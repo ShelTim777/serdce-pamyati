@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Сердце Памяти - Общероссийская сеть сохранения памяти</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0a0a;
+            --text: #e8e8e8;
+            --accent: #d4af37;
+            --gray: #666;
+            --dark-gray: #1a1a1a;
+            --red: #c41e3a;
+            --orange: #ff8c00;
+            --blue: #4169e1;
+            --white: #f5f5f5;
+        }
+        
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+        }
+        
+        /* ШАПКА */
+        header {
+            background: rgba(10, 10, 10, 0.95);
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #222;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo-icon {
+            font-size: 32px;
+        }
+        
+        .logo-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--accent);
+        }
+        
+        .btn-order {
+            background: var(--accent);
+            color: var(--bg);
+            padding: 12px 30px;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-order:hover {
+            background: #e5c158;
+            transform: translateY(-2px);
+        }
+        
+        /* ГЕРОЙ-БЛОК */
+        .hero {
+            text-align: center;
+            padding: 80px 20px;
+            background: linear-gradient(180deg, rgba(212, 175, 55, 0.1) 0%, transparent 100%);
+        }
+        
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 48px;
+            margin-bottom: 20px;
+            color: var(--text);
+        }
+        
+        .hero p {
+            font-size: 20px;
+            color: var(--gray);
+            margin-bottom: 40px;
+        }
+        
+        .btn-map {
+            background: transparent;
+            border: 2px solid var(--accent);
+            color: var(--accent);
+            padding: 16px 40px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+        
+        .btn-map:hover {
+            background: var(--accent);
+            color: var(--bg);
+        }
+        
+        /* КАТЕГОРИИ */
+        .categories {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            padding: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .category-card {
+            background: var(--dark-gray);
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 30px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .category-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-5px);
+        }
+        
+        .category-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+        
+        .category-name {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .category-desc {
+            font-size: 14px;
+            color: var(--gray);
+        }
+        
+        /* КАРТА */
+        .map-section {
+            padding: 40px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .map-container {
+            position: relative;
+            height: 600px;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #333;
+        }
+        
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .map-stats {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(10, 10, 10, 0.9);
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid var(--accent);
+            z-index: 100;
+        }
+        
+        .stat-item {
+            margin-bottom: 15px;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: var(--gray);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--accent);
+        }
+        
+        /* КАК ЭТО РАБОТАЕТ */
+        .how-it-works {
+            padding: 80px 40px;
+            text-align: center;
+            background: var(--dark-gray);
+        }
+        
+        .how-it-works h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 36px;
+            margin-bottom: 60px;
+        }
+        
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .step {
+            text-align: center;
+        }
+        
+        .step-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+        
+        .step-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .step-desc {
+            font-size: 14px;
+            color: var(--gray);
+        }
+        
+        /* ПОДВАЛ */
+        footer {
+            background: var(--bg);
+            padding: 40px;
+            text-align: center;
+            border-top: 1px solid #222;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 20px;
+        }
+        
+        .footer-links a {
+            color: var(--gray);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: var(--accent);
+        }
+        
+        .footer-copy {
+            font-size: 12px;
+            color: var(--gray);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ШАПКА -->
+    <header>
+        <div class="logo">
+            <span class="logo-icon">❤️</span>
+            <span class="logo-text">Сердце Памяти</span>
+        </div>
+        <button class="btn-order" onclick="document.getElementById('order-form').scrollIntoView({behavior: 'smooth'})">
+            Заказать мемориал
+        </button>
+    </header>
+
+    <!-- ГЕРОЙ-БЛОК -->
+    <section class="hero">
+        <h1>Общероссийская сеть сохранения памяти</h1>
+        <p>Интерактивная карта героев, ветеранов и значимых людей России</p>
+        <button class="btn-map" onclick="document.getElementById('map').scrollIntoView({behavior: 'smooth'})">
+            Найти на карте
+        </button>
+    </section>
+
+    <!-- КАТЕГОРИИ -->
+    <section class="categories">
+        <div class="category-card" onclick="filterMap('svo')">
+            <div class="category-icon">⭐</div>
+            <div class="category-name">Герои СВО</div>
+            <div class="category-desc">Защитники Родины</div>
+        </div>
+        <div class="category-card" onclick="filterMap('veteran')">
+            <div class="category-icon">🎖️</div>
+            <div class="category-name">Ветераны</div>
+            <div class="category-desc">ВОВ, локальные конфликты</div>
+        </div>
+        <div class="category-card" onclick="filterMap('significant')">
+            <div class="category-icon"></div>
+            <div class="category-name">Значимые люди</div>
+            <div class="category-desc">Врачи, учителя, деятели</div>
+        </div>
+        <div class="category-card" onclick="filterMap('personal')">
+            <div class="category-icon">❤️</div>
+            <div class="category-name">Личная память</div>
+            <div class="category-desc">Семья, близкие, родные</div>
+        </div>
+    </section>
+
+    <!-- КАРТА -->
+    <section class="map-section">
+        <div class="map-container">
+            <div class="map-stats">
+                <div class="stat-item">
+                    <div class="stat-label">Всего мемориалов</div>
+                    <div class="stat-value" id="total-memorials">1</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Городов</div>
+                    <div class="stat-value" id="total-cities">1</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Свечей зажжено</div>
+                    <div class="stat-value" id="total-candles">0</div>
+                </div>
+            </div>
+            <div id="map"></div>
+        </div>
+    </section>
+
+    <!-- КАК ЭТО РАБОТАЕТ -->
+    <section class="how-it-works">
+        <h2>Как это работает</h2>
+        <div class="steps">
+            <div class="step">
+                <div class="step-icon"></div>
+                <div class="step-title">Сканируете NFC/QR</div>
+                <div class="step-desc">На мемориальной табличке</div>
+            </div>
+            <div class="step">
+                <div class="step-icon">🗺️</div>
+                <div class="step-title">Открывается страница</div>
+                <div class="step-desc">С историей и фотографиями</div>
+            </div>
+            <div class="step">
+                <div class="step-icon">🕯️</div>
+                <div class="step-title">Зажигаете свечу</div>
+                <div class="step-desc">И оставляете слово благодарности</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ПОДВАЛ -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="#about">О проекте</a>
+                <a href="#contacts">Контакты</a>
+                <a href="#privacy">Политика конфиденциальности</a>
+            </div>
+            <div class="footer-copy">
+                © 2026 Сердце Памяти. Tech Partner: KOT & KOTE
+            </div>
+        </div>
+    </footer>
+
+    <!-- ЯНДЕКС КАРТЫ -->
+    <script src="https://api-maps.yandex.ru/2.1/?apikey=c3a2335d-b6fc-4399-9d97-3c705fb682d1
+&lang=ru_RU"></script>
+    
+    <script>
+        // Данные мемориалов
+        const memorials = [
+            {
+                id: 'grigorev_dmitriy',
+                name: 'Григорьев Дмитрий Николаевич',
+                dates: '23.08.1993',
+                category: 'svo',
+                city: 'Москва',
+                coords: [55.7558, 37.6173],
+                photo: 'memorial/grigorev_dmitriy/img/14.jpg',
+                link: 'memorial/grigorev_dmitriy/',
+                candles: 0
+            }
+        ];
+
+        let map;
+        let placemarks = [];
+
+        // Инициализация карты
+        ymaps.ready(function () {
+            map = new ymaps.Map("map", {
+                center: [55.7558, 37.6173],
+                zoom: 5,
+                controls: ['zoomControl', 'fullscreenControl']
+            });
+
+            // Добавляем метки
+            memorials.forEach(memorial => {
+                const placemark = new ymaps.Placemark(memorial.coords, {
+                    hintContent: memorial.city,
+                    balloonContent: `
+                        <div style="padding: 10px;">
+                            <h3 style="margin-bottom: 10px;">${memorial.name}</h3>
+                            <p style="margin-bottom: 10px;">${memorial.dates}</p>
+                            <a href="${memorial.link}" target="_blank" style="color: #d4af37;">Открыть страницу памяти →</a>
+                        </div>
+                    `
+                }, {
+                    preset: getPresetByCategory(memorial.category)
+                });
+
+                map.geoObjects.add(placemark);
+                placemarks.push({ placemark, memorial });
+            });
+
+            updateStats();
+        });
+
+        // Получение цвета метки по категории
+        function getPresetByCategory(category) {
+            const presets = {
+                svo: 'islands#redStarIcon',
+                veteran: 'islands#orangeStarIcon',
+                significant: 'islands#blueCircleIcon',
+                personal: 'islands#whiteCircleIcon'
+            };
+            return presets[category] || 'islands#grayCircleIcon';
+        }
+
+        // Фильтрация карты
+        function filterMap(category) {
+            placemarks.forEach(({ placemark, memorial }) => {
+                if (category === 'all' || memorial.category === category) {
+                    placemark.options.set('visible', true);
+                } else {
+                    placemark.options.set('visible', false);
+                }
+            });
+        }
+
+        // Обновление статистики
+        function updateStats() {
+            document.getElementById('total-memorials').textContent = memorials.length;
+            const cities = new Set(memorials.map(m => m.city));
+            document.getElementById('total-cities').textContent = cities.size;
+            const candles = memorials.reduce((sum, m) => sum + m.candles, 0);
+            document.getElementById('total-candles').textContent = candles;
+        }
+    </script>
+
+</body>
+</html>
