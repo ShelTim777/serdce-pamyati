@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Услуги и стоимость - Сердце Памяти</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+    --bg: #0a0a0a;
+    --text: #e8e8e8;
+    --accent: #d4af37;
+    --gray: #888;
+    --dark-gray: #151515;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+    background: linear-gradient(180deg, rgba(212, 175, 55, 0.05) 0%, var(--bg) 100%);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+header {
+    background: rgba(10, 10, 10, 0.95);
+    padding: 20px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    backdrop-filter: blur(15px);
+    animation: fadeInUp 0.8s ease-out;
+}
+.logo { display: flex; align-items: center; gap: 15px; }
+.logo-icon { font-size: 32px; filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.5)); }
+.logo-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 1px;
+}
+.btn-home {
+    background: transparent;
+    border: 2px solid var(--accent);
+    color: var(--accent);
+    padding: 12px 25px;
+    border-radius: 30px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-decoration: none;
+    display: inline-block;
+}
+.btn-home:hover {
+    background: var(--accent);
+    color: #000;
+    transform: translateY(-2px);
+}
+
+.hero-services {
+    text-align: center;
+    padding: 80px 20px 40px;
+    animation: fadeInUp 1s ease-out 0.2s both;
+}
+.hero-services h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 48px;
+    color: var(--accent);
+    margin-bottom: 20px;
+}
+.hero-services p {
+    font-size: 18px;
+    color: var(--gray);
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+.tariff-section {
+    padding: 60px 20px;
+    max-width: 800px;
+    margin: 0 auto;
+    animation: fadeInUp 1s ease-out 0.4s both;
+}
+
+.tariff-card {
+    background: rgba(21, 21, 21, 0.9);
+    border: 2px solid var(--accent);
+    border-radius: 16px;
+    padding: 50px 40px;
+    text-align: center;
+    box-shadow: 0 0 40px rgba(212, 175, 55, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.tariff-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+}
+
+.tariff-badge {
+    display: inline-block;
+    background: var(--accent);
+    color: #000;
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.tariff-price {
+    font-size: 56px;
+    font-weight: 700;
+    color: var(--accent);
+    margin: 20px 0;
+    font-family: 'Playfair Display', serif;
+}
+
+.tariff-price span {
+    font-size: 24px;
+    color: var(--gray);
+}
+
+.tariff-desc {
+    font-size: 16px;
+    color: var(--text);
+    margin-bottom: 30px;
+    font-style: italic;
+}
+
+.tariff-list {
+    text-align: left;
+    list-style: none;
+    margin: 30px 0;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.tariff-list li {
+    padding: 12px 0;
+    color: var(--text);
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+}
+
+.tariff-list li:last-child {
+    border-bottom: none;
+}
+
+.tariff-list li::before {
+    content: "✓";
+    color: var(--accent);
+    font-weight: bold;
+    font-size: 18px;
+    flex-shrink: 0;
+}
+
+.btn-order {
+    background: linear-gradient(135deg, #d4af37 0%, #b8860b 100%);
+    color: #000;
+    padding: 16px 50px;
+    border: none;
+    border-radius: 30px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 20px rgba(212, 175, 55, 0.4);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 20px;
+}
+
+.btn-order:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(212, 175, 55, 0.6);
+}
+
+.calc-section {
+    padding: 80px 20px;
+    background: rgba(21, 21, 21, 0.5);
+    margin: 60px 0;
+    animation: fadeInUp 1s ease-out 0.6s both;
+}
+
+.calc-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px;
+    text-align: center;
+    color: var(--accent);
+    margin-bottom: 20px;
+}
+
+.calc-subtitle {
+    text-align: center;
+    color: var(--gray);
+    margin-bottom: 40px;
+    font-size: 16px;
+}
+
+.calc-container {
+    max-width: 700px;
+    margin: 0 auto;
+    background: rgba(10, 10, 10, 0.9);
+    border-radius: 12px;
+    padding: 40px;
+    border: 1px solid rgba(212, 175, 55, 0.3);
+}
+
+.calc-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 18px;
+    background: rgba(212, 175, 55, 0.05);
+    border-radius: 8px;
+    transition: all 0.3s;
+}
+
+.calc-row:hover {
+    background: rgba(212, 175, 55, 0.1);
+}
+
+.calc-label {
+    font-size: 16px;
+    color: var(--text);
+    flex: 1;
+}
+
+.calc-price {
+    color: var(--accent);
+    font-weight: 600;
+    margin-right: 20px;
+    white-space: nowrap;
+}
+
+.calc-checkbox {
+    width: 24px;
+    height: 24px;
+    accent-color: var(--accent);
+    cursor: pointer;
+}
+
+.calc-total {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--accent);
+    text-align: right;
+    margin-top: 30px;
+    font-family: 'Playfair Display', serif;
+    padding: 25px;
+    background: rgba(212, 175, 55, 0.1);
+    border-radius: 8px;
+    border: 1px solid rgba(212, 175, 55, 0.3);
+}
+
+.principles {
+    padding: 100px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    animation: fadeInUp 1s ease-out 0.8s both;
+}
+
+.principles-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 42px;
+    text-align: center;
+    color: var(--accent);
+    margin-bottom: 60px;
+}
+
+.principles-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+}
+
+.principle-card {
+    background: rgba(21, 21, 21, 0.8);
+    border-radius: 12px;
+    padding: 40px 30px;
+    text-align: center;
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    transition: all 0.3s;
+}
+
+.principle-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--accent);
+    box-shadow: 0 10px 30px rgba(212, 175, 55, 0.2);
+}
+
+.principle-icon { font-size: 48px; margin-bottom: 20px; }
+.principle-title { font-size: 22px; font-weight: 600; margin-bottom: 15px; color: var(--text); }
+.principle-desc { font-size: 14px; color: var(--gray); line-height: 1.6; }
+
+footer { background: #050505; padding: 60px 40px; text-align: center; border-top: 1px solid rgba(255, 255, 255, 0.05); }
+.footer-links { display: flex; justify-content: center; gap: 40px; margin-bottom: 30px; flex-wrap: wrap; }
+.footer-links a { color: var(--gray); text-decoration: none; transition: all 0.3s; font-size: 14px; }
+.footer-links a:hover { color: var(--accent); }
+.footer-copy { font-size: 12px; color: #444; }
+
+@media (max-width: 768px) {
+    header { padding: 15px 20px; flex-direction: column; gap: 15px; }
+    .hero-services h1 { font-size: 32px; }
+    .hero-services p { font-size: 16px; }
+    .tariff-card { padding: 30px 20px; }
+    .tariff-price { font-size: 42px; }
+    .tariff-list li { font-size: 14px; }
+    .calc-container { padding: 25px 20px; }
+    .calc-row { flex-direction: column; align-items: flex-start; gap: 10px; padding: 15px; }
+    .calc-price { margin-right: 0; }
+    .calc-total { font-size: 24px; text-align: center; }
+    .principles-grid { grid-template-columns: 1fr; }
+    .principles-title { font-size: 32px; }
+    footer { padding: 40px 20px; }
+}
+
+@media (max-width: 480px) {
+    .hero-services { padding: 60px 20px 30px; }
+    .hero-services h1 { font-size: 28px; }
+    .tariff-price { font-size: 36px; }
+    .btn-order { padding: 14px 40px; font-size: 14px; }
+}
+</style>
+</head>
+<body>
+
+<header>
+    <div class="logo">
+        <span class="logo-icon">❤️</span>
+        <span class="logo-text">Сердце Памяти</span>
+    </div>
+    <a href="index.html" class="btn-home">← На главную</a>
+</header>
+
+<section class="hero-services">
+    <h1>Услуги и стоимость</h1>
+    <p>Мы создаём цифровые мемориалы, которые сохраняют память о близких на века. Простая и прозрачная цена без скрытых платежей.</p>
+</section>
+
+<section class="tariff-section">
+    <div class="tariff-card">
+        <span class="tariff-badge">Память</span>
+        <div class="tariff-price">2 000 <span>₽</span></div>
+        <div class="tariff-desc">Всё необходимое для сохранения памяти</div>
+        
+        <ul class="tariff-list">
+            <li>Мемориальная табличка из ПВХ с защитным покрытием (устойчива к любым погодным условиям)</li>
+            <li>NFC метка + QR код для мгновенного доступа</li>
+            <li>Персональная страница памяти на нашем сайте</li>
+            <li>Размещение до 10 фотографий + текст биографии</li>
+            <li>Видеоархив (до 3 видео)</li>
+            <li>Кнопка «Зажечь свечу» для посетителей</li>
+            <li>Место на интерактивной карте России</li>
+            <li>Вечное хранение без абонентской платы</li>
+            <li>Бережная упаковка и доставка по всей России</li>
+        </ul>
+        
+        <button class="btn-order">Заказать мемориал</button>
+    </div>
+</section>
+
+<section class="calc-section">
+    <h2 class="calc-title">Дополнительные опции</h2>
+    <p class="calc-subtitle">По желанию можно добавить эти услуги к базовому тарифу</p>
+    
+    <div class="calc-container">
+        <div class="calc-row">
+            <span class="calc-label">LED подсветка таблички (тёплый золотой свет)</span>
+            <span class="calc-price">+1 000 ₽</span>
+            <input type="checkbox" class="calc-checkbox" data-price="1000">
+        </div>
+        <div class="calc-row">
+            <span class="calc-label">Голосовое приветствие (запись голоса родных)</span>
+            <span class="calc-price">+700 ₽</span>
+            <input type="checkbox" class="calc-checkbox" data-price="700">
+        </div>
+        <div class="calc-row">
+            <span class="calc-label">Книга памяти (печатный альбом с историей)</span>
+            <span class="calc-price">+1 500 ₽</span>
+            <input type="checkbox" class="calc-checkbox" data-price="1500">
+        </div>
+        
+        <div class="calc-total">
+            Итого: <span id="total-price">2 000</span> ₽
+        </div>
+    </div>
+</section>
+
+<section class="principles">
+    <h2 class="principles-title">Наши принципы</h2>
+    <div class="principles-grid">
+        <div class="principle-card">
+            <div class="principle-icon">💰</div>
+            <div class="principle-title">Честные цены</div>
+            <div class="principle-desc">Мы не наживаемся на горе. Наши цены покрывают только расходы на материалы и работу.</div>
+        </div>
+        <div class="principle-card">
+            <div class="principle-icon"></div>
+            <div class="principle-title">Прозрачность</div>
+            <div class="principle-desc">Никаких скрытых платежей. Вы платите ровно столько, сколько указано при заказе.</div>
+        </div>
+        <div class="principle-card">
+            <div class="principle-icon">❤️</div>
+            <div class="principle-title">Миссия</div>
+            <div class="principle-desc">Мы помогаем сохранить память о близких, а не продаём ритуальные услуги.</div>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <div class="footer-links">
+        <a href="index.html">Главная</a>
+        <a href="#contacts">Контакты</a>
+        <a href="#privacy">Политика конфиденциальности</a>
+    </div>
+    <div class="footer-copy">© 2026 Сердце Памяти</div>
+</footer>
+
+<script>
+const checkboxes = document.querySelectorAll('.calc-checkbox');
+const totalPriceEl = document.getElementById('total-price');
+const basePrice = 2000;
+
+function updateTotal() {
+    let total = basePrice;
+    checkboxes.forEach(cb => {
+        if (cb.checked) total += parseInt(cb.dataset.price);
+    });
+    totalPriceEl.textContent = total.toLocaleString('ru-RU');
+}
+
+checkboxes.forEach(cb => cb.addEventListener('change', updateTotal));
+</script>
+
+</body>
+</html>
