@@ -22,8 +22,6 @@ body {
     font-family: 'Inter', sans-serif;
     min-height: 100vh;
 }
-
-/* ЭКРАН ВХОДА */
 .login-screen {
     display: flex;
     justify-content: center;
@@ -88,8 +86,6 @@ body {
     font-size: 14px;
     display: none;
 }
-
-/* АДМИН-ПАНЕЛЬ */
 .admin-panel {
     display: none;
     padding: 40px 20px;
@@ -124,8 +120,6 @@ body {
     background: var(--danger);
     color: #fff;
 }
-
-/* СТАТИСТИКА */
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -150,8 +144,6 @@ body {
     font-size: 14px;
     margin-top: 5px;
 }
-
-/* ФОРМА ДОБАВЛЕНИЯ */
 .add-form {
     background: rgba(21, 21, 21, 0.8);
     border: 1px solid rgba(212, 175, 55, 0.2);
@@ -217,8 +209,6 @@ body {
     transform: translateY(-2px);
     box-shadow: 0 8px 25px rgba(212, 175, 55, 0.5);
 }
-
-/* СПИСОК ЛЮДЕЙ */
 .people-list {
     margin-bottom: 40px;
 }
@@ -298,8 +288,6 @@ body {
     background: var(--danger);
     color: #fff;
 }
-
-/* ЭКСПОРТ */
 .export-section {
     background: rgba(21, 21, 21, 0.8);
     border: 1px solid rgba(212, 175, 55, 0.2);
@@ -336,8 +324,6 @@ body {
     transform: translateY(-2px);
     box-shadow: 0 8px 20px rgba(76, 175, 80, 0.4);
 }
-
-/* УВЕДОМЛЕНИЯ */
 .notification {
     position: fixed;
     top: 20px;
@@ -355,8 +341,6 @@ body {
     from { transform: translateX(400px); opacity: 0; }
     to { transform: translateX(0); opacity: 1; }
 }
-
-/* АДАПТИВНОСТЬ */
 @media (max-width: 768px) {
     .admin-header { flex-direction: column; gap: 15px; }
     .form-grid { grid-template-columns: 1fr; }
@@ -368,7 +352,6 @@ body {
 </head>
 <body>
 
-<!-- ЭКРАН ВХОДА -->
 <div class="login-screen" id="loginScreen">
     <div class="login-box">
         <h1>Админ-панель</h1>
@@ -379,14 +362,12 @@ body {
     </div>
 </div>
 
-<!-- АДМИН-ПАНЕЛЬ -->
 <div class="admin-panel" id="adminPanel">
     <div class="admin-header">
         <h1 class="admin-title">Управление мемориалами</h1>
         <button class="btn-logout" onclick="logout()">Выйти</button>
     </div>
 
-    <!-- СТАТИСТИКА -->
     <div class="stats-grid">
         <div class="stat-card">
             <div class="stat-number" id="statTotal">0</div>
@@ -406,9 +387,8 @@ body {
         </div>
     </div>
 
-    <!-- ФОРМА ДОБАВЛЕНИЯ -->
     <div class="add-form">
-        <h2 class="form-title">Добавить нового человека</h2>
+        <h2 class="form-title" id="formTitle">Добавить нового человека</h2>
         <div class="form-grid">
             <div class="form-group">
                 <label>Имя *</label>
@@ -448,18 +428,16 @@ body {
                 <input type="number" id="personCandles" value="0">
             </div>
         </div>
-        <button class="btn-add" onclick="addPerson()">Добавить мемориал</button>
+        <button class="btn-add" id="btnAdd" onclick="addPerson()">Добавить мемориал</button>
+        <button class="btn-add" id="btnCancel" onclick="cancelEdit()" style="display: none; background: linear-gradient(135deg, #757575 0%, #616161 100%); margin-left: 10px;">Отмена</button>
     </div>
 
-    <!-- СПИСОК ЛЮДЕЙ -->
     <div class="people-list">
         <h2 class="list-title">Существующие мемориалы</h2>
         <div id="peopleContainer">
-            <!-- Люди добавляются через JS -->
         </div>
     </div>
 
-    <!-- ЭКСПОРТ -->
     <div class="export-section">
         <h2 class="export-title">Экспорт данных</h2>
         <p class="export-desc">
@@ -470,17 +448,13 @@ body {
     </div>
 </div>
 
-<!-- УВЕДОМЛЕНИЕ -->
 <div class="notification" id="notification"></div>
 
 <script>
-// ПАРОЛЬ (можно изменить)
 const ADMIN_PASSWORD = 'serdce2026';
-
-// ДАННЫЕ (загружаются из localStorage или по умолчанию)
 let memorials = JSON.parse(localStorage.getItem('memorials_db') || '[{"id":"grigorev_dmitriy","name":"Григорьев Дмитрий Николаевич","dates":"23.08.1993","category":"svo","city":"Москва","coords":[55.7558,37.6173],"link":"memorial/grigorev_dmitriy/","candles":0}]');
+let editIndex = -1;
 
-// ПРОВЕРКА ПАРОЛЯ
 function checkPassword() {
     const input = document.getElementById('passwordInput').value;
     if (input === ADMIN_PASSWORD) {
@@ -494,7 +468,6 @@ function checkPassword() {
     }
 }
 
-// ВЫХОД
 function logout() {
     localStorage.removeItem('admin_logged_in');
     document.getElementById('loginScreen').style.display = 'flex';
@@ -502,7 +475,6 @@ function logout() {
     document.getElementById('passwordInput').value = '';
 }
 
-// АВТО-ВХОД
 if (localStorage.getItem('admin_logged_in') === 'true') {
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('adminPanel').style.display = 'block';
@@ -510,7 +482,6 @@ if (localStorage.getItem('admin_logged_in') === 'true') {
     updateStats();
 }
 
-// ДОБАВИТЬ ЧЕЛОВЕКА
 function addPerson() {
     const name = document.getElementById('personName').value.trim();
     const date = document.getElementById('personDate').value.trim();
@@ -539,15 +510,33 @@ function addPerson() {
         candles: candles
     };
 
-    memorials.push(person);
+    if (editIndex >= 0) {
+        memorials[editIndex] = person;
+        editIndex = -1;
+        document.getElementById('formTitle').textContent = 'Добавить нового человека';
+        document.getElementById('btnAdd').textContent = 'Добавить мемориал';
+        document.getElementById('btnCancel').style.display = 'none';
+        showNotification('Мемориал обновлен!');
+    } else {
+        memorials.push(person);
+        showNotification('Мемориал добавлен!');
+    }
+
     saveData();
     renderPeople();
     updateStats();
     clearForm();
-    showNotification('Мемориал добавлен!');
 }
 
-// УДАЛИТЬ ЧЕЛОВЕКА
+function cancelEdit() {
+    editIndex = -1;
+    document.getElementById('formTitle').textContent = 'Добавить нового человека';
+    document.getElementById('btnAdd').textContent = 'Добавить мемориал';
+    document.getElementById('btnCancel').style.display = 'none';
+    clearForm();
+    showNotification('Редактирование отменено');
+}
+
 function deletePerson(index) {
     if (confirm('Удалить этот мемориал?')) {
         memorials.splice(index, 1);
@@ -558,7 +547,6 @@ function deletePerson(index) {
     }
 }
 
-// РЕДАКТИРОВАТЬ (заполнить форму данными)
 function editPerson(index) {
     const person = memorials[index];
     document.getElementById('personName').value = person.name;
@@ -570,17 +558,15 @@ function editPerson(index) {
     document.getElementById('personFolder').value = person.id;
     document.getElementById('personCandles').value = person.candles;
     
-    // Удаляем старого и добавим нового при сохранении
-    memorials.splice(index, 1);
-    saveData();
-    renderPeople();
-    updateStats();
+    editIndex = index;
+    document.getElementById('formTitle').textContent = 'Редактировать: ' + person.name;
+    document.getElementById('btnAdd').textContent = 'Сохранить изменения';
+    document.getElementById('btnCancel').style.display = 'inline-block';
     
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    showNotification('Редактируйте данные и нажмите "Добавить"');
+    showNotification('Измените данные и нажмите "Сохранить изменения"');
 }
 
-// ОТРИСОВКА СПИСКА
 function renderPeople() {
     const container = document.getElementById('peopleContainer');
     
@@ -611,7 +597,6 @@ function renderPeople() {
     `).join('');
 }
 
-// ОБНОВЛЕНИЕ СТАТИСТИКИ
 function updateStats() {
     document.getElementById('statTotal').textContent = memorials.length;
     document.getElementById('statSVO').textContent = memorials.filter(m => m.category === 'svo').length;
@@ -620,12 +605,10 @@ function updateStats() {
     document.getElementById('statCities').textContent = cities.size;
 }
 
-// СОХРАНЕНИЕ
 function saveData() {
     localStorage.setItem('memorials_db', JSON.stringify(memorials));
 }
 
-// ОЧИСТКА ФОРМЫ
 function clearForm() {
     document.getElementById('personName').value = '';
     document.getElementById('personDate').value = '';
@@ -636,7 +619,6 @@ function clearForm() {
     document.getElementById('personCandles').value = '0';
 }
 
-// ЭКСПОРТ JSON
 function exportJSON() {
     const dataStr = JSON.stringify(memorials, null, 2);
     const blob = new Blob([dataStr], { type: 'application/json' });
@@ -649,13 +631,11 @@ function exportJSON() {
     showNotification('JSON скачан!');
 }
 
-// ЭКСПОРТ КОДА
 function exportCode() {
     const code = `const memorials = ${JSON.stringify(memorials, null, 2)};`;
     navigator.clipboard.writeText(code).then(() => {
         showNotification('Код скопирован в буфер обмена!');
     }).catch(() => {
-        // Fallback для старых браузеров
         const textarea = document.createElement('textarea');
         textarea.value = code;
         document.body.appendChild(textarea);
@@ -666,7 +646,6 @@ function exportCode() {
     });
 }
 
-// УВЕДОМЛЕНИЕ
 function showNotification(message, type = 'success') {
     const notif = document.getElementById('notification');
     notif.textContent = message;
@@ -677,7 +656,6 @@ function showNotification(message, type = 'success') {
     }, 3000);
 }
 
-// Enter для входа
 document.getElementById('passwordInput').addEventListener('keypress', function(e) {
     if (e.key === 'Enter') checkPassword();
 });
