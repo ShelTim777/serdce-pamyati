@@ -12,7 +12,6 @@
             --accent: #d4af37;
             --gray: #888;
             --dark-gray: #151515;
-            --red: #c41e3a;
         }
         
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -35,7 +34,6 @@
             50% { transform: scale(1.5); opacity: 0.5; }
         }
 
-        /* ШАПКА */
         header {
             background: rgba(10, 10, 10, 0.95);
             padding: 20px 40px;
@@ -50,17 +48,8 @@
             backdrop-filter: blur(10px);
         }
 
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .logo-icon {
-            font-size: 32px;
-            animation: pulse 2s infinite;
-        }
-
+        .logo { display: flex; align-items: center; gap: 15px; }
+        .logo-icon { font-size: 32px; animation: pulse 2s infinite; }
         .logo-text {
             font-family: 'Playfair Display', serif;
             font-size: 24px;
@@ -68,8 +57,8 @@
             color: var(--accent);
             letter-spacing: 1px;
         }
-
-        .btn-order, .btn-calc {
+        
+        .btn-header {
             background: linear-gradient(135deg, #d4af37 0%, #b8860b 100%);
             color: #000;
             padding: 12px 25px;
@@ -80,24 +69,17 @@
             cursor: pointer;
             transition: all 0.3s;
             box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            margin-left: 10px;
         }
 
-        .btn-order:hover, .btn-calc:hover {
+        .btn-header:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(212, 175, 55, 0.5);
         }
 
-        /* ГЕРОЙ-БЛОК */
         .hero {
             text-align: center;
             padding: 120px 20px 80px;
-            min-height: 60vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
             animation: fadeInUp 1s ease-out 0.2s both;
         }
 
@@ -113,10 +95,11 @@
             color: var(--gray);
             margin-bottom: 40px;
             max-width: 700px;
-            line-height: 1.6;
+            margin-left: auto;
+            margin-right: auto;
         }
 
-        .btn-map {
+        .btn-hero {
             background: transparent;
             border: 2px solid var(--accent);
             color: var(--accent);
@@ -126,17 +109,15 @@
             cursor: pointer;
             border-radius: 30px;
             transition: all 0.3s;
-            text-transform: uppercase;
-            letter-spacing: 1px;
         }
-        .btn-map:hover {
+        .btn-hero:hover {
             background: var(--accent);
             color: #000;
             transform: translateY(-3px);
             box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4);
         }
 
-        /* УСЛУГИ */
+        /* УСЛУГИ И ЦЕНЫ */
         .services {
             padding: 100px 20px;
             max-width: 1400px;
@@ -206,7 +187,7 @@
         }
 
         .service-price {
-            font-size: 32px;
+            font-size: 36px;
             font-weight: 700;
             color: var(--accent);
             margin: 20px 0;
@@ -216,10 +197,11 @@
         .service-list {
             text-align: left;
             margin: 25px 0;
+            list-style: none;
         }
 
         .service-list li {
-            padding: 8px 0;
+            padding: 10px 0;
             color: var(--gray);
             display: flex;
             align-items: center;
@@ -281,11 +263,19 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(212, 175, 55, 0.05);
+            border-radius: 8px;
         }
 
         .calc-label {
             font-size: 16px;
             color: var(--text);
+        }
+
+        .calc-price {
+            color: var(--accent);
+            font-weight: 600;
         }
 
         .calc-checkbox {
@@ -295,12 +285,15 @@
         }
 
         .calc-total {
-            font-size: 28px;
+            font-size: 32px;
             font-weight: 700;
             color: var(--accent);
             text-align: right;
-            margin-top: 20px;
+            margin-top: 30px;
             font-family: 'Playfair Display', serif;
+            padding: 20px;
+            background: rgba(212, 175, 55, 0.1);
+            border-radius: 8px;
         }
 
         /* ПРИНЦИПЫ */
@@ -384,9 +377,7 @@
             min-width: 220px;
         }
 
-        .stat-item {
-            margin-bottom: 25px;
-        }
+        .stat-item { margin-bottom: 25px; }
         .stat-label { font-size: 11px; color: var(--gray); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; }
         .stat-value { font-size: 36px; font-weight: 700; color: var(--accent); font-family: 'Playfair Display', serif; }
 
@@ -450,4 +441,294 @@
             color: #444;
         }
 
-        /* МОДАЛЬНОЕ ОКНО КАЛЬК
+        @media (max-width: 968px) {
+            .hero h1 { font-size: 36px; }
+            .services-grid, .steps { grid-template-columns: 1fr; }
+            .calc-row { flex-direction: column; align-items: flex-start; gap: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <span class="logo-icon">❤️</span>
+            <span class="logo-text">Сердце Памяти</span>
+        </div>
+        <div>
+            <button class="btn-header" onclick="document.getElementById('services').scrollIntoView({behavior: 'smooth'})">Услуги</button>
+            <button class="btn-header" onclick="document.getElementById('map').scrollIntoView({behavior: 'smooth'})">Карта</button>
+        </div>
+    </header>
+
+    <section class="hero">
+        <h1>Общероссийская сеть сохранения памяти</h1>
+        <p>Интерактивная карта героев, ветеранов и значимых людей России. Сохраняем историю, чтобы она жила вечно.</p>
+        <button class="btn-hero" onclick="document.getElementById('map').scrollIntoView({behavior: 'smooth'})">
+            Найти на карте
+        </button>
+    </section>
+
+    <section class="services" id="services">
+        <h2 class="services-title">Услуги и стоимость</h2>
+        <div class="services-grid">
+            <div class="service-card">
+                <span class="service-badge">БАЗОВЫЙ</span>
+                <div class="service-price">2 000 ₽</div>
+                <ul class="service-list">
+                    <li>Металлическая табличка (15×10 см)</li>
+                    <li>NFC метка + QR код</li>
+                    <li>Персональная страница памяти</li>
+                    <li>Фото (до 10 шт) + текст биографии</li>
+                    <li>Кнопка «Зажечь свечу»</li>
+                    <li>Вечное хранение</li>
+                </ul>
+                <button class="btn-service" onclick="alert('Форма заказа будет здесь')">Заказать</button>
+            </div>
+
+            <div class="service-card" style="border-color: var(--accent); box-shadow: 0 0 30px rgba(212, 175, 55, 0.2);">
+                <span class="service-badge" style="background: #ff6b6b; color: #fff;">ПОПУЛЯРНЫЙ</span>
+                <div class="service-price">3 500 ₽</div>
+                <ul class="service-list">
+                    <li>Всё из тарифа «Память»</li>
+                    <li><strong>LED подсветка</strong> (тёплый золотой свет)</li>
+                    <li>Место на интерактивной карте России</li>
+                    <li>Видеоархив (до 3 видео)</li>
+                    <li>Фоновая музыка («Мелодия памяти»)</li>
+                    <li>Сертификат о создании мемориала</li>
+                    <li>Приоритетная поддержка</li>
+                </ul>
+                <button class="btn-service" style="background: var(--accent); color: #000;" onclick="alert('Форма заказа будет здесь')">Заказать</button>
+            </div>
+
+            <div class="service-card">
+                <span class="service-badge">ПРЕМИУМ</span>
+                <div class="service-price">5 000 ₽</div>
+                <ul class="service-list">
+                    <li>Всё из тарифа «Уважение»</li>
+                    <li><strong>Голосовое приветствие</strong> (запись родных)</li>
+                    <li>Неограниченное фото и видео</li>
+                    <li>Книга памяти (комментарии)</li>
+                    <li>Увеличенная табличка (20×15 см)</li>
+                    <li>VIP упаковка при доставке</li>
+                    <li>Личный менеджер</li>
+                </ul>
+                <button class="btn-service" onclick="alert('Форма заказа будет здесь')">Заказать</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="calc-section">
+        <h2 class="calc-title">Рассчитать стоимость</h2>
+        <div class="calc-container">
+            <div class="calc-row">
+                <span class="calc-label">Базовая табличка + NFC/QR + страница</span>
+                <span class="calc-price">2 000 ₽</span>
+                <input type="checkbox" class="calc-checkbox" checked disabled>
+            </div>
+            <div class="calc-row">
+                <span class="calc-label">LED подсветка</span>
+                <span class="calc-price">+1 000 ₽</span>
+                <input type="checkbox" class="calc-checkbox" data-price="1000">
+            </div>
+            <div class="calc-row">
+                <span class="calc-label">Место на карте</span>
+                <span class="calc-price">+300 ₽</span>
+                <input type="checkbox" class="calc-checkbox" data-price="300">
+            </div>
+            <div class="calc-row">
+                <span class="calc-label">Голосовое приветствие</span>
+                <span class="calc-price">+700 ₽</span>
+                <input type="checkbox" class="calc-checkbox" data-price="700">
+            </div>
+            <div class="calc-row">
+                <span class="calc-label">Увеличенная табличка</span>
+                <span class="calc-price">+500 ₽</span>
+                <input type="checkbox" class="calc-checkbox" data-price="500">
+            </div>
+            <div class="calc-total">
+                Итого: <span id="total-price">2 000</span> ₽
+            </div>
+        </div>
+    </section>
+
+    <section class="principles">
+        <h2 class="principles-title">Наши принципы</h2>
+        <div class="principles-grid">
+            <div class="principle-card">
+                <div class="principle-icon">💰</div>
+                <div class="principle-title">Честные цены</div>
+                <div class="principle-desc">Мы не наживаемся на горе. Наши цены покрывают только расходы на материалы и работу.</div>
+            </div>
+            <div class="principle-card">
+                <div class="principle-icon"></div>
+                <div class="principle-title">Прозрачность</div>
+                <div class="principle-desc">Никаких скрытых платежей. Вы платите ровно столько, сколько указано при заказе.</div>
+            </div>
+            <div class="principle-card">
+                <div class="principle-icon">❤️</div>
+                <div class="principle-title">Миссия</div>
+                <div class="principle-desc">Мы помогаем сохранить память о близких, а не продаём ритуальные услуги.</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="map-section">
+        <div class="map-container">
+            <div class="map-stats">
+                <div class="stat-item">
+                    <div class="stat-label">Всего мемориалов</div>
+                    <div class="stat-value" id="total-memorials">0</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Городов</div>
+                    <div class="stat-value" id="total-cities">0</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Свечей зажжено</div>
+                    <div class="stat-value" id="total-candles">0</div>
+                </div>
+            </div>
+            <div id="map"></div>
+        </div>
+    </section>
+
+    <section class="how-it-works">
+        <h2>Как это работает</h2>
+        <div class="steps">
+            <div class="step">
+                <div class="step-icon">📱</div>
+                <div class="step-title">Сканируете NFC/QR</div>
+                <div class="step-desc">На мемориальной табличке</div>
+            </div>
+            <div class="step">
+                <div class="step-icon">🗺️</div>
+                <div class="step-title">Открывается страница</div>
+                <div class="step-desc">С историей и фотографиями</div>
+            </div>
+            <div class="step">
+                <div class="step-icon">️</div>
+                <div class="step-title">Зажигаете свечу</div>
+                <div class="step-desc">И оставляете слово благодарности</div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="#about">О проекте</a>
+                <a href="#contacts">Контакты</a>
+                <a href="#privacy">Политика конфиденциальности</a>
+            </div>
+            <div class="footer-copy">
+                © 2026 Сердце Памяти
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://api-maps.yandex.ru/2.1/?apikey=ТВОЙ_API_КЛЮЧ&lang=ru_RU"></script>
+    <script>
+        // КАЛЬКУЛЯТОР
+        const checkboxes = document.querySelectorAll('.calc-checkbox:not([disabled])');
+        const totalPriceEl = document.getElementById('total-price');
+        const basePrice = 2000;
+
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', updateTotal);
+        });
+
+        function updateTotal() {
+            let total = basePrice;
+            checkboxes.forEach(checkbox => {
+                if (checkbox.checked) {
+                    total += parseInt(checkbox.dataset.price);
+                }
+            });
+            totalPriceEl.textContent = total.toLocaleString('ru-RU');
+        }
+
+        // ДАННЫЕ КАРТЫ
+        const memorials = [
+            {
+                id: 'grigorev_dmitriy',
+                name: 'Григорьев Дмитрий Николаевич',
+                dates: '23.08.1993',
+                category: 'svo',
+                city: 'Москва',
+                coords: [55.7558, 37.6173],
+                link: 'memorial/grigorev_dmitriy/',
+                candles: 0
+            }
+        ];
+
+        let map;
+        let placemarks = [];
+
+        function animateValue(element, start, end, duration) {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                const value = Math.floor(progress * (end - start) + start);
+                element.textContent = value;
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        ymaps.ready(function () {
+            map = new ymaps.Map("map", {
+                center: [55.7558, 37.6173],
+                zoom: 5,
+                controls: ['zoomControl', 'fullscreenControl']
+            });
+
+            memorials.forEach(memorial => {
+                const placemark = new ymaps.Placemark(memorial.coords, {
+                    hintContent: memorial.name,
+                    balloonContent: `
+                        <div style="padding: 15px; max-width: 300px;">
+                            <h3 style="margin-bottom: 10px; color: #d4af37; font-family: 'Playfair Display', serif;">${memorial.name}</h3>
+                            <p style="margin-bottom: 10px; color: #666;">${memorial.dates}</p>
+                            <p style="margin-bottom: 15px; font-style: italic;">${memorial.city}</p>
+                            <a href="${memorial.link}" target="_blank" 
+                               style="color: #d4af37; text-decoration: none; font-weight: 600; display: inline-block; padding: 8px 15px; border: 2px solid #d4af37; border-radius: 4px; transition: all 0.3s;">
+                               Открыть страницу памяти →
+                            </a>
+                        </div>
+                    `
+                }, {
+                    preset: 'islands#redStarIcon',
+                    iconColor: '#c41e3a'
+                });
+
+                map.geoObjects.add(placemark);
+                placemarks.push({ placemark, memorial });
+            });
+
+            setTimeout(updateStats, 1000);
+        });
+
+        function filterMap(category) {
+            placemarks.forEach(({ placemark, memorial }) => {
+                placemark.options.set('visible', category === 'all' || memorial.category === category);
+            });
+            document.getElementById('map').scrollIntoView({behavior: 'smooth'});
+        }
+
+        function updateStats() {
+            const totalMemorials = memorials.length;
+            const cities = new Set(memorials.map(m => m.city));
+            const totalCities = cities.size;
+            const candles = memorials.reduce((sum, m) => sum + m.candles, 0);
+
+            animateValue(document.getElementById('total-memorials'), 0, totalMemorials, 2000);
+            animateValue(document.getElementById('total-cities'), 0, totalCities, 2000);
+            animateValue(document.getElementById('total-candles'), 0, candles, 2000);
+        }
+    </script>
+</body>
+</html>
