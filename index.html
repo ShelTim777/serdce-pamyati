@@ -7,199 +7,191 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
 :root {
-    --bg: #0a0a0a;
-    --text: #e8e8e8;
-    --accent: #d4af37;
-    --gray: #888;
-    --dark-gray: #151515;
+--bg: #0a0a0a;
+--text: #e8e8e8;
+--accent: #d4af37;
+--gray: #888;
+--dark-gray: #151515;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
-    background-color: var(--bg);
-    color: var(--text);
-    font-family: 'Inter', sans-serif;
-    min-height: 100vh;
-    overflow-x: hidden;
-    position: relative;
+background-color: var(--bg);
+color: var(--text);
+font-family: 'Inter', sans-serif;
+min-height: 100vh;
+overflow-x: hidden;
+position: relative;
 }
-
 #particles-canvas {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
-    pointer-events: none;
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+z-index: -1;
+pointer-events: none;
 }
-
 @keyframes pulse-ring {
-    0% { transform: scale(0.8); opacity: 1; }
-    100% { transform: scale(2.5); opacity: 0; }
+0% { transform: scale(0.8); opacity: 1; }
+100% { transform: scale(2.5); opacity: 0; }
 }
 @keyframes cursor-blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0; }
+0%, 100% { opacity: 1; }
+50% { opacity: 0; }
 }
-
 .reveal {
-    opacity: 0;
-    transform: translateY(50px);
-    transition: all 1s cubic-bezier(0.5, 0, 0, 1);
+opacity: 0;
+transform: translateY(50px);
+transition: all 1s cubic-bezier(0.5, 0, 0, 1);
 }
 .reveal.active {
-    opacity: 1;
-    transform: translateY(0);
+opacity: 1;
+transform: translateY(0);
 }
-
 header {
-    background: rgba(10, 10, 10, 0.8);
-    padding: 20px 40px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid rgba(212, 175, 55, 0.2);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    backdrop-filter: blur(15px);
+background: rgba(10, 10, 10, 0.8);
+padding: 20px 40px;
+display: flex;
+justify-content: space-between;
+align-items: center;
+border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+position: sticky;
+top: 0;
+z-index: 1000;
+backdrop-filter: blur(15px);
 }
 .logo { display: flex; align-items: center; gap: 15px; }
 .logo-icon { font-size: 32px; filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.5)); }
 .logo-text {
-    font-family: 'Playfair Display', serif;
-    font-size: 24px;
-    font-weight: 700;
-    color: var(--accent);
-    letter-spacing: 1px;
+font-family: 'Playfair Display', serif;
+font-size: 24px;
+font-weight: 700;
+color: var(--accent);
+letter-spacing: 1px;
 }
 .header-buttons { display: flex; gap: 15px; }
 .btn-header {
-    background: linear-gradient(135deg, #d4af37 0%, #b8860b 100%);
-    color: #000;
-    padding: 12px 25px;
-    border: none;
-    border-radius: 30px;
-    font-size: 14px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.3s;
-    box-shadow: 0 4px 20px rgba(212, 175, 55, 0.3);
-    text-decoration: none;
-    display: inline-block;
+background: linear-gradient(135deg, #d4af37 0%, #b8860b 100%);
+color: #000;
+padding: 12px 25px;
+border: none;
+border-radius: 30px;
+font-size: 14px;
+font-weight: 700;
+cursor: pointer;
+transition: all 0.3s;
+box-shadow: 0 4px 20px rgba(212, 175, 55, 0.3);
+text-decoration: none;
+display: inline-block;
 }
 .btn-header:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 30px rgba(212, 175, 55, 0.6);
+transform: translateY(-3px);
+box-shadow: 0 8px 30px rgba(212, 175, 55, 0.6);
 }
-
 .hero {
-    text-align: center;
-    padding: 120px 20px 80px;
-    min-height: 60vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+text-align: center;
+padding: 120px 20px 80px;
+min-height: 60vh;
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
 }
 .hero h1 {
-    font-family: 'Playfair Display', serif;
-    font-size: 56px;
-    margin-bottom: 20px;
-    color: var(--text);
-    min-height: 70px;
+font-family: 'Playfair Display', serif;
+font-size: 56px;
+margin-bottom: 20px;
+color: var(--text);
+min-height: 70px;
 }
 .typing-cursor {
-    display: inline-block;
-    width: 3px;
-    height: 50px;
-    background: var(--accent);
-    margin-left: 5px;
-    animation: cursor-blink 1s infinite;
-    vertical-align: middle;
+display: inline-block;
+width: 3px;
+height: 50px;
+background: var(--accent);
+margin-left: 5px;
+animation: cursor-blink 1s infinite;
+vertical-align: middle;
 }
 .hero p {
-    font-size: 20px;
-    color: var(--gray);
-    margin-bottom: 40px;
-    max-width: 700px;
-    line-height: 1.6;
+font-size: 20px;
+color: var(--gray);
+margin-bottom: 40px;
+max-width: 700px;
+line-height: 1.6;
 }
 .btn-map {
-    background: transparent;
-    border: 2px solid var(--accent);
-    color: var(--accent);
-    padding: 16px 40px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    border-radius: 30px;
-    transition: all 0.3s;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+background: transparent;
+border: 2px solid var(--accent);
+color: var(--accent);
+padding: 16px 40px;
+font-size: 16px;
+font-weight: 600;
+cursor: pointer;
+border-radius: 30px;
+transition: all 0.3s;
+text-transform: uppercase;
+letter-spacing: 1px;
 }
 .btn-map:hover {
-    background: var(--accent);
-    color: #000;
-    transform: translateY(-3px);
-    box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4);
+background: var(--accent);
+color: #000;
+transform: translateY(-3px);
+box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4);
 }
-
 .categories {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
-    padding: 40px;
-    max-width: 1200px;
-    margin: 0 auto;
+display: grid;
+grid-template-columns: repeat(4, 1fr);
+gap: 20px;
+padding: 40px;
+max-width: 1200px;
+margin: 0 auto;
 }
 .category-card {
-    background: rgba(21, 21, 21, 0.8);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 12px;
-    padding: 40px 20px;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.4s ease;
-    backdrop-filter: blur(10px);
+background: rgba(21, 21, 21, 0.8);
+border: 1px solid rgba(255, 255, 255, 0.05);
+border-radius: 12px;
+padding: 40px 20px;
+text-align: center;
+cursor: pointer;
+transition: all 0.4s ease;
+backdrop-filter: blur(10px);
 }
 .category-card:hover {
-    border-color: var(--accent);
-    box-shadow: 0 15px 40px rgba(212, 175, 55, 0.15);
-    transform: translateY(-10px);
+border-color: var(--accent);
+box-shadow: 0 15px 40px rgba(212, 175, 55, 0.15);
+transform: translateY(-10px);
 }
 .category-icon { font-size: 56px; margin-bottom: 20px; transition: transform 0.3s; }
 .category-card:hover .category-icon { transform: scale(1.15) rotate(5deg); }
 .category-name { font-size: 20px; font-weight: 600; margin-bottom: 10px; color: var(--text); }
 .category-desc { font-size: 14px; color: var(--gray); line-height: 1.5; }
-
 .map-section { padding: 60px 40px; max-width: 1400px; margin: 0 auto; }
 .map-container {
-    position: relative;
-    height: 650px;
-    border-radius: 16px;
-    overflow: hidden;
-    border: 1px solid rgba(212, 175, 55, 0.2);
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+position: relative;
+height: 650px;
+border-radius: 16px;
+overflow: hidden;
+border: 1px solid rgba(212, 175, 55, 0.2);
+box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
 }
 #map { width: 100%; height: 100%; }
 .map-stats {
-    position: absolute;
-    top: 30px;
-    left: 30px;
-    background: rgba(10, 10, 10, 0.9);
-    padding: 30px;
-    border-radius: 12px;
-    border: 1px solid rgba(212, 175, 55, 0.3);
-    z-index: 100;
-    backdrop-filter: blur(15px);
-    min-width: 220px;
+position: absolute;
+top: 30px;
+left: 30px;
+background: rgba(10, 10, 10, 0.9);
+padding: 30px;
+border-radius: 12px;
+border: 1px solid rgba(212, 175, 55, 0.3);
+z-index: 100;
+backdrop-filter: blur(15px);
+min-width: 220px;
 }
 .stat-item { margin-bottom: 25px; }
 .stat-item:last-child { margin-bottom: 0; }
 .stat-label { font-size: 11px; color: var(--gray); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; }
 .stat-value { font-size: 36px; font-weight: 700; color: var(--accent); font-family: 'Playfair Display', serif; }
-
 .how-it-works { padding: 100px 40px; text-align: center; background: rgba(21, 21, 21, 0.5); }
 .how-it-works h2 { font-family: 'Playfair Display', serif; font-size: 42px; margin-bottom: 70px; color: var(--accent); }
 .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 50px; max-width: 1100px; margin: 0 auto; }
@@ -208,306 +200,278 @@ header {
 .step-icon { font-size: 72px; margin-bottom: 25px; }
 .step-title { font-size: 22px; font-weight: 600; margin-bottom: 15px; color: var(--text); }
 .step-desc { font-size: 15px; color: var(--gray); line-height: 1.6; }
-
 footer { background: #050505; padding: 60px 40px; text-align: center; border-top: 1px solid rgba(255, 255, 255, 0.05); }
 .footer-content { max-width: 1200px; margin: 0 auto; }
 .footer-links { display: flex; justify-content: center; gap: 40px; margin-bottom: 30px; flex-wrap: wrap; }
 .footer-links a { color: var(--gray); text-decoration: none; transition: all 0.3s; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; }
 .footer-links a:hover { color: var(--accent); }
 .footer-copy { font-size: 12px; color: #444; }
-
 @media (max-width: 1024px) {
-    .categories { grid-template-columns: repeat(2, 1fr); }
-    .hero h1 { font-size: 44px; }
-    .typing-cursor { height: 44px; }
+.categories { grid-template-columns: repeat(2, 1fr); }
+.hero h1 { font-size: 44px; }
+.typing-cursor { height: 44px; }
 }
 @media (max-width: 768px) {
-    header { padding: 15px 20px; flex-direction: column; gap: 15px; }
-    .header-buttons { width: 100%; justify-content: center; }
-    .hero { padding: 80px 20px 50px; min-height: auto; }
-    .hero h1 { font-size: 32px; min-height: auto; }
-    .typing-cursor { height: 32px; }
-    .hero p { font-size: 16px; }
-    .categories { grid-template-columns: 1fr; padding: 20px; }
-    .category-card { padding: 25px 15px; }
-    .category-icon { font-size: 40px; }
-    .map-section { padding: 30px 20px; }
-    .map-container { height: 450px; }
-    .map-stats { position: relative; top: auto; left: auto; margin-bottom: 15px; min-width: auto; }
-    .stat-value { font-size: 28px; }
-    .how-it-works { padding: 60px 20px; }
-    .how-it-works h2 { font-size: 32px; margin-bottom: 40px; }
-    .steps { grid-template-columns: 1fr; gap: 40px; }
-    .step-icon { font-size: 50px; }
-    footer { padding: 40px 20px; }
+header { padding: 15px 20px; flex-direction: column; gap: 15px; }
+.header-buttons { width: 100%; justify-content: center; flex-wrap: wrap; }
+.hero { padding: 80px 20px 50px; min-height: auto; }
+.hero h1 { font-size: 32px; min-height: auto; }
+.typing-cursor { height: 32px; }
+.hero p { font-size: 16px; }
+.categories { grid-template-columns: 1fr; padding: 20px; }
+.category-card { padding: 25px 15px; }
+.category-icon { font-size: 40px; }
+.map-section { padding: 30px 20px; }
+.map-container { height: 450px; }
+.map-stats { position: relative; top: auto; left: auto; margin-bottom: 15px; min-width: auto; }
+.stat-value { font-size: 28px; }
+.how-it-works { padding: 60px 20px; }
+.how-it-works h2 { font-size: 32px; margin-bottom: 40px; }
+.steps { grid-template-columns: 1fr; gap: 40px; }
+.step-icon { font-size: 50px; }
+footer { padding: 40px 20px; }
 }
 @media (max-width: 480px) {
-    .hero h1 { font-size: 26px; }
-    .typing-cursor { height: 26px; }
-    .btn-map { padding: 14px 30px; font-size: 14px; }
-    .btn-header { padding: 10px 20px; font-size: 12px; }
+.hero h1 { font-size: 26px; }
+.typing-cursor { height: 26px; }
+.btn-map { padding: 14px 30px; font-size: 14px; }
+.btn-header { padding: 10px 20px; font-size: 12px; }
 }
 </style>
 </head>
 <body>
-
 <canvas id="particles-canvas"></canvas>
-
 <header>
-    <div class="logo">
-        <span class="logo-icon">❤️</span>
-        <span class="logo-text">Сердце Памяти</span>
-    </div>
-    <div class="header-buttons">
-        <a href="services.html" class="btn-header">Услуги</a>
-        <button class="btn-header" onclick="document.getElementById('map').scrollIntoView({behavior: 'smooth'})">Карта</button>
-    </div>
+<div class="logo">
+<span class="logo-icon">❤️</span>
+<span class="logo-text">Сердце Памяти</span>
+</div>
+<div class="header-buttons">
+<a href="services.html" class="btn-header">Услуги</a>
+<button class="btn-header" onclick="document.getElementById('map').scrollIntoView({behavior: 'smooth'})">Карта</button>
+<button class="btn-header" onclick="window.location.href='admin.html'">Админка</button>
+</div>
 </header>
-
 <section class="hero reveal">
-    <h1><span id="typing-text"></span><span class="typing-cursor"></span></h1>
-    <p>Интерактивная карта героев, ветеранов и значимых людей России. Сохраняем историю, чтобы она жила вечно.</p>
-    <button class="btn-map" onclick="document.getElementById('map').scrollIntoView({behavior: 'smooth'})">
-        Найти на карте
-    </button>
+<h1><span id="typing-text"></span><span class="typing-cursor"></span></h1>
+<p>Интерактивная карта героев, ветеранов и значимых людей России. Сохраняем историю, чтобы она жила вечно.</p>
+<button class="btn-map" onclick="document.getElementById('map').scrollIntoView({behavior: 'smooth'})">
+Найти на карте
+</button>
 </section>
-
 <section class="categories">
-    <div class="category-card reveal" onclick="filterMap('svo')">
-        <div class="category-icon">⭐</div>
-        <div class="category-name">Герои СВО</div>
-        <div class="category-desc">Защитники Родины, проявившие мужество и отвагу</div>
-    </div>
-    <div class="category-card reveal" onclick="filterMap('veteran')">
-        <div class="category-icon">🎖️</div>
-        <div class="category-name">Ветераны</div>
-        <div class="category-desc">Участники ВОВ и локальных конфликтов</div>
-    </div>
-    <div class="category-card reveal" onclick="filterMap('significant')">
-        <div class="category-icon"></div>
-        <div class="category-name">Значимые люди</div>
-        <div class="category-desc">Врачи, учителя, деятели культуры и науки</div>
-    </div>
-    <div class="category-card reveal" onclick="filterMap('personal')">
-        <div class="category-icon">❤️</div>
-        <div class="category-name">Личная память</div>
-        <div class="category-desc">Семья, близкие и родные люди</div>
-    </div>
+<div class="category-card reveal" onclick="filterMap('svo')">
+<div class="category-icon">⭐</div>
+<div class="category-name">Герои СВО</div>
+<div class="category-desc">Защитники Родины, проявившие мужество и отвагу</div>
+</div>
+<div class="category-card reveal" onclick="filterMap('veteran')">
+<div class="category-icon">🎖️</div>
+<div class="category-name">Ветераны</div>
+<div class="category-desc">Участники ВОВ и локальных конфликтов</div>
+</div>
+<div class="category-card reveal" onclick="filterMap('significant')">
+<div class="category-icon"></div>
+<div class="category-name">Значимые люди</div>
+<div class="category-desc">Врачи, учителя, деятели культуры и науки</div>
+</div>
+<div class="category-card reveal" onclick="filterMap('personal')">
+<div class="category-icon">❤️</div>
+<div class="category-name">Личная память</div>
+<div class="category-desc">Семья, близкие и родные люди</div>
+</div>
 </section>
-
 <section class="map-section reveal">
-    <div class="map-container">
-        <div class="map-stats">
-            <div class="stat-item">
-                <div class="stat-label">Всего мемориалов</div>
-                <div class="stat-value" id="total-memorials">0</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-label">Городов</div>
-                <div class="stat-value" id="total-cities">0</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-label">Свечей зажжено</div>
-                <div class="stat-value" id="total-candles">0</div>
-            </div>
-        </div>
-        <div id="map"></div>
-    </div>
+<div class="map-container">
+<div class="map-stats">
+<div class="stat-item">
+<div class="stat-label">Всего мемориалов</div>
+<div class="stat-value" id="total-memorials">0</div>
+</div>
+<div class="stat-item">
+<div class="stat-label">Городов</div>
+<div class="stat-value" id="total-cities">0</div>
+</div>
+<div class="stat-item">
+<div class="stat-label">Свечей зажжено</div>
+<div class="stat-value" id="total-candles">0</div>
+</div>
+</div>
+<div id="map"></div>
+</div>
 </section>
-
 <section class="how-it-works reveal">
-    <h2>Как это работает</h2>
-    <div class="steps">
-        <div class="step">
-            <div class="step-icon"></div>
-            <div class="step-title">Сканируете NFC/QR</div>
-            <div class="step-desc">Наведите телефон на мемориальную табличку</div>
-        </div>
-        <div class="step">
-            <div class="step-icon">🗺️</div>
-            <div class="step-title">Открывается страница</div>
-            <div class="step-desc">История жизни, фотографии и видеоархив</div>
-        </div>
-        <div class="step">
-            <div class="step-icon">🕯️</div>
-            <div class="step-title">Зажигаете свечу</div>
-            <div class="step-desc">Оставьте виртуальную свечу и слова благодарности</div>
-        </div>
-    </div>
+<h2>Как это работает</h2>
+<div class="steps">
+<div class="step">
+<div class="step-icon"></div>
+<div class="step-title">Сканируете NFC/QR</div>
+<div class="step-desc">Наведите телефон на мемориальную табличку</div>
+</div>
+<div class="step">
+<div class="step-icon">🗺️</div>
+<div class="step-title">Открывается страница</div>
+<div class="step-desc">История жизни, фотографии и видеоархив</div>
+</div>
+<div class="step">
+<div class="step-icon">🕯️</div>
+<div class="step-title">Зажигаете свечу</div>
+<div class="step-desc">Оставьте виртуальную свечу и слова благодарности</div>
+</div>
+</div>
 </section>
-
 <footer>
-    <div class="footer-content">
-        <div class="footer-links">
-            <a href="#about">О проекте</a>
-            <a href="#contacts">Контакты</a>
-            <a href="#privacy">Политика конфиденциальности</a>
-        </div>
-        <div class="footer-copy">© 2026 Сердце Памяти</div>
-    </div>
+<div class="footer-content">
+<div class="footer-links">
+<a href="#about">О проекте</a>
+<a href="#contacts">Контакты</a>
+<a href="#privacy">Политика конфиденциальности</a>
+</div>
+<div class="footer-copy">© 2026 Сердце Памяти</div>
+</div>
 </footer>
-
 <script src="https://api-maps.yandex.ru/2.1/?apikey=ТВОЙ_API_КЛЮЧ&lang=ru_RU"></script>
 <script>
 const canvas = document.getElementById('particles-canvas');
 const ctx = canvas.getContext('2d');
 let particles = [];
-
 function resizeCanvas() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 }
 window.addEventListener('resize', resizeCanvas);
 resizeCanvas();
-
 class Particle {
-    constructor() {
-        this.x = Math.random() * canvas.width;
-        this.y = Math.random() * canvas.height;
-        this.size = Math.random() * 2 + 0.5;
-        this.speedY = Math.random() * 0.5 + 0.1;
-        this.opacity = Math.random() * 0.5 + 0.1;
-    }
-    update() {
-        this.y -= this.speedY;
-        if (this.y < 0) {
-            this.y = canvas.height;
-            this.x = Math.random() * canvas.width;
-        }
-    }
-    draw() {
-        ctx.fillStyle = `rgba(212, 175, 55, ${this.opacity})`;
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fill();
-    }
+constructor() {
+this.x = Math.random() * canvas.width;
+this.y = Math.random() * canvas.height;
+this.size = Math.random() * 2 + 0.5;
+this.speedY = Math.random() * 0.5 + 0.1;
+this.opacity = Math.random() * 0.5 + 0.1;
 }
-
+update() {
+this.y -= this.speedY;
+if (this.y < 0) {
+this.y = canvas.height;
+this.x = Math.random() * canvas.width;
+}
+}
+draw() {
+ctx.fillStyle = `rgba(212, 175, 55, ${this.opacity})`;
+ctx.beginPath();
+ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+ctx.fill();
+}
+}
 function initParticles() {
-    particles = [];
-    for (let i = 0; i < 60; i++) {
-        particles.push(new Particle());
-    }
+particles = [];
+for (let i = 0; i < 60; i++) {
+particles.push(new Particle());
 }
-
+}
 function animateParticles() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    particles.forEach(p => {
-        p.update();
-        p.draw();
-    });
-    requestAnimationFrame(animateParticles);
+ctx.clearRect(0, 0, canvas.width, canvas.height);
+particles.forEach(p => {
+p.update();
+p.draw();
+});
+requestAnimationFrame(animateParticles);
 }
 initParticles();
 animateParticles();
-
 const textToType = "Общероссийская сеть сохранения памяти";
 const typingElement = document.getElementById('typing-text');
 let charIndex = 0;
-
 function typeText() {
-    if (charIndex < textToType.length) {
-        typingElement.textContent += textToType.charAt(charIndex);
-        charIndex++;
-        setTimeout(typeText, 60);
-    }
+if (charIndex < textToType.length) {
+typingElement.textContent += textToType.charAt(charIndex);
+charIndex++;
+setTimeout(typeText, 60);
+}
 }
 setTimeout(typeText, 500);
-
 const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.classList.add('active');
-        }
-    });
-}, { threshold: 0.1 });
-
-document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-
-function animateValue(element, start, end, duration) {
-    let startTimestamp = null;
-    const step = (timestamp) => {
-        if (!startTimestamp) startTimestamp = timestamp;
-        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-        const value = Math.floor(progress * (end - start) + start);
-        element.textContent = value;
-        if (progress < 1) window.requestAnimationFrame(step);
-    };
-    window.requestAnimationFrame(step);
+entries.forEach(entry => {
+if (entry.isIntersecting) {
+entry.target.classList.add('active');
 }
-
+});
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+function animateValue(element, start, end, duration) {
+let startTimestamp = null;
+const step = (timestamp) => {
+if (!startTimestamp) startTimestamp = timestamp;
+const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+const value = Math.floor(progress * (end - start) + start);
+element.textContent = value;
+if (progress < 1) window.requestAnimationFrame(step);
+};
+window.requestAnimationFrame(step);
+}
 const memorials = [
-    {
-        id: 'grigorev_dmitriy',
-        name: 'Григорьев Дмитрий Николаевич',
-        dates: '23.08.1993',
-        category: 'svo',
-        city: 'Москва',
-        coords: [55.7558, 37.6173],
-        link: 'memorial/grigorev_dmitriy/',
-        candles: 0
-    }
+{
+id: 'grigorev_dmitriy',
+name: 'Григорьев Дмитрий Николаевич',
+dates: '23.08.1993',
+category: 'svo',
+city: 'Москва',
+coords: [55.7558, 37.6173],
+link: 'memorial/grigorev_dmitriy/',
+candles: 0
+}
 ];
-
 let map;
 let placemarks = [];
-
 ymaps.ready(function () {
-    map = new ymaps.Map("map", {
-        center: [55.7558, 37.6173],
-        zoom: 5,
-        controls: ['zoomControl', 'fullscreenControl']
-    });
-
-    const pulsingLayout = ymaps.templateLayoutFactory.createClass(
-        `<div style="position: relative; width: 40px; height: 40px; display: flex; justify-content: center; align-items: center;">
-            <div style="position: absolute; width: 100%; height: 100%; background: rgba(212, 175, 55, 0.3); border-radius: 50%; animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;"></div>
-            <div style="position: absolute; width: 16px; height: 16px; background: #d4af37; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 0 15px #d4af37; z-index: 2;"></div>
-        </div>`
-    );
-
-    memorials.forEach(memorial => {
-        const placemark = new ymaps.Placemark(memorial.coords, {
-            hintContent: memorial.name,
-            balloonContent: `
-                <div style="padding: 20px; max-width: 320px; font-family: 'Inter', sans-serif;">
-                    <h3 style="margin-bottom: 12px; color: #d4af37; font-family: 'Playfair Display', serif; font-size: 20px;">${memorial.name}</h3>
-                    <p style="margin-bottom: 8px; color: #888; font-size: 14px;">${memorial.dates}</p>
-                    <p style="margin-bottom: 20px; font-style: italic; color: #aaa;">${memorial.city}</p>
-                    <a href="${memorial.link}" target="_blank"
-                       style="color: #000; background: #d4af37; text-decoration: none; font-weight: 700; display: inline-block; padding: 10px 20px; border-radius: 20px; font-size: 14px;">
-                       Открыть страницу памяти →
-                    </a>
-                </div>
-            `
-        }, {
-            iconLayout: pulsingLayout,
-            iconShape: { type: 'Circle', coordinates: [20, 20], radius: 20 }
-        });
-
-        map.geoObjects.add(placemark);
-        placemarks.push({ placemark, memorial });
-    });
-
-    setTimeout(updateStats, 1500);
+map = new ymaps.Map("map", {
+center: [55.7558, 37.6173],
+zoom: 5,
+controls: ['zoomControl', 'fullscreenControl']
 });
-
+const pulsingLayout = ymaps.templateLayoutFactory.createClass(
+`<div style="position: relative; width: 40px; height: 40px; display: flex; justify-content: center; align-items: center;">
+<div style="position: absolute; width: 100%; height: 100%; background: rgba(212, 175, 55, 0.3); border-radius: 50%; animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;"></div>
+<div style="position: absolute; width: 16px; height: 16px; background: #d4af37; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 0 15px #d4af37; z-index: 2;"></div>
+</div>`
+);
+memorials.forEach(memorial => {
+const placemark = new ymaps.Placemark(memorial.coords, {
+hintContent: memorial.name,
+balloonContent: `
+<div style="padding: 20px; max-width: 320px; font-family: 'Inter', sans-serif;">
+<h3 style="margin-bottom: 12px; color: #d4af37; font-family: 'Playfair Display', serif; font-size: 20px;">${memorial.name}</h3>
+<p style="margin-bottom: 8px; color: #888; font-size: 14px;">${memorial.dates}</p>
+<p style="margin-bottom: 20px; font-style: italic; color: #aaa;">${memorial.city}</p>
+<a href="${memorial.link}" target="_blank"
+style="color: #000; background: #d4af37; text-decoration: none; font-weight: 700; display: inline-block; padding: 10px 20px; border-radius: 20px; font-size: 14px;">
+Открыть страницу памяти →
+</a>
+</div>
+`
+}, {
+iconLayout: pulsingLayout,
+iconShape: { type: 'Circle', coordinates: [20, 20], radius: 20 }
+});
+map.geoObjects.add(placemark);
+placemarks.push({ placemark, memorial });
+});
+setTimeout(updateStats, 1500);
+});
 function filterMap(category) {
-    placemarks.forEach(({ placemark, memorial }) => {
-        placemark.options.set('visible', category === 'all' || memorial.category === category);
-    });
-    document.getElementById('map').scrollIntoView({behavior: 'smooth'});
+placemarks.forEach(({ placemark, memorial }) => {
+placemark.options.set('visible', category === 'all' || memorial.category === category);
+});
+document.getElementById('map').scrollIntoView({behavior: 'smooth'});
 }
-
 function updateStats() {
-    const totalMemorials = memorials.length;
-    const cities = new Set(memorials.map(m => m.city));
-    const totalCities = cities.size;
-    const candles = memorials.reduce((sum, m) => sum + m.candles, 0);
-
-    animateValue(document.getElementById('total-memorials'), 0, totalMemorials, 2000);
-    animateValue(document.getElementById('total-cities'), 0, totalCities, 2000);
-    animateValue(document.getElementById('total-candles'), 0, candles, 2000);
+const totalMemorials = memorials.length;
+const cities = new Set(memorials.map(m => m.city));
+const totalCities = cities.size;
+const candles = memorials.reduce((sum, m) => sum + m.candles, 0);
+animateValue(document.getElementById('total-memorials'), 0, totalMemorials, 2000);
+animateValue(document.getElementById('total-cities'), 0, totalCities, 2000);
+animateValue(document.getElementById('total-candles'), 0, candles, 2000);
 }
 </script>
 </body>
