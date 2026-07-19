@@ -21,12 +21,30 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         
         body {
-            background-color: var(--bg);
+            background: linear-gradient(180deg, rgba(212, 175, 55, 0.05) 0%, var(--bg) 100%);
             color: var(--text);
             font-family: 'Inter', sans-serif;
             min-height: 100vh;
+            overflow-x: hidden;
         }
         
+        /* Анимация появления */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.5); opacity: 0.5; }
+        }
+
         /* ШАПКА */
         header {
             background: rgba(10, 10, 10, 0.95);
@@ -38,6 +56,8 @@
             position: sticky;
             top: 0;
             z-index: 1000;
+            animation: fadeInUp 0.8s ease-out;
+            backdrop-filter: blur(10px);
         }
         
         .logo {
@@ -48,6 +68,7 @@
         
         .logo-icon {
             font-size: 32px;
+            animation: pulse 2s infinite;
         }
         
         .logo-text {
@@ -55,6 +76,7 @@
             font-size: 24px;
             font-weight: 700;
             color: var(--accent);
+            letter-spacing: 1px;
         }
         
         .btn-order {
@@ -67,18 +89,21 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
         }
         
         .btn-order:hover {
             background: #e5c158;
             transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.5);
         }
         
         /* ГЕРОЙ-БЛОК */
         .hero {
             text-align: center;
-            padding: 80px 20px;
+            padding: 100px 20px;
             background: linear-gradient(180deg, rgba(212, 175, 55, 0.1) 0%, transparent 100%);
+            animation: fadeInUp 1s ease-out 0.2s both;
         }
         
         .hero h1 {
@@ -86,6 +111,7 @@
             font-size: 48px;
             margin-bottom: 20px;
             color: var(--text);
+            text-shadow: 0 0 30px rgba(212, 175, 55, 0.3);
         }
         
         .hero p {
@@ -109,6 +135,8 @@
         .btn-map:hover {
             background: var(--accent);
             color: var(--bg);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4);
         }
         
         /* КАТЕГОРИИ */
@@ -119,6 +147,7 @@
             padding: 40px;
             max-width: 1200px;
             margin: 0 auto;
+            animation: fadeInUp 1s ease-out 0.4s both;
         }
         
         .category-card {
@@ -128,23 +157,32 @@
             padding: 30px 20px;
             text-align: center;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform-style: preserve-3d;
+            perspective: 1000px;
         }
         
         .category-card:hover {
+            transform: translateY(-10px) rotateX(5deg);
             border-color: var(--accent);
-            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(212, 175, 55, 0.3);
         }
         
         .category-icon {
             font-size: 48px;
             margin-bottom: 15px;
+            transition: transform 0.3s;
+        }
+        
+        .category-card:hover .category-icon {
+            transform: scale(1.2);
         }
         
         .category-name {
             font-size: 18px;
             font-weight: 600;
             margin-bottom: 10px;
+            color: var(--text);
         }
         
         .category-desc {
@@ -157,6 +195,7 @@
             padding: 40px;
             max-width: 1400px;
             margin: 0 auto;
+            animation: fadeInUp 1s ease-out 0.6s both;
         }
         
         .map-container {
@@ -165,6 +204,7 @@
             border-radius: 8px;
             overflow: hidden;
             border: 1px solid #333;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
         }
         
         #map {
@@ -176,41 +216,46 @@
             position: absolute;
             top: 20px;
             left: 20px;
-            background: rgba(10, 10, 10, 0.9);
-            padding: 20px;
+            background: rgba(10, 10, 10, 0.95);
+            padding: 25px;
             border-radius: 8px;
             border: 1px solid var(--accent);
             z-index: 100;
+            backdrop-filter: blur(10px);
         }
         
         .stat-item {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
         
         .stat-label {
             font-size: 12px;
             color: var(--gray);
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
         }
         
         .stat-value {
-            font-size: 28px;
+            font-size: 32px;
             font-weight: 700;
             color: var(--accent);
+            text-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
         }
         
         /* КАК ЭТО РАБОТАЕТ */
         .how-it-works {
-            padding: 80px 40px;
+            padding: 100px 40px;
             text-align: center;
             background: var(--dark-gray);
+            animation: fadeInUp 1s ease-out 0.8s both;
         }
         
         .how-it-works h2 {
             font-family: 'Playfair Display', serif;
             font-size: 36px;
             margin-bottom: 60px;
+            color: var(--accent);
         }
         
         .steps {
@@ -223,17 +268,24 @@
         
         .step {
             text-align: center;
+            transition: transform 0.3s;
+        }
+        
+        .step:hover {
+            transform: translateY(-5px);
         }
         
         .step-icon {
             font-size: 64px;
             margin-bottom: 20px;
+            animation: pulse 3s infinite;
         }
         
         .step-title {
             font-size: 20px;
             font-weight: 600;
             margin-bottom: 10px;
+            color: var(--text);
         }
         
         .step-desc {
@@ -247,6 +299,7 @@
             padding: 40px;
             text-align: center;
             border-top: 1px solid #222;
+            animation: fadeInUp 1s ease-out 1s both;
         }
         
         .footer-content {
@@ -264,7 +317,7 @@
         .footer-links a {
             color: var(--gray);
             text-decoration: none;
-            transition: color 0.3s;
+            transition: all 0.3s;
         }
         
         .footer-links a:hover {
@@ -274,6 +327,19 @@
         .footer-copy {
             font-size: 12px;
             color: var(--gray);
+        }
+
+        /* Адаптивность */
+        @media (max-width: 968px) {
+            .categories {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .steps {
+                grid-template-columns: 1fr;
+            }
+            .hero h1 {
+                font-size: 32px;
+            }
         }
     </style>
 </head>
@@ -307,12 +373,12 @@
             <div class="category-desc">Защитники Родины</div>
         </div>
         <div class="category-card" onclick="filterMap('veteran')">
-            <div class="category-icon">🎖️</div>
+            <div class="category-icon">️</div>
             <div class="category-name">Ветераны</div>
             <div class="category-desc">ВОВ, локальные конфликты</div>
         </div>
         <div class="category-card" onclick="filterMap('significant')">
-            <div class="category-icon"></div>
+            <div class="category-icon">👤</div>
             <div class="category-name">Значимые люди</div>
             <div class="category-desc">Врачи, учителя, деятели</div>
         </div>
@@ -329,11 +395,11 @@
             <div class="map-stats">
                 <div class="stat-item">
                     <div class="stat-label">Всего мемориалов</div>
-                    <div class="stat-value" id="total-memorials">1</div>
+                    <div class="stat-value" id="total-memorials">0</div>
                 </div>
                 <div class="stat-item">
                     <div class="stat-label">Городов</div>
-                    <div class="stat-value" id="total-cities">1</div>
+                    <div class="stat-value" id="total-cities">0</div>
                 </div>
                 <div class="stat-item">
                     <div class="stat-label">Свечей зажжено</div>
@@ -349,12 +415,12 @@
         <h2>Как это работает</h2>
         <div class="steps">
             <div class="step">
-                <div class="step-icon"></div>
+                <div class="step-icon">📱</div>
                 <div class="step-title">Сканируете NFC/QR</div>
                 <div class="step-desc">На мемориальной табличке</div>
             </div>
             <div class="step">
-                <div class="step-icon">🗺️</div>
+                <div class="step-icon">️</div>
                 <div class="step-title">Открывается страница</div>
                 <div class="step-desc">С историей и фотографиями</div>
             </div>
@@ -381,8 +447,7 @@
     </footer>
 
     <!-- ЯНДЕКС КАРТЫ -->
-    <script src="https://api-maps.yandex.ru/2.1/?apikey=c3a2335d-b6fc-4399-9d97-3c705fb682d1
-&lang=ru_RU"></script>
+    <script src="https://api-maps.yandex.ru/2.1/?apikey=ТВОЙ_API_КЛЮЧ&lang=ru_RU"></script>
     
     <script>
         // Данные мемориалов
@@ -403,6 +468,21 @@
         let map;
         let placemarks = [];
 
+        // Анимация счётчиков
+        function animateValue(element, start, end, duration) {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                const value = Math.floor(progress * (end - start) + start);
+                element.textContent = value;
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+
         // Инициализация карты
         ymaps.ready(function () {
             map = new ymaps.Map("map", {
@@ -411,26 +491,32 @@
                 controls: ['zoomControl', 'fullscreenControl']
             });
 
-            // Добавляем метки
+            // Добавляем метки с пульсацией
             memorials.forEach(memorial => {
                 const placemark = new ymaps.Placemark(memorial.coords, {
-                    hintContent: memorial.city,
+                    hintContent: memorial.name,
                     balloonContent: `
-                        <div style="padding: 10px;">
-                            <h3 style="margin-bottom: 10px;">${memorial.name}</h3>
-                            <p style="margin-bottom: 10px;">${memorial.dates}</p>
-                            <a href="${memorial.link}" target="_blank" style="color: #d4af37;">Открыть страницу памяти →</a>
+                        <div style="padding: 15px; max-width: 300px;">
+                            <h3 style="margin-bottom: 10px; color: #d4af37; font-family: 'Playfair Display', serif;">${memorial.name}</h3>
+                            <p style="margin-bottom: 10px; color: #666;">${memorial.dates}</p>
+                            <p style="margin-bottom: 15px; font-style: italic;">${memorial.city}</p>
+                            <a href="${memorial.link}" target="_blank" 
+                               style="color: #d4af37; text-decoration: none; font-weight: 600; display: inline-block; padding: 8px 15px; border: 2px solid #d4af37; border-radius: 4px; transition: all 0.3s;">
+                               Открыть страницу памяти →
+                            </a>
                         </div>
                     `
                 }, {
-                    preset: getPresetByCategory(memorial.category)
+                    preset: 'islands#redStarIcon',
+                    iconColor: '#c41e3a'
                 });
 
                 map.geoObjects.add(placemark);
                 placemarks.push({ placemark, memorial });
             });
 
-            updateStats();
+            // Анимированная статистика
+            setTimeout(updateStats, 1000);
         });
 
         // Получение цвета метки по категории
@@ -453,15 +539,21 @@
                     placemark.options.set('visible', false);
                 }
             });
+            
+            // Плавный скролл к карте
+            document.getElementById('map').scrollIntoView({behavior: 'smooth'});
         }
 
-        // Обновление статистики
+        // Обновление статистики с анимацией
         function updateStats() {
-            document.getElementById('total-memorials').textContent = memorials.length;
+            const totalMemorials = memorials.length;
             const cities = new Set(memorials.map(m => m.city));
-            document.getElementById('total-cities').textContent = cities.size;
+            const totalCities = cities.size;
             const candles = memorials.reduce((sum, m) => sum + m.candles, 0);
-            document.getElementById('total-candles').textContent = candles;
+
+            animateValue(document.getElementById('total-memorials'), 0, totalMemorials, 2000);
+            animateValue(document.getElementById('total-cities'), 0, totalCities, 2000);
+            animateValue(document.getElementById('total-candles'), 0, candles, 2000);
         }
     </script>
 
