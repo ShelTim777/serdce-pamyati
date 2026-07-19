@@ -10,67 +10,70 @@
             --bg: #0a0a0a;
             --text: #e8e8e8;
             --accent: #d4af37;
-            --gray: #666;
-            --dark-gray: #1a1a1a;
-            --red: #c41e3a;
-            --orange: #ff8c00;
-            --blue: #4169e1;
-            --white: #f5f5f5;
+            --gray: #888;
+            --dark-gray: #151515;
         }
         
         * { box-sizing: border-box; margin: 0; padding: 0; }
         
         body {
-            background: linear-gradient(180deg, rgba(212, 175, 55, 0.05) 0%, var(--bg) 100%);
+            background-color: var(--bg);
             color: var(--text);
             font-family: 'Inter', sans-serif;
             min-height: 100vh;
             overflow-x: hidden;
-        }
-        
-        /* Анимация появления */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            position: relative;
         }
 
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.5); opacity: 0.5; }
+        /* ФОНОВЫЕ ЧАСТИЦЫ */
+        #particles-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* АНИМАЦИИ */
+        @keyframes pulse-ring {
+            0% { transform: scale(0.8); opacity: 1; }
+            100% { transform: scale(2.5); opacity: 0; }
+        }
+
+        @keyframes cursor-blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* ПЛАВНОЕ ПОЯВЛЕНИЕ ПРИ СКРОЛЛЕ */
+        .reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 1s cubic-bezier(0.5, 0, 0, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         /* ШАПКА */
         header {
-            background: rgba(10, 10, 10, 0.95);
+            background: rgba(10, 10, 10, 0.8);
             padding: 20px 40px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid #222;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
             position: sticky;
             top: 0;
             z-index: 1000;
-            animation: fadeInUp 0.8s ease-out;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(15px);
         }
         
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        
-        .logo-icon {
-            font-size: 32px;
-            animation: pulse 2s infinite;
-        }
-        
+        .logo { display: flex; align-items: center; gap: 15px; }
+        .logo-icon { font-size: 32px; filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.5)); }
         .logo-text {
             font-family: 'Playfair Display', serif;
             font-size: 24px;
@@ -80,44 +83,58 @@
         }
         
         .btn-order {
-            background: var(--accent);
-            color: var(--bg);
+            background: linear-gradient(135deg, #d4af37 0%, #b8860b 100%);
+            color: #000;
             padding: 12px 30px;
             border: none;
-            border-radius: 4px;
+            border-radius: 30px;
             font-size: 14px;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
             transition: all 0.3s;
-            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+            box-shadow: 0 4px 20px rgba(212, 175, 55, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
-        
         .btn-order:hover {
-            background: #e5c158;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.5);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(212, 175, 55, 0.6);
         }
         
         /* ГЕРОЙ-БЛОК */
         .hero {
             text-align: center;
-            padding: 100px 20px;
-            background: linear-gradient(180deg, rgba(212, 175, 55, 0.1) 0%, transparent 100%);
-            animation: fadeInUp 1s ease-out 0.2s both;
+            padding: 120px 20px 80px;
+            min-height: 60vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
         
         .hero h1 {
             font-family: 'Playfair Display', serif;
-            font-size: 48px;
+            font-size: 56px;
             margin-bottom: 20px;
             color: var(--text);
-            text-shadow: 0 0 30px rgba(212, 175, 55, 0.3);
+            min-height: 70px; /* Чтобы не прыгало при печати */
+        }
+        .typing-cursor {
+            display: inline-block;
+            width: 3px;
+            height: 50px;
+            background: var(--accent);
+            margin-left: 5px;
+            animation: cursor-blink 1s infinite;
+            vertical-align: middle;
         }
         
         .hero p {
             font-size: 20px;
             color: var(--gray);
             margin-bottom: 40px;
+            max-width: 700px;
+            line-height: 1.6;
         }
         
         .btn-map {
@@ -128,13 +145,14 @@
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            border-radius: 4px;
+            border-radius: 30px;
             transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
-        
         .btn-map:hover {
             background: var(--accent);
-            color: var(--bg);
+            color: #000;
             transform: translateY(-3px);
             box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4);
         }
@@ -147,203 +165,98 @@
             padding: 40px;
             max-width: 1200px;
             margin: 0 auto;
-            animation: fadeInUp 1s ease-out 0.4s both;
         }
         
         .category-card {
-            background: var(--dark-gray);
-            border: 1px solid #333;
-            border-radius: 8px;
-            padding: 30px 20px;
+            background: rgba(21, 21, 21, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 40px 20px;
             text-align: center;
             cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.4s ease;
+            backdrop-filter: blur(10px);
             transform-style: preserve-3d;
-            perspective: 1000px;
         }
         
         .category-card:hover {
-            transform: translateY(-10px) rotateX(5deg);
             border-color: var(--accent);
-            box-shadow: 0 15px 40px rgba(212, 175, 55, 0.3);
+            box-shadow: 0 15px 40px rgba(212, 175, 55, 0.15);
+            transform: translateY(-10px);
         }
         
-        .category-icon {
-            font-size: 48px;
-            margin-bottom: 15px;
-            transition: transform 0.3s;
-        }
-        
-        .category-card:hover .category-icon {
-            transform: scale(1.2);
-        }
-        
-        .category-name {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 10px;
-            color: var(--text);
-        }
-        
-        .category-desc {
-            font-size: 14px;
-            color: var(--gray);
-        }
+        .category-icon { font-size: 56px; margin-bottom: 20px; transition: transform 0.3s; }
+        .category-card:hover .category-icon { transform: scale(1.15) rotate(5deg); }
+        .category-name { font-size: 20px; font-weight: 600; margin-bottom: 10px; color: var(--text); }
+        .category-desc { font-size: 14px; color: var(--gray); line-height: 1.5; }
         
         /* КАРТА */
-        .map-section {
-            padding: 40px;
-            max-width: 1400px;
-            margin: 0 auto;
-            animation: fadeInUp 1s ease-out 0.6s both;
-        }
-        
+        .map-section { padding: 60px 40px; max-width: 1400px; margin: 0 auto; }
         .map-container {
             position: relative;
-            height: 600px;
-            border-radius: 8px;
+            height: 650px;
+            border-radius: 16px;
             overflow: hidden;
-            border: 1px solid #333;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
         }
-        
-        #map {
-            width: 100%;
-            height: 100%;
-        }
+        #map { width: 100%; height: 100%; }
         
         .map-stats {
             position: absolute;
-            top: 20px;
-            left: 20px;
-            background: rgba(10, 10, 10, 0.95);
-            padding: 25px;
-            border-radius: 8px;
-            border: 1px solid var(--accent);
+            top: 30px;
+            left: 30px;
+            background: rgba(10, 10, 10, 0.9);
+            padding: 30px;
+            border-radius: 12px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
             z-index: 100;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(15px);
+            min-width: 220px;
         }
-        
-        .stat-item {
-            margin-bottom: 20px;
-        }
-        
-        .stat-label {
-            font-size: 12px;
-            color: var(--gray);
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 5px;
-        }
-        
-        .stat-value {
-            font-size: 32px;
-            font-weight: 700;
-            color: var(--accent);
-            text-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
-        }
+        .stat-item { margin-bottom: 25px; }
+        .stat-item:last-child { margin-bottom: 0; }
+        .stat-label { font-size: 11px; color: var(--gray); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; }
+        .stat-value { font-size: 36px; font-weight: 700; color: var(--accent); font-family: 'Playfair Display', serif; }
         
         /* КАК ЭТО РАБОТАЕТ */
-        .how-it-works {
-            padding: 100px 40px;
-            text-align: center;
-            background: var(--dark-gray);
-            animation: fadeInUp 1s ease-out 0.8s both;
-        }
-        
-        .how-it-works h2 {
-            font-family: 'Playfair Display', serif;
-            font-size: 36px;
-            margin-bottom: 60px;
-            color: var(--accent);
-        }
-        
-        .steps {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 40px;
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-        
-        .step {
-            text-align: center;
-            transition: transform 0.3s;
-        }
-        
-        .step:hover {
-            transform: translateY(-5px);
-        }
-        
-        .step-icon {
-            font-size: 64px;
-            margin-bottom: 20px;
-            animation: pulse 3s infinite;
-        }
-        
-        .step-title {
-            font-size: 20px;
-            font-weight: 600;
-            margin-bottom: 10px;
-            color: var(--text);
-        }
-        
-        .step-desc {
-            font-size: 14px;
-            color: var(--gray);
-        }
+        .how-it-works { padding: 100px 40px; text-align: center; background: rgba(21, 21, 21, 0.5); }
+        .how-it-works h2 { font-family: 'Playfair Display', serif; font-size: 42px; margin-bottom: 70px; color: var(--accent); }
+        .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 50px; max-width: 1100px; margin: 0 auto; }
+        .step { text-align: center; transition: transform 0.3s; }
+        .step:hover { transform: translateY(-10px); }
+        .step-icon { font-size: 72px; margin-bottom: 25px; }
+        .step-title { font-size: 22px; font-weight: 600; margin-bottom: 15px; color: var(--text); }
+        .step-desc { font-size: 15px; color: var(--gray); line-height: 1.6; }
         
         /* ПОДВАЛ */
-        footer {
-            background: var(--bg);
-            padding: 40px;
-            text-align: center;
-            border-top: 1px solid #222;
-            animation: fadeInUp 1s ease-out 1s both;
-        }
-        
-        .footer-content {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        .footer-links {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            margin-bottom: 20px;
-        }
-        
-        .footer-links a {
-            color: var(--gray);
-            text-decoration: none;
-            transition: all 0.3s;
-        }
-        
-        .footer-links a:hover {
-            color: var(--accent);
-        }
-        
-        .footer-copy {
-            font-size: 12px;
-            color: var(--gray);
-        }
+        footer { background: #050505; padding: 60px 40px; text-align: center; border-top: 1px solid rgba(255, 255, 255, 0.05); }
+        .footer-content { max-width: 1200px; margin: 0 auto; }
+        .footer-links { display: flex; justify-content: center; gap: 40px; margin-bottom: 30px; }
+        .footer-links a { color: var(--gray); text-decoration: none; transition: all 0.3s; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; }
+        .footer-links a:hover { color: var(--accent); }
+        .footer-copy { font-size: 12px; color: #444; }
 
-        /* Адаптивность */
+        /* АДАПТИВНОСТЬ */
         @media (max-width: 968px) {
-            .categories {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            .steps {
-                grid-template-columns: 1fr;
-            }
-            .hero h1 {
-                font-size: 32px;
-            }
+            .categories { grid-template-columns: repeat(2, 1fr); }
+            .steps { grid-template-columns: 1fr; gap: 40px; }
+            .hero h1 { font-size: 36px; }
+            .typing-cursor { height: 36px; }
+            .map-container { height: 500px; }
+            .map-stats { top: 15px; left: 15px; padding: 20px; min-width: 180px; }
+            .stat-value { font-size: 28px; }
+        }
+        @media (max-width: 600px) {
+            .categories { grid-template-columns: 1fr; }
+            header { padding: 15px 20px; flex-direction: column; gap: 15px; }
         }
     </style>
 </head>
 <body>
+
+    <!-- Фоновые частицы -->
+    <canvas id="particles-canvas"></canvas>
 
     <!-- ШАПКА -->
     <header>
@@ -351,15 +264,13 @@
             <span class="logo-icon">❤️</span>
             <span class="logo-text">Сердце Памяти</span>
         </div>
-        <button class="btn-order" onclick="document.getElementById('order-form').scrollIntoView({behavior: 'smooth'})">
-            Заказать мемориал
-        </button>
+        <button class="btn-order">Заказать мемориал</button>
     </header>
 
     <!-- ГЕРОЙ-БЛОК -->
-    <section class="hero">
-        <h1>Общероссийская сеть сохранения памяти</h1>
-        <p>Интерактивная карта героев, ветеранов и значимых людей России</p>
+    <section class="hero reveal">
+        <h1><span id="typing-text"></span><span class="typing-cursor"></span></h1>
+        <p>Интерактивная карта героев, ветеранов и значимых людей России. Сохраняем историю, чтобы она жила вечно.</p>
         <button class="btn-map" onclick="document.getElementById('map').scrollIntoView({behavior: 'smooth'})">
             Найти на карте
         </button>
@@ -367,30 +278,30 @@
 
     <!-- КАТЕГОРИИ -->
     <section class="categories">
-        <div class="category-card" onclick="filterMap('svo')">
+        <div class="category-card reveal" onclick="filterMap('svo')">
             <div class="category-icon">⭐</div>
             <div class="category-name">Герои СВО</div>
-            <div class="category-desc">Защитники Родины</div>
+            <div class="category-desc">Защитники Родины, проявившие мужество и отвагу</div>
         </div>
-        <div class="category-card" onclick="filterMap('veteran')">
-            <div class="category-icon">️</div>
+        <div class="category-card reveal" onclick="filterMap('veteran')">
+            <div class="category-icon">🎖️</div>
             <div class="category-name">Ветераны</div>
-            <div class="category-desc">ВОВ, локальные конфликты</div>
+            <div class="category-desc">Участники ВОВ и локальных конфликтов</div>
         </div>
-        <div class="category-card" onclick="filterMap('significant')">
-            <div class="category-icon">👤</div>
+        <div class="category-card reveal" onclick="filterMap('significant')">
+            <div class="category-icon"></div>
             <div class="category-name">Значимые люди</div>
-            <div class="category-desc">Врачи, учителя, деятели</div>
+            <div class="category-desc">Врачи, учителя, деятели культуры и науки</div>
         </div>
-        <div class="category-card" onclick="filterMap('personal')">
+        <div class="category-card reveal" onclick="filterMap('personal')">
             <div class="category-icon">❤️</div>
             <div class="category-name">Личная память</div>
-            <div class="category-desc">Семья, близкие, родные</div>
+            <div class="category-desc">Семья, близкие и родные люди</div>
         </div>
     </section>
 
     <!-- КАРТА -->
-    <section class="map-section">
+    <section class="map-section reveal">
         <div class="map-container">
             <div class="map-stats">
                 <div class="stat-item">
@@ -411,23 +322,23 @@
     </section>
 
     <!-- КАК ЭТО РАБОТАЕТ -->
-    <section class="how-it-works">
+    <section class="how-it-works reveal">
         <h2>Как это работает</h2>
         <div class="steps">
             <div class="step">
                 <div class="step-icon">📱</div>
                 <div class="step-title">Сканируете NFC/QR</div>
-                <div class="step-desc">На мемориальной табличке</div>
+                <div class="step-desc">Наведите телефон на мемориальную табличку</div>
             </div>
             <div class="step">
-                <div class="step-icon">️</div>
+                <div class="step-icon">🗺️</div>
                 <div class="step-title">Открывается страница</div>
-                <div class="step-desc">С историей и фотографиями</div>
+                <div class="step-desc">История жизни, фотографии и видеоархив</div>
             </div>
             <div class="step">
                 <div class="step-icon">🕯️</div>
                 <div class="step-title">Зажигаете свечу</div>
-                <div class="step-desc">И оставляете слово благодарности</div>
+                <div class="step-desc">Оставьте виртуальную свечу и слова благодарности</div>
             </div>
         </div>
     </section>
@@ -447,10 +358,112 @@
     </footer>
 
     <!-- ЯНДЕКС КАРТЫ -->
-    <script src="https://api-maps.yandex.ru/2.1/?apikey=ТВОЙ_API_КЛЮЧ&lang=ru_RU"></script>
+    <script src="https://api-maps.yandex.ru/2.1/?apikey=c3a2335d-b6fc-4399-9d97-3c705fb682d1
+&lang=ru_RU"></script>
     
     <script>
-        // Данные мемориалов
+        // ==========================================
+        // 1. ФОНОВЫЕ ЧАСТИЦЫ (ЗОЛОТАЯ ПЫЛЬ)
+        // ==========================================
+        const canvas = document.getElementById('particles-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2 + 0.5;
+                this.speedY = Math.random() * 0.5 + 0.1;
+                this.opacity = Math.random() * 0.5 + 0.1;
+            }
+            update() {
+                this.y -= this.speedY;
+                if (this.y < 0) {
+                    this.y = canvas.height;
+                    this.x = Math.random() * canvas.width;
+                }
+            }
+            draw() {
+                ctx.fillStyle = `rgba(212, 175, 55, ${this.opacity})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function initParticles() {
+            particles = [];
+            for (let i = 0; i < 60; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            requestAnimationFrame(animateParticles);
+        }
+        initParticles();
+        animateParticles();
+
+        // ==========================================
+        // 2. ЭФФЕКТ ПЕЧАТНОЙ МАШИНКИ
+        // ==========================================
+        const textToType = "Общероссийская сеть сохранения памяти";
+        const typingElement = document.getElementById('typing-text');
+        let charIndex = 0;
+
+        function typeText() {
+            if (charIndex < textToType.length) {
+                typingElement.textContent += textToType.charAt(charIndex);
+                charIndex++;
+                setTimeout(typeText, 60); // Скорость печати
+            }
+        }
+        setTimeout(typeText, 500); // Задержка перед началом
+
+        // ==========================================
+        // 3. ПЛАВНОЕ ПОЯВЛЕНИЕ ПРИ СКРОЛЛЕ
+        // ==========================================
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // ==========================================
+        // 4. АНИМИРОВАННЫЕ СЧЕТЧИКИ
+        // ==========================================
+        function animateValue(element, start, end, duration) {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                const value = Math.floor(progress * (end - start) + start);
+                element.textContent = value;
+                if (progress < 1) window.requestAnimationFrame(step);
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        // ==========================================
+        // 5. ДАННЫЕ И КАРТА
+        // ==========================================
         const memorials = [
             {
                 id: 'grigorev_dmitriy',
@@ -459,7 +472,6 @@
                 category: 'svo',
                 city: 'Москва',
                 coords: [55.7558, 37.6173],
-                photo: 'memorial/grigorev_dmitriy/img/14.jpg',
                 link: 'memorial/grigorev_dmitriy/',
                 candles: 0
             }
@@ -468,22 +480,6 @@
         let map;
         let placemarks = [];
 
-        // Анимация счётчиков
-        function animateValue(element, start, end, duration) {
-            let startTimestamp = null;
-            const step = (timestamp) => {
-                if (!startTimestamp) startTimestamp = timestamp;
-                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-                const value = Math.floor(progress * (end - start) + start);
-                element.textContent = value;
-                if (progress < 1) {
-                    window.requestAnimationFrame(step);
-                }
-            };
-            window.requestAnimationFrame(step);
-        }
-
-        // Инициализация карты
         ymaps.ready(function () {
             map = new ymaps.Map("map", {
                 center: [55.7558, 37.6173],
@@ -491,60 +487,48 @@
                 controls: ['zoomControl', 'fullscreenControl']
             });
 
-            // Добавляем метки с пульсацией
+            // Кастомный макет пульсирующей метки
+            const pulsingLayout = ymaps.templateLayoutFactory.createClass(
+                `<div style="position: relative; width: 40px; height: 40px; display: flex; justify-content: center; align-items: center;">
+                    <div style="position: absolute; width: 100%; height: 100%; background: rgba(212, 175, 55, 0.3); border-radius: 50%; animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;"></div>
+                    <div style="position: absolute; width: 16px; height: 16px; background: #d4af37; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 0 15px #d4af37; z-index: 2;"></div>
+                </div>`
+            );
+
             memorials.forEach(memorial => {
                 const placemark = new ymaps.Placemark(memorial.coords, {
                     hintContent: memorial.name,
                     balloonContent: `
-                        <div style="padding: 15px; max-width: 300px;">
-                            <h3 style="margin-bottom: 10px; color: #d4af37; font-family: 'Playfair Display', serif;">${memorial.name}</h3>
-                            <p style="margin-bottom: 10px; color: #666;">${memorial.dates}</p>
-                            <p style="margin-bottom: 15px; font-style: italic;">${memorial.city}</p>
+                        <div style="padding: 20px; max-width: 320px; font-family: 'Inter', sans-serif;">
+                            <h3 style="margin-bottom: 12px; color: #d4af37; font-family: 'Playfair Display', serif; font-size: 20px;">${memorial.name}</h3>
+                            <p style="margin-bottom: 8px; color: #888; font-size: 14px;">${memorial.dates}</p>
+                            <p style="margin-bottom: 20px; font-style: italic; color: #aaa;">${memorial.city}</p>
                             <a href="${memorial.link}" target="_blank" 
-                               style="color: #d4af37; text-decoration: none; font-weight: 600; display: inline-block; padding: 8px 15px; border: 2px solid #d4af37; border-radius: 4px; transition: all 0.3s;">
+                               style="color: #000; background: #d4af37; text-decoration: none; font-weight: 700; display: inline-block; padding: 10px 20px; border-radius: 20px; transition: all 0.3s; font-size: 14px;">
                                Открыть страницу памяти →
                             </a>
                         </div>
                     `
                 }, {
-                    preset: 'islands#redStarIcon',
-                    iconColor: '#c41e3a'
+                    iconLayout: pulsingLayout,
+                    iconShape: { type: 'Circle', coordinates: [20, 20], radius: 20 }
                 });
 
                 map.geoObjects.add(placemark);
                 placemarks.push({ placemark, memorial });
             });
 
-            // Анимированная статистика
-            setTimeout(updateStats, 1000);
+            // Запуск счетчиков через 1.5 секунды
+            setTimeout(updateStats, 1500);
         });
 
-        // Получение цвета метки по категории
-        function getPresetByCategory(category) {
-            const presets = {
-                svo: 'islands#redStarIcon',
-                veteran: 'islands#orangeStarIcon',
-                significant: 'islands#blueCircleIcon',
-                personal: 'islands#whiteCircleIcon'
-            };
-            return presets[category] || 'islands#grayCircleIcon';
-        }
-
-        // Фильтрация карты
         function filterMap(category) {
             placemarks.forEach(({ placemark, memorial }) => {
-                if (category === 'all' || memorial.category === category) {
-                    placemark.options.set('visible', true);
-                } else {
-                    placemark.options.set('visible', false);
-                }
+                placemark.options.set('visible', category === 'all' || memorial.category === category);
             });
-            
-            // Плавный скролл к карте
             document.getElementById('map').scrollIntoView({behavior: 'smooth'});
         }
 
-        // Обновление статистики с анимацией
         function updateStats() {
             const totalMemorials = memorials.length;
             const cities = new Set(memorials.map(m => m.city));
@@ -556,6 +540,5 @@
             animateValue(document.getElementById('total-candles'), 0, candles, 2000);
         }
     </script>
-
 </body>
 </html>
