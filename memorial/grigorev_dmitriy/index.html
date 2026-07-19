@@ -1,186 +1,368 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Страница Памяти Героя</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-<style>
-  :root { --bg: #0a0a0a; --text: #e8e8e8; --accent: #d4af37; --gray: #666; --dark-gray: #1a1a1a; }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background-color: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; min-height: 100vh; padding: 20px; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E"); }
-  .container { max-width: 500px; margin: 0 auto; animation: fadeIn 1.5s ease-out; padding-bottom: 50px; }
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-  
-  .hero-badge { text-align: center; margin-bottom: 30px; }
-  .hero-badge .star { font-size: 40px; color: var(--accent); text-shadow: 0 0 20px rgba(212, 175, 55, 0.5); }
-  .hero-badge .title { font-size: 12px; color: var(--gray); text-transform: uppercase; letter-spacing: 3px; margin-top: 10px; }
-  
-  .hero-portrait { width: 100%; max-width: 280px; margin: 0 auto 30px; border: 1px solid #333; padding: 8px; background: var(--dark-gray); border-radius: 4px; }
-  .hero-portrait img { width: 100%; height: auto; filter: grayscale(100%) contrast(1.1); border-radius: 2px; }
-  
-  .hero-name { text-align: center; font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 700; margin-bottom: 10px; letter-spacing: 1px; }
-  .hero-dates { text-align: center; font-size: 16px; color: var(--gray); margin-bottom: 10px; font-weight: 300; letter-spacing: 2px; }
-  .hero-rank { text-align: center; font-size: 14px; color: var(--accent); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 2px; }
-  .hero-award { text-align: center; font-size: 13px; color: var(--accent); margin-bottom: 30px; font-style: italic; }
-  
-  .hero-quote { font-size: 15px; line-height: 1.7; color: #b0b0b0; margin-bottom: 40px; font-style: italic; padding: 20px; border-left: 2px solid var(--accent); background: rgba(212, 175, 55, 0.03); border-radius: 0 4px 4px 0; }
-  .divider { width: 60px; height: 1px; background: var(--gray); margin: 40px auto; }
-  
-  .action-btn { background: transparent; border: 1px solid #333; color: var(--text); padding: 16px 20px; margin: 12px 0; width: 100%; font-size: 15px; font-family: 'Inter', sans-serif; cursor: pointer; transition: all 0.3s ease; border-radius: 4px; display: flex; align-items: center; justify-content: center; gap: 12px; }
-  .action-btn:active { transform: scale(0.98); }
-  .action-btn:hover, .action-btn.active { border-color: var(--accent); color: var(--accent); background: rgba(212, 175, 55, 0.05); }
-  
-  .glow-orb { width: 10px; height: 10px; background: var(--accent); border-radius: 50%; box-shadow: 0 0 10px var(--accent); display: inline-block; transition: all 0.5s; }
-  .glow-orb.active { width: 14px; height: 14px; box-shadow: 0 0 20px var(--accent), 0 0 40px var(--accent); }
-  .counter { text-align: center; font-size: 13px; color: var(--gray); margin-top: 8px; }
-  
-  .gallery-title { text-align: center; font-size: 14px; color: var(--accent); text-transform: uppercase; letter-spacing: 2px; margin: 40px 0 20px; }
-  .gallery-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-  .gallery-grid img { width: 100%; height: 160px; object-fit: cover; border-radius: 4px; border: 1px solid #222; }
-  
-  .video-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-  .video-card { background: var(--dark-gray); border: 1px solid #333; border-radius: 4px; padding: 20px 10px; text-align: center; cursor: pointer; transition: all 0.3s; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; }
-  .video-card:active { transform: scale(0.95); border-color: var(--accent); }
-  .play-icon { font-size: 24px; color: var(--accent); }
-  .video-title { font-size: 12px; color: #b0b0b0; text-transform: uppercase; letter-spacing: 1px; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Григорьев Дмитрий Николаевич - Герой Российской Федерации</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0a0a;
+            --text: #e8e8e8;
+            --accent: #d4af37;
+            --gray: #888;
+            --dark-gray: #151515;
+        }
+        
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            background: linear-gradient(180deg, rgba(212, 175, 55, 0.05) 0%, var(--bg) 100%);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
 
-  .modal { display: none; position: fixed; z-index: 10000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); justify-content: center; align-items: center; }
-  .modal-content { position: relative; width: 90%; max-width: 600px; }
-  .close-modal { position: absolute; top: -40px; right: 0; color: #fff; font-size: 30px; cursor: pointer; }
-  .video-wrapper { position: relative; width: 100%; padding-bottom: 56.25%; background: #000; border-radius: 4px; overflow: hidden; }
-  .video-wrapper iframe, .video-wrapper video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
-  
-  .footer-brand { margin-top: 60px; padding-top: 30px; border-top: 1px solid #222; text-align: center; font-size: 10px; color: #444; text-transform: uppercase; letter-spacing: 2px; line-height: 1.6; }
-  
-  #welcome-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: opacity 1s ease; }
-  #welcome-screen h1 { color: #fff; font-family: 'Playfair Display', serif; font-size: 22px; letter-spacing: 3px; text-align: center; padding: 20px; animation: pulse 2s infinite; }
-  @keyframes pulse { 0% { opacity: 0.7; } 50% { opacity: 1; } 100% { opacity: 0.7; } }
-  #bg-audio { display: none; }
-</style>
+        /* Анимации */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.5); opacity: 0.5; }
+        }
+
+        /* ШАПКА */
+        header {
+            background: rgba(10, 10, 10, 0.95);
+            padding: 30px 20px;
+            text-align: center;
+            border-bottom: 2px solid rgba(212, 175, 55, 0.3);
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .header-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            color: var(--accent);
+            margin-bottom: 10px;
+        }
+
+        .main-title {
+            font-size: 36px;
+            font-weight: 700;
+            margin: 20px 0;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #d4af37 0%, #b8860b 100%);
+            color: #000;
+            padding: 10px 25px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 14px;
+            margin: 10px 0;
+            animation: pulse 2s infinite;
+        }
+
+        .info-bar {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(212, 175, 55, 0.1);
+            border-radius: 8px;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .quote {
+            font-style: italic;
+            font-size: 18px;
+            color: var(--gray);
+            max-width: 700px;
+            margin: 30px auto;
+            padding: 20px;
+            border-left: 3px solid var(--accent);
+            text-align: left;
+        }
+
+        /* КНОПКА СВЕЧИ */
+        .candle-section {
+            text-align: center;
+            padding: 40px 20px;
+            background: rgba(212, 175, 55, 0.05);
+        }
+
+        .btn-candle {
+            background: linear-gradient(135deg, #d4af37 0%, #b8860b 100%);
+            color: #000;
+            padding: 16px 40px;
+            border: none;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 20px rgba(212, 175, 55, 0.4);
+        }
+
+        .btn-candle:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(212, 175, 55, 0.6);
+        }
+
+        .candle-count {
+            margin-top: 20px;
+            font-size: 14px;
+            color: var(--gray);
+        }
+
+        .candle-count span {
+            color: var(--accent);
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        /* РАЗДЕЛЫ */
+        .section {
+            padding: 60px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 36px;
+            text-align: center;
+            color: var(--accent);
+            margin-bottom: 40px;
+            text-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+        }
+
+        /* ФОТОАРХИВ */
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .photo-item {
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            transition: transform 0.3s;
+        }
+
+        .photo-item:hover {
+            transform: scale(1.03);
+        }
+
+        .photo-item img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* ВИДЕОАРХИВ */
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+        }
+
+        .video-item {
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            background: #111;
+        }
+
+        .video-item video {
+            width: 100%;
+            display: block;
+        }
+
+        /* ПОДВАЛ */
+        footer {
+            background: #050505;
+            padding: 40px 20px;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            margin-top: 60px;
+        }
+
+        .footer-link {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        /* АДАПТИВНОСТЬ */
+        @media (max-width: 768px) {
+            .main-title { font-size: 24px; }
+            .video-grid { grid-template-columns: 1fr; }
+            .section-title { font-size: 28px; }
+        }
+    </style>
 </head>
 <body>
 
-<div id="welcome-screen"><h1>ПРИКОСНИСЬ К ПАМЯТИ</h1></div>
+    <!-- ШАПКА -->
+    <header>
+        <div class="header-title">ПРИКОСНИСЬ К ПАМЯТИ</div>
+        <div class="hero-badge">★ Герой Российской Федерации</div>
+        <h1 class="main-title">ГРИГОРЬЕВ ДМИТРИЙ НИКОЛАЕВИЧ</h1>
+        <div class="info-bar">
+            <div class="info-item">📅 23.08.1993</div>
+            <div class="info-item">🎖️ Ветеран СВО</div>
+            <div class="info-item">🏅 Награждён медалью «За отвагу»</div>
+        </div>
+        <div class="quote">
+            «Мы не просто защищали землю. Мы защищали тех, кто стоит за нашей спиной».
+        </div>
+    </header>
 
-<audio id="bg-audio" loop>
-  <source src="audio/music.mp3" type="audio/mpeg">
-</audio>
+    <!-- КНОПКА СВЕЧИ -->
+    <section class="candle-section">
+        <button class="btn-candle" onclick="lightCandle()">
+            ️ Зажечь свет памяти
+        </button>
+        <div class="candle-count">
+            Свет зажгли: <span id="candle-count">0</span> раз
+        </div>
+    </section>
 
-<div class="container">
-  <div class="hero-badge">
-    <div class="star">★</div>
-    <div class="title">Герой Российской Федерации</div>
-  </div>
+    <!-- ВИДЕОАРХИВ -->
+    <section class="section">
+        <h2 class="section-title">Видеоархив</h2>
+        <div class="video-grid">
+            <div class="video-item">
+                <video controls poster="img/14.jpg">
+                    <source src="videos/1.mp4" type="video/mp4">
+                    Ваш браузер не поддерживает видео.
+                </video>
+            </div>
+            <div class="video-item">
+                <video controls poster="img/14.jpg">
+                    <source src="videos/2.mp4" type="video/mp4">
+                    Ваш браузер не поддерживает видео.
+                </video>
+            </div>
+            <div class="video-item">
+                <video controls poster="img/14.jpg">
+                    <source src="videos/3.mp4" type="video/mp4">
+                    Ваш браузер не поддерживает видео.
+                </video>
+            </div>
+            <div class="video-item">
+                <video controls poster="img/14.jpg">
+                    <source src="videos/4.mp4" type="video/mp4">
+                    Ваш браузер не поддерживает видео.
+                </video>
+            </div>
+            <div class="video-item">
+                <video controls poster="img/14.jpg">
+                    <source src="videos/5.mp4" type="video/mp4">
+                    Ваш браузер не поддерживает видео.
+                </video>
+            </div>
+            <div class="video-item">
+                <video controls poster="img/14.jpg">
+                    <source src="videos/6.mp4" type="video/mp4">
+                    Ваш браузер не поддерживает видео.
+                </video>
+            </div>
+        </div>
+    </section>
 
-  <div class="hero-portrait">
-    <img src="img/14.jpg" alt="Главное фото" onerror="this.src='https://via.placeholder.com/280x350/1a1a1a/666666?text=ФОТО'">
-  </div>
+    <!-- ФОТОАРХИВ -->
+    <section class="section">
+        <h2 class="section-title">Фотоархив</h2>
+        <div class="photo-grid">
+            <div class="photo-item">
+                <img src="img/14.jpg" alt="Фото 1">
+            </div>
+            <div class="photo-item">
+                <img src="img/1.jpg" alt="Фото 2">
+            </div>
+            <div class="photo-item">
+                <img src="img/2.jpg" alt="Фото 3">
+            </div>
+            <div class="photo-item">
+                <img src="img/3.jpg" alt="Фото 4">
+            </div>
+            <div class="photo-item">
+                <img src="img/4.jpg" alt="Фото 5">
+            </div>
+            <div class="photo-item">
+                <img src="img/5.jpg" alt="Фото 6">
+            </div>
+        </div>
+    </section>
 
-  <h1 class="hero-name">ГРИГОРЬЕВ ДМИТРИЙ НИКОЛАЕВИЧ</h1>
-  <div class="hero-dates">23.08.1993</div>
-  <div class="hero-rank">Ветеран СВО</div>
-  <div class="hero-award">Награждён медалью «За отвагу»</div>
+    <!-- ПОДВАЛ -->
+    <footer>
+        <p style="color: var(--gray); margin-bottom: 10px;">Цифровая платформа интерактивной памяти</p>
+        <a href="https://serdce-pamyati.ru" class="footer-link">❤️ Сердце Памяти →</a>
+        <p style="color: #444; font-size: 12px; margin-top: 20px;">
+            © 2026 Сердце Памяти. Tech Partner: KOT & KOTE
+        </p>
+    </footer>
 
-  <div class="hero-quote">
-    «Мы не просто защищали землю. Мы защищали тех, кто стоит за нашей спиной».
-  </div>
+    <script>
+        // Функция зажигания свечи
+        function lightCandle() {
+            let count = parseInt(document.getElementById('candle-count').textContent);
+            count++;
+            document.getElementById('candle-count').textContent = count;
+            
+            // Анимация кнопки
+            const btn = document.querySelector('.btn-candle');
+            btn.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                btn.style.transform = 'scale(1)';
+            }, 200);
+            
+            // Эффект свечения
+            btn.style.boxShadow = '0 0 40px rgba(212, 175, 55, 0.9)';
+            setTimeout(() => {
+                btn.style.boxShadow = '0 4px 20px rgba(212, 175, 55, 0.4)';
+            }, 500);
+        }
 
-  <div class="divider"></div>
+        // Плавное появление элементов при скролле
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
 
-  <button class="action-btn" onclick="leaveTrace(this)">
-    <span class="glow-orb"></span> Зажечь свет памяти
-  </button>
-  <div class="counter" id="trace-counter">Свет зажгли: 0 раз</div>
+        document.querySelectorAll('.section').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'all 0.8s ease-out';
+            observer.observe(el);
+        });
+    </script>
 
-  <div class="gallery-title">Видеоархив</div>
-  <div class="video-grid" id="video-gallery"></div>
-
-  <div class="gallery-title">Фотоархив</div>
-  <div class="gallery-grid" id="photo-gallery"></div>
-
-  <div class="footer-brand">
-    Цифровая платформа интерактивной памяти
-  </div>
-</div>
-
-<div id="video-modal" class="modal">
-  <div class="modal-content">
-    <span class="close-modal" onclick="closeVideoModal()">&times;</span>
-    <div class="video-wrapper">
-      <div id="video-content"></div>
-    </div>
-  </div>
-</div>
-
-<script>
-  document.getElementById('welcome-screen').addEventListener('click', function() {
-    var audio = document.getElementById('bg-audio');
-    audio.volume = 0.4; 
-    audio.play().catch(e => console.log("Нужно взаимодействие"));
-    this.style.opacity = '0';
-    setTimeout(() => { this.style.display = 'none'; }, 1000);
-  });
-
-  const videoLinks = [
-    "https://disk.yandex.ru/ССЫЛКА1?dl=1",
-    "https://disk.yandex.ru/ССЫЛКА2?dl=1",
-    "https://disk.yandex.ru/ССЫЛКА3?dl=1",
-    "https://disk.yandex.ru/ССЫЛКА4?dl=1",
-    "https://disk.yandex.ru/ССЫЛКА5?dl=1",
-    "https://disk.yandex.ru/ССЫЛКА6?dl=1",
-    "https://disk.yandex.ru/ССЫЛКА7?dl=1"
-  ];
-
-  const videoGrid = document.getElementById('video-gallery');
-  videoLinks.forEach((link, index) => {
-    let card = document.createElement('div');
-    card.className = 'video-card';
-    card.innerHTML = `<div class="play-icon">▶</div><div class="video-title">Хроника ${index + 1}</div>`;
-    card.onclick = () => openVideoModal(link);
-    videoGrid.appendChild(card);
-  });
-
-  // Фото с 2 по 25, пропуская 6 (удалено) и 14 (главное фото)
-  const gallery = document.getElementById('photo-gallery');
-  for(let i = 2; i <= 25; i++) {
-    if (i === 6 || i === 14) continue; // Пропускаем удалённое и главное фото
-    let img = document.createElement('img');
-    img.src = `img/${i}.jpg`;
-    img.onerror = function() { this.style.display = 'none'; };
-    gallery.appendChild(img);
-  }
-
-  function openVideoModal(link) {
-    const videoContent = document.getElementById('video-content');
-    if (link.includes('yandex.ru') || link.includes('yadi.sk')) {
-      videoContent.innerHTML = `<iframe src="${link}" allowfullscreen></iframe>`;
-    } else {
-      videoContent.innerHTML = `<video controls autoplay><source src="${link}" type="video/mp4"></video>`;
-    }
-    document.getElementById('video-modal').style.display = 'flex';
-  }
-
-  function closeVideoModal() {
-    document.getElementById('video-modal').style.display = 'none';
-    document.getElementById('video-content').innerHTML = '';
-  }
-
-  window.onclick = function(event) {
-    const modal = document.getElementById('video-modal');
-    if (event.target == modal) closeVideoModal();
-  }
-
-  function leaveTrace(btn) {
-    const orb = btn.querySelector('.glow-orb');
-    const counter = document.getElementById('trace-counter');
-    orb.classList.add('active');
-    setTimeout(() => orb.classList.remove('active'), 1000);
-    let count = parseInt(counter.innerText.split(': ')[1].replace(/\s/g, '').replace('раз', ''));
-    count++;
-    counter.innerText = `Свет зажгли: ${count.toLocaleString('ru-RU')} раз`;
-    if(navigator.vibrate) navigator.vibrate(50);
-  }
-</script>
 </body>
 </html>
