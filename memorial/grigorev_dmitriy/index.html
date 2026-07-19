@@ -51,6 +51,25 @@
             margin-bottom: 10px;
         }
 
+        /* ГЛАВНОЕ ФОТО */
+        .main-photo-container {
+            width: 250px;
+            height: 250px;
+            margin: 30px auto;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 4px solid rgba(212, 175, 55, 0.5);
+            box-shadow: 0 0 40px rgba(212, 175, 55, 0.4);
+            animation: pulse 3s infinite;
+        }
+
+        .main-photo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
         .main-title {
             font-size: 36px;
             font-weight: 700;
@@ -68,7 +87,6 @@
             font-weight: 700;
             font-size: 14px;
             margin: 10px 0;
-            animation: pulse 2s infinite;
         }
 
         .info-bar {
@@ -211,10 +229,24 @@
             color: var(--accent);
             text-decoration: none;
             font-weight: 600;
+            font-size: 18px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+
+        .footer-link:hover {
+            transform: translateY(-2px);
+            text-shadow: 0 0 15px rgba(212, 175, 55, 0.6);
         }
 
         /* АДАПТИВНОСТЬ */
         @media (max-width: 768px) {
+            .main-photo-container {
+                width: 200px;
+                height: 200px;
+            }
             .main-title { font-size: 24px; }
             .video-grid { grid-template-columns: 1fr; }
             .section-title { font-size: 28px; }
@@ -223,9 +255,20 @@
 </head>
 <body>
 
-    <!-- ШАПКА -->
+    <!-- АУДИО (МУЗЫКА) -->
+    <audio id="memorial-music" loop>
+        <source src="audio/music.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- ШАПКА С ГЛАВНЫМ ФОТО -->
     <header>
         <div class="header-title">ПРИКОСНИСЬ К ПАМЯТИ</div>
+        
+        <!-- ГЛАВНОЕ ФОТО (АВАТАР) -->
+        <div class="main-photo-container">
+            <img src="img/14.jpg" alt="Григорьев Дмитрий Николаевич" class="main-photo">
+        </div>
+
         <div class="hero-badge">★ Герой Российской Федерации</div>
         <h1 class="main-title">ГРИГОРЬЕВ ДМИТРИЙ НИКОЛАЕВИЧ</h1>
         <div class="info-bar">
@@ -238,10 +281,10 @@
         </div>
     </header>
 
-    <!-- КНОПКА СВЕЧИ -->
+    <!-- КНОПКА СВЕЧИ (С МУЗЫКОЙ) -->
     <section class="candle-section">
         <button class="btn-candle" onclick="lightCandle()">
-            ️ Зажечь свет памяти
+            🕯️ Зажечь свет памяти
         </button>
         <div class="candle-count">
             Свет зажгли: <span id="candle-count">0</span> раз
@@ -318,16 +361,24 @@
 
     <!-- ПОДВАЛ -->
     <footer>
-        <p style="color: var(--gray); margin-bottom: 10px;">Цифровая платформа интерактивной памяти</p>
-        <a href="https://serdce-pamyati.ru" class="footer-link">❤️ Сердце Памяти →</a>
+        <p style="color: var(--gray); margin-bottom: 20px; font-size: 14px;">Цифровая платформа интерактивной памяти</p>
+        <a href="https://serdce-pamyati.ru" class="footer-link">
+            ❤️ Сердце Памяти →
+        </a>
         <p style="color: #444; font-size: 12px; margin-top: 20px;">
-            © 2026 Сердце Памяти. Tech Partner: KOT & KOTE
+            © 2026 Сердце Памяти
         </p>
     </footer>
 
     <script>
-        // Функция зажигания свечи
+        // Функция зажигания свечи С МУЗЫКОЙ
         function lightCandle() {
+            // Включаем музыку
+            const music = document.getElementById('memorial-music');
+            music.volume = 0.5; // Громкость 50%
+            music.play().catch(e => console.log('Автовоспроизведение заблокировано:', e));
+            
+            // Увеличиваем счетчик
             let count = parseInt(document.getElementById('candle-count').textContent);
             count++;
             document.getElementById('candle-count').textContent = count;
