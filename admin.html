@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Админ-панель - Сердце Памяти</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <style>
 :root {
     --bg: #0a0a0a;
@@ -204,10 +205,15 @@ body {
     cursor: pointer;
     transition: all 0.3s;
     margin-top: 10px;
+    margin-right: 10px;
 }
 .btn-add:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 25px rgba(212, 175, 55, 0.5);
+}
+.btn-generate {
+    background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+    color: #fff;
 }
 .people-list {
     margin-bottom: 40px;
@@ -263,7 +269,7 @@ body {
     display: flex;
     gap: 10px;
 }
-.btn-edit, .btn-delete {
+.btn-edit, .btn-delete, .btn-download {
     padding: 8px 20px;
     border: none;
     border-radius: 20px;
@@ -286,6 +292,14 @@ body {
 }
 .btn-delete:hover {
     background: var(--danger);
+    color: #fff;
+}
+.btn-download {
+    background: rgba(76, 175, 80, 0.2);
+    color: var(--success);
+}
+.btn-download:hover {
+    background: var(--success);
     color: #fff;
 }
 .export-section {
@@ -341,12 +355,32 @@ body {
     from { transform: translateX(400px); opacity: 0; }
     to { transform: translateX(0); opacity: 1; }
 }
+.instructions {
+    background: rgba(212, 175, 55, 0.1);
+    border-left: 4px solid var(--accent);
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 4px;
+}
+.instructions h3 {
+    color: var(--accent);
+    margin-bottom: 15px;
+    font-family: 'Playfair Display', serif;
+}
+.instructions ol {
+    margin-left: 20px;
+    color: var(--text);
+    line-height: 1.8;
+}
+.instructions li {
+    margin-bottom: 10px;
+}
 @media (max-width: 768px) {
     .admin-header { flex-direction: column; gap: 15px; }
     .form-grid { grid-template-columns: 1fr; }
     .person-card { flex-direction: column; align-items: flex-start; }
     .person-actions { width: 100%; }
-    .btn-edit, .btn-delete { flex: 1; }
+    .btn-edit, .btn-delete, .btn-download { flex: 1; }
 }
 </style>
 </head>
@@ -388,14 +422,14 @@ body {
     </div>
 
     <div class="add-form">
-        <h2 class="form-title" id="formTitle">Добавить нового человека</h2>
+        <h2 class="form-title" id="formTitle">Создать новый мемориал</h2>
         <div class="form-grid">
             <div class="form-group">
-                <label>Имя *</label>
+                <label>ФИО полностью *</label>
                 <input type="text" id="personName" placeholder="Иванов Иван Иванович">
             </div>
             <div class="form-group">
-                <label>Дата рождения *</label>
+                <label>Дата рождения/смерти *</label>
                 <input type="text" id="personDate" placeholder="01.01.1990">
             </div>
             <div class="form-group">
@@ -420,31 +454,41 @@ body {
                 <input type="number" step="0.0001" id="personLng" placeholder="37.6173">
             </div>
             <div class="form-group">
-                <label>Папка с фото/видео</label>
-                <input type="text" id="personFolder" placeholder="ivanov_ivan">
+                <label>Цитата/девиз</label>
+                <input type="text" id="personQuote" placeholder="«Мы не просто защищали землю...»">
             </div>
             <div class="form-group">
-                <label>Свечей зажжено</label>
-                <input type="number" id="personCandles" value="0">
+                <label>Награды/звания</label>
+                <input type="text" id="personAwards" placeholder="Награждён медалью «За отвагу»">
             </div>
         </div>
-        <button class="btn-add" id="btnAdd" onclick="addPerson()">Добавить мемориал</button>
-        <button class="btn-add" id="btnCancel" onclick="cancelEdit()" style="display: none; background: linear-gradient(135deg, #757575 0%, #616161 100%); margin-left: 10px;">Отмена</button>
+        <button class="btn-add" onclick="addPerson()">💾 Добавить в базу</button>
+        <button class="btn-add btn-generate" onclick="generateMemorial()" id="btnGenerate" style="display: none;">📦 Создать ZIP-архив</button>
+        <button class="btn-add" onclick="cancelEdit()" id="btnCancel" style="display: none; background: linear-gradient(135deg, #757575 0%, #616161 100%);">Отмена</button>
+        
+        <div class="instructions" id="instructions" style="display: none;">
+            <h3>📋 Инструкция по загрузке:</h3>
+            <ol>
+                <li>Распакуй скачанный ZIP-архив</li>
+                <li>Загрузи папку с мемориалом на GitHub в папку <code>memorial/</code></li>
+                <li>Загрузи фото в папку <code>img/</code>, видео в <code>videos/</code></li>
+                <li>Скопируй код для карты (кнопка ниже) и обнови <code>index.html</code></li>
+            </ol>
+        </div>
     </div>
 
     <div class="people-list">
         <h2 class="list-title">Существующие мемориалы</h2>
-        <div id="peopleContainer">
-        </div>
+        <div id="peopleContainer"></div>
     </div>
 
     <div class="export-section">
         <h2 class="export-title">Экспорт данных</h2>
         <p class="export-desc">
-            Скачайте JSON-файл с данными всех мемориалов. Этот файл можно использовать для обновления основного сайта.
+            Скопируй этот код и вставь в <code>index.html</code> вместо старого массива <code>memorials</code>
         </p>
-        <button class="btn-export" onclick="exportJSON()">Скачать JSON</button>
-        <button class="btn-export" onclick="exportCode()" style="background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);">Скопировать код для сайта</button>
+        <button class="btn-export" onclick="exportCode()">📋 Скопировать код для карты</button>
+        <button class="btn-export" onclick="exportJSON()" style="background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);">💾 Скачать JSON</button>
     </div>
 </div>
 
@@ -452,8 +496,9 @@ body {
 
 <script>
 const ADMIN_PASSWORD = 'serdce2026';
-let memorials = JSON.parse(localStorage.getItem('memorials_db') || '[{"id":"grigorev_dmitriy","name":"Григорьев Дмитрий Николаевич","dates":"23.08.1993","category":"svo","city":"Москва","coords":[55.7558,37.6173],"link":"memorial/grigorev_dmitriy/","candles":0}]');
+let memorials = JSON.parse(localStorage.getItem('memorials_db') || '[{"id":"grigorev_dmitriy","name":"Григорьев Дмитрий Николаевич","dates":"23.08.1993","category":"svo","city":"Москва","coords":[55.7558,37.6173],"quote":"Мы не просто защищали землю. Мы защищали тех, кто стоит за нашей спиной","awards":"Ветеран СВО, Награждён медалью «За отвагу»","link":"memorial/grigorev_dmitriy/","candles":0}]');
 let editIndex = -1;
+let currentPerson = null;
 
 function checkPassword() {
     const input = document.getElementById('passwordInput').value;
@@ -489,50 +534,316 @@ function addPerson() {
     const city = document.getElementById('personCity').value.trim();
     const lat = parseFloat(document.getElementById('personLat').value);
     const lng = parseFloat(document.getElementById('personLng').value);
-    const folder = document.getElementById('personFolder').value.trim();
-    const candles = parseInt(document.getElementById('personCandles').value) || 0;
+    const quote = document.getElementById('personQuote').value.trim();
+    const awards = document.getElementById('personAwards').value.trim();
 
     if (!name || !date || !city || isNaN(lat) || isNaN(lng)) {
         showNotification('Заполните все обязательные поля!', 'error');
         return;
     }
 
-    const id = folder || name.toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '');
+    const id = name.toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '');
     
-    const person = {
+    currentPerson = {
         id: id,
         name: name,
         dates: date,
         category: category,
         city: city,
         coords: [lat, lng],
+        quote: quote || '«Мы не просто защищали землю. Мы защищали тех, кто стоит за нашей спиной»',
+        awards: awards || 'Ветеран СВО',
         link: `memorial/${id}/`,
-        candles: candles
+        candles: 0
     };
 
     if (editIndex >= 0) {
-        memorials[editIndex] = person;
+        memorials[editIndex] = currentPerson;
         editIndex = -1;
-        document.getElementById('formTitle').textContent = 'Добавить нового человека';
-        document.getElementById('btnAdd').textContent = 'Добавить мемориал';
+        document.getElementById('formTitle').textContent = 'Создать новый мемориал';
+        document.getElementById('btnGenerate').style.display = 'none';
         document.getElementById('btnCancel').style.display = 'none';
-        showNotification('Мемориал обновлен!');
+        document.getElementById('instructions').style.display = 'none';
+        showNotification('Мемориал обновлен в базе!');
     } else {
-        memorials.push(person);
-        showNotification('Мемориал добавлен!');
+        memorials.push(currentPerson);
+        document.getElementById('btnGenerate').style.display = 'inline-block';
+        document.getElementById('instructions').style.display = 'block';
+        showNotification('Мемориал добавлен! Теперь создай ZIP-архив.');
     }
 
     saveData();
     renderPeople();
     updateStats();
-    clearForm();
+}
+
+function generateMemorial() {
+    if (!currentPerson) {
+        showNotification('Сначала добавьте человека в базу!', 'error');
+        return;
+    }
+
+    const zip = new JSZip();
+    const folder = zip.folder(currentPerson.id);
+    
+    // Создаем HTML страницу
+    const htmlContent = generateMemorialHTML(currentPerson);
+    folder.file('index.html', htmlContent);
+    
+    // Создаем пустые папки
+    folder.folder('img');
+    folder.folder('videos');
+    folder.folder('audio');
+    
+    // Создаем README
+    const readme = `# Мемориал: ${currentPerson.name}
+
+## Инструкция по загрузке:
+
+1. Загрузи эту папку на GitHub в папку \`memorial/\`
+2. Загрузи фотографии в папку \`img/\` (назови их 1.jpg, 2.jpg и т.д.)
+3. Загрузи видео в папку \`videos/\` (1.mp4, 2.mp4 и т.д.)
+4. При необходимости добавь музыку в \`audio/music.mp3\`
+5. Обнови главный файл \`index.html\` с новым кодом из админки
+
+## Данные мемориала:
+- **Имя:** ${currentPerson.name}
+- **Дата:** ${currentPerson.dates}
+- **Город:** ${currentPerson.city}
+- **Категория:** ${currentPerson.category}
+`;
+    folder.file('README.md', readme);
+    
+    // Скачиваем ZIP
+    zip.generateAsync({type: 'blob'}).then(function(content) {
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(content);
+        a.download = `${currentPerson.id}.zip`;
+        a.click();
+        showNotification('ZIP-архив создан!');
+    });
+}
+
+function generateMemorialHTML(person) {
+    return `<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>${person.name} - Герой Российской Федерации</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+    --bg: #0a0a0a;
+    --text: #e8e8e8;
+    --accent: #d4af37;
+    --gray: #888;
+    --dark-gray: #151515;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+    background: linear-gradient(180deg, rgba(212, 175, 55, 0.05) 0%, var(--bg) 100%);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+@keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.5); opacity: 0.5; }
+}
+@keyframes sound-wave {
+    0%, 100% { height: 10px; }
+    50% { height: 25px; }
+}
+header {
+    background: rgba(10, 10, 10, 0.95);
+    padding: 30px 20px;
+    text-align: center;
+    border-bottom: 2px solid rgba(212, 175, 55, 0.3);
+    animation: fadeInUp 0.8s ease-out;
+}
+.header-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    color: var(--accent);
+    margin-bottom: 10px;
+}
+.main-photo-container {
+    width: 320px;
+    max-width: 90vw;
+    margin: 30px auto;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 3px solid rgba(212, 175, 55, 0.5);
+    box-shadow: 0 10px 40px rgba(212, 175, 55, 0.3);
+    background: #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.main-photo {
+    width: 100%;
+    height: auto;
+    max-height: 500px;
+    object-fit: contain;
+    display: block;
+}
+.main-title {
+    font-size: 36px;
+    font-weight: 700;
+    margin: 20px 0;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+.hero-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #d4af37 0%, #b8860b 100%);
+    color: #000;
+    padding: 10px 25px;
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 14px;
+    margin: 10px 0;
+}
+.info-bar {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin: 20px 0;
+    padding: 15px;
+    background: rgba(212, 175, 55, 0.1);
+    border-radius: 8px;
+}
+.info-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+}
+.quote {
+    font-style: italic;
+    font-size: 18px;
+    color: var(--gray);
+    max-width: 700px;
+    margin: 30px auto;
+    padding: 20px;
+    border-left: 3px solid var(--accent);
+    text-align: left;
+}
+.candle-section {
+    text-align: center;
+    padding: 40px 20px;
+    background: rgba(212, 175, 55, 0.05);
+}
+.btn-candle {
+    background: linear-gradient(135deg, #d4af37 0%, #b8860b 100%);
+    color: #000;
+    padding: 16px 40px;
+    border: none;
+    border-radius: 30px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 20px rgba(212, 175, 55, 0.4);
+}
+.btn-candle:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(212, 175, 55, 0.6);
+}
+.candle-count {
+    margin-top: 20px;
+    font-size: 14px;
+    color: var(--gray);
+}
+.candle-count span {
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 18px;
+}
+footer {
+    background: #050505;
+    padding: 40px 20px;
+    text-align: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    margin-top: 60px;
+}
+.footer-link {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 18px;
+}
+</style>
+</head>
+<body>
+<header>
+    <div class="header-title">ПРИКОСНИСЬ К ПАМЯТИ</div>
+    <div class="main-photo-container">
+        <img src="img/1.jpg" alt="${person.name}" class="main-photo">
+    </div>
+    <div class="hero-badge">★ Герой Российской Федерации</div>
+    <h1 class="main-title">${person.name.toUpperCase()}</h1>
+    <div class="info-bar">
+        <div class="info-item">📅 ${person.dates}</div>
+        <div class="info-item">🎖️ ${person.awards}</div>
+    </div>
+    <div class="quote">${person.quote}</div>
+</header>
+<section class="candle-section">
+    <button class="btn-candle" onclick="lightCandle()">
+        🕯️ Зажечь свет памяти
+    </button>
+    <div class="candle-count">
+        Свет зажгли: <span id="candle-count">0</span> раз
+    </div>
+</section>
+<footer>
+    <p style="color: var(--gray); margin-bottom: 20px; font-size: 14px;">Цифровая платформа интерактивной памяти</p>
+    <a href="https://serdce-pamyati.ru" class="footer-link">
+        ❤️ Сердце Памяти →
+    </a>
+    <p style="color: #444; font-size: 12px; margin-top: 20px;">
+        © 2026 Сердце Памяти
+    </p>
+</footer>
+<script>
+const STORAGE_KEY = 'candles_${person.id}';
+function getCandles() {
+    return parseInt(localStorage.getItem(STORAGE_KEY) || '0');
+}
+function setCandles(count) {
+    localStorage.setItem(STORAGE_KEY, count.toString());
+    document.getElementById('candle-count').textContent = count;
+}
+setCandles(getCandles());
+function lightCandle() {
+    let count = getCandles() + 1;
+    setCandles(count);
+    const btn = document.querySelector('.btn-candle');
+    btn.style.transform = 'scale(0.95)';
+    setTimeout(() => { btn.style.transform = 'scale(1)'; }, 200);
+    btn.style.boxShadow = '0 0 40px rgba(212, 175, 55, 0.9)';
+    setTimeout(() => { btn.style.boxShadow = '0 4px 20px rgba(212, 175, 55, 0.4)'; }, 500);
+}
+</script>
+</body>
+</html>`;
 }
 
 function cancelEdit() {
     editIndex = -1;
-    document.getElementById('formTitle').textContent = 'Добавить нового человека';
-    document.getElementById('btnAdd').textContent = 'Добавить мемориал';
+    currentPerson = null;
+    document.getElementById('formTitle').textContent = 'Создать новый мемориал';
+    document.getElementById('btnGenerate').style.display = 'none';
     document.getElementById('btnCancel').style.display = 'none';
+    document.getElementById('instructions').style.display = 'none';
     clearForm();
     showNotification('Редактирование отменено');
 }
@@ -555,16 +866,18 @@ function editPerson(index) {
     document.getElementById('personCity').value = person.city;
     document.getElementById('personLat').value = person.coords[0];
     document.getElementById('personLng').value = person.coords[1];
-    document.getElementById('personFolder').value = person.id;
-    document.getElementById('personCandles').value = person.candles;
+    document.getElementById('personQuote').value = person.quote || '';
+    document.getElementById('personAwards').value = person.awards || '';
     
     editIndex = index;
+    currentPerson = person;
     document.getElementById('formTitle').textContent = 'Редактировать: ' + person.name;
-    document.getElementById('btnAdd').textContent = 'Сохранить изменения';
+    document.getElementById('btnGenerate').style.display = 'inline-block';
     document.getElementById('btnCancel').style.display = 'inline-block';
+    document.getElementById('instructions').style.display = 'block';
     
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    showNotification('Измените данные и нажмите "Сохранить изменения"');
+    showNotification('Измените данные и нажмите "Добавить в базу"');
 }
 
 function renderPeople() {
@@ -591,10 +904,16 @@ function renderPeople() {
             </div>
             <div class="person-actions">
                 <button class="btn-edit" onclick="editPerson(${index})">Редактировать</button>
+                <button class="btn-download" onclick="downloadMemorial(${index})">Скачать ZIP</button>
                 <button class="btn-delete" onclick="deletePerson(${index})">Удалить</button>
             </div>
         </div>
     `).join('');
+}
+
+function downloadMemorial(index) {
+    currentPerson = memorials[index];
+    generateMemorial();
 }
 
 function updateStats() {
@@ -615,20 +934,8 @@ function clearForm() {
     document.getElementById('personCity').value = '';
     document.getElementById('personLat').value = '';
     document.getElementById('personLng').value = '';
-    document.getElementById('personFolder').value = '';
-    document.getElementById('personCandles').value = '0';
-}
-
-function exportJSON() {
-    const dataStr = JSON.stringify(memorials, null, 2);
-    const blob = new Blob([dataStr], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'memorials.json';
-    a.click();
-    URL.revokeObjectURL(url);
-    showNotification('JSON скачан!');
+    document.getElementById('personQuote').value = '';
+    document.getElementById('personAwards').value = '';
 }
 
 function exportCode() {
@@ -644,6 +951,18 @@ function exportCode() {
         document.body.removeChild(textarea);
         showNotification('Код скопирован!');
     });
+}
+
+function exportJSON() {
+    const dataStr = JSON.stringify(memorials, null, 2);
+    const blob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'memorials.json';
+    a.click();
+    URL.revokeObjectURL(url);
+    showNotification('JSON скачан!');
 }
 
 function showNotification(message, type = 'success') {
