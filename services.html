@@ -3,459 +3,246 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Услуги и стоимость - Сердце Памяти</title>
+<title>Услуги и тариф - Сердце Памяти</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
-:root {
-    --bg: #0a0a0a;
-    --text: #e8e8e8;
-    --accent: #d4af37;
-    --gray: #888;
-    --dark-gray: #151515;
-}
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-    background: linear-gradient(180deg, rgba(212, 175, 55, 0.05) 0%, var(--bg) 100%);
-    color: var(--text);
-    font-family: 'Inter', sans-serif;
-    min-height: 100vh;
-    overflow-x: hidden;
-}
-
-@keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(30px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-header {
-    background: rgba(10, 10, 10, 0.95);
-    padding: 20px 40px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid rgba(212, 175, 55, 0.2);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    backdrop-filter: blur(15px);
-    animation: fadeInUp 0.8s ease-out;
-}
-.logo { display: flex; align-items: center; gap: 15px; }
-.logo-icon { font-size: 32px; filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.5)); }
-.logo-text {
-    font-family: 'Playfair Display', serif;
-    font-size: 24px;
-    font-weight: 700;
-    color: var(--accent);
-    letter-spacing: 1px;
-}
-.btn-home {
-    background: transparent;
-    border: 2px solid var(--accent);
-    color: var(--accent);
-    padding: 12px 25px;
-    border-radius: 30px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s;
-    text-decoration: none;
-    display: inline-block;
-}
-.btn-home:hover {
-    background: var(--accent);
-    color: #000;
-    transform: translateY(-2px);
-}
-
-.hero-services {
-    text-align: center;
-    padding: 80px 20px 40px;
-    animation: fadeInUp 1s ease-out 0.2s both;
-}
-.hero-services h1 {
-    font-family: 'Playfair Display', serif;
-    font-size: 48px;
-    color: var(--accent);
-    margin-bottom: 20px;
-}
-.hero-services p {
-    font-size: 18px;
-    color: var(--gray);
-    max-width: 600px;
-    margin: 0 auto;
-    line-height: 1.6;
-}
-
-.tariff-section {
-    padding: 60px 20px;
-    max-width: 800px;
-    margin: 0 auto;
-    animation: fadeInUp 1s ease-out 0.4s both;
-}
-
-.tariff-card {
-    background: rgba(21, 21, 21, 0.9);
-    border: 2px solid var(--accent);
-    border-radius: 16px;
-    padding: 50px 40px;
-    text-align: center;
-    box-shadow: 0 0 40px rgba(212, 175, 55, 0.2);
-    position: relative;
-    overflow: hidden;
-}
-
-.tariff-card::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 4px;
-    background: linear-gradient(90deg, transparent, var(--accent), transparent);
-}
-
-.tariff-badge {
-    display: inline-block;
-    background: var(--accent);
-    color: #000;
-    padding: 8px 20px;
-    border-radius: 20px;
-    font-size: 14px;
-    font-weight: 700;
-    margin-bottom: 20px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.tariff-price {
-    font-size: 56px;
-    font-weight: 700;
-    color: var(--accent);
-    margin: 20px 0;
-    font-family: 'Playfair Display', serif;
-}
-
-.tariff-price span {
-    font-size: 24px;
-    color: var(--gray);
-}
-
-.tariff-desc {
-    font-size: 16px;
-    color: var(--text);
-    margin-bottom: 30px;
-    font-style: italic;
-}
-
-.tariff-list {
-    text-align: left;
-    list-style: none;
-    margin: 30px 0;
-    max-width: 500px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.tariff-list li {
-    padding: 12px 0;
-    color: var(--text);
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    border-bottom: 1px solid rgba(212, 175, 55, 0.1);
-}
-
-.tariff-list li:last-child {
-    border-bottom: none;
-}
-
-.tariff-list li::before {
-    content: "✓";
-    color: var(--accent);
-    font-weight: bold;
-    font-size: 18px;
-    flex-shrink: 0;
-}
-
-.btn-order {
-    background: linear-gradient(135deg, #d4af37 0%, #b8860b 100%);
-    color: #000;
-    padding: 16px 50px;
-    border: none;
-    border-radius: 30px;
-    font-size: 16px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.3s;
-    box-shadow: 0 4px 20px rgba(212, 175, 55, 0.4);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-top: 20px;
-}
-
-.btn-order:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 30px rgba(212, 175, 55, 0.6);
-}
-
-.calc-section {
-    padding: 80px 20px;
-    background: rgba(21, 21, 21, 0.5);
-    margin: 60px 0;
-    animation: fadeInUp 1s ease-out 0.6s both;
-}
-
-.calc-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 36px;
-    text-align: center;
-    color: var(--accent);
-    margin-bottom: 20px;
-}
-
-.calc-subtitle {
-    text-align: center;
-    color: var(--gray);
-    margin-bottom: 40px;
-    font-size: 16px;
-}
-
-.calc-container {
-    max-width: 700px;
-    margin: 0 auto;
-    background: rgba(10, 10, 10, 0.9);
-    border-radius: 12px;
-    padding: 40px;
-    border: 1px solid rgba(212, 175, 55, 0.3);
-}
-
-.calc-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    padding: 18px;
-    background: rgba(212, 175, 55, 0.05);
-    border-radius: 8px;
-    transition: all 0.3s;
-}
-
-.calc-row:hover {
-    background: rgba(212, 175, 55, 0.1);
-}
-
-.calc-label {
-    font-size: 16px;
-    color: var(--text);
-    flex: 1;
-}
-
-.calc-price {
-    color: var(--accent);
-    font-weight: 600;
-    margin-right: 20px;
-    white-space: nowrap;
-}
-
-.calc-checkbox {
-    width: 24px;
-    height: 24px;
-    accent-color: var(--accent);
-    cursor: pointer;
-}
-
-.calc-total {
-    font-size: 32px;
-    font-weight: 700;
-    color: var(--accent);
-    text-align: right;
-    margin-top: 30px;
-    font-family: 'Playfair Display', serif;
-    padding: 25px;
-    background: rgba(212, 175, 55, 0.1);
-    border-radius: 8px;
-    border: 1px solid rgba(212, 175, 55, 0.3);
-}
-
-.principles {
-    padding: 100px 20px;
-    max-width: 1200px;
-    margin: 0 auto;
-    animation: fadeInUp 1s ease-out 0.8s both;
-}
-
-.principles-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 42px;
-    text-align: center;
-    color: var(--accent);
-    margin-bottom: 60px;
-}
-
-.principles-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 30px;
-}
-
-.principle-card {
-    background: rgba(21, 21, 21, 0.8);
-    border-radius: 12px;
-    padding: 40px 30px;
-    text-align: center;
-    border: 1px solid rgba(212, 175, 55, 0.2);
-    transition: all 0.3s;
-}
-
-.principle-card:hover {
-    transform: translateY(-5px);
-    border-color: var(--accent);
-    box-shadow: 0 10px 30px rgba(212, 175, 55, 0.2);
-}
-
-.principle-icon { font-size: 48px; margin-bottom: 20px; }
-.principle-title { font-size: 22px; font-weight: 600; margin-bottom: 15px; color: var(--text); }
-.principle-desc { font-size: 14px; color: var(--gray); line-height: 1.6; }
-
-footer { background: #050505; padding: 60px 40px; text-align: center; border-top: 1px solid rgba(255, 255, 255, 0.05); }
-.footer-links { display: flex; justify-content: center; gap: 40px; margin-bottom: 30px; flex-wrap: wrap; }
-.footer-links a { color: var(--gray); text-decoration: none; transition: all 0.3s; font-size: 14px; }
-.footer-links a:hover { color: var(--accent); }
-.footer-copy { font-size: 12px; color: #444; }
-
-@media (max-width: 768px) {
-    header { padding: 15px 20px; flex-direction: column; gap: 15px; }
-    .hero-services h1 { font-size: 32px; }
-    .hero-services p { font-size: 16px; }
-    .tariff-card { padding: 30px 20px; }
-    .tariff-price { font-size: 42px; }
-    .tariff-list li { font-size: 14px; }
-    .calc-container { padding: 25px 20px; }
-    .calc-row { flex-direction: column; align-items: flex-start; gap: 10px; padding: 15px; }
-    .calc-price { margin-right: 0; }
-    .calc-total { font-size: 24px; text-align: center; }
-    .principles-grid { grid-template-columns: 1fr; }
-    .principles-title { font-size: 32px; }
-    footer { padding: 40px 20px; }
-}
-
-@media (max-width: 480px) {
-    .hero-services { padding: 60px 20px 30px; }
-    .hero-services h1 { font-size: 28px; }
-    .tariff-price { font-size: 36px; }
-    .btn-order { padding: 14px 40px; font-size: 14px; }
+:root { --bg:#0a0a0a; --text:#e8e8e8; --accent:#d4af37; --gray:#888; --dark-gray:#151515; --success:#4caf50; }
+* { box-sizing:border-box; margin:0; padding:0; }
+body { background:linear-gradient(180deg, rgba(212,175,55,0.05) 0%, var(--bg) 100%); color:var(--text); font-family:'Inter',sans-serif; min-height:100vh; overflow-x:hidden; }
+.reveal { opacity:0; transform:translateY(40px); transition:all 0.9s cubic-bezier(0.5,0,0,1); }
+.reveal.active { opacity:1; transform:translateY(0); }
+header { background:rgba(10,10,10,0.8); padding:20px 40px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(212,175,55,0.2); position:sticky; top:0; z-index:1000; backdrop-filter:blur(15px); }
+.logo { display:flex; align-items:center; gap:15px; }
+.logo-icon { font-size:32px; filter:drop-shadow(0 0 10px rgba(212,175,55,0.5)); }
+.logo-text { font-family:'Playfair Display',serif; font-size:24px; font-weight:700; color:var(--accent); letter-spacing:1px; }
+.header-buttons { display:flex; gap:15px; }
+.btn-header { background:linear-gradient(135deg,#d4af37 0%,#b8860b 100%); color:#000; padding:12px 25px; border:none; border-radius:30px; font-size:14px; font-weight:700; cursor:pointer; transition:all 0.3s; box-shadow:0 4px 20px rgba(212,175,55,0.3); text-decoration:none; display:inline-block; }
+.btn-header:hover { transform:translateY(-3px); box-shadow:0 8px 30px rgba(212,175,55,0.6); }
+.btn-header.ghost { background:transparent; border:1px solid rgba(212,175,55,0.4); color:var(--accent); box-shadow:none; }
+.hero { text-align:center; padding:90px 20px 50px; max-width:900px; margin:0 auto; }
+.hero h1 { font-family:'Playfair Display',serif; font-size:46px; margin-bottom:20px; line-height:1.2; }
+.hero h1 span { color:var(--accent); }
+.hero p { font-size:18px; color:var(--gray); line-height:1.7; max-width:650px; margin:0 auto 35px; }
+.price-badge { display:inline-block; background:rgba(21,21,21,0.9); border:2px solid var(--accent); border-radius:16px; padding:25px 45px; box-shadow:0 0 40px rgba(212,175,55,0.2); margin-bottom:18px; }
+.price-num { font-family:'Playfair Display',serif; font-size:54px; font-weight:700; color:var(--accent); line-height:1; }
+.price-sub { color:var(--gray); font-size:14px; margin-top:8px; letter-spacing:1px; }
+.delivery-tag { display:inline-block; background:linear-gradient(135deg, rgba(76,175,80,0.15), rgba(76,175,80,0.05)); border:1px solid rgba(76,175,80,0.4); color:#8fd994; padding:10px 22px; border-radius:30px; font-size:14px; font-weight:600; }
+.section { padding:60px 20px; max-width:1100px; margin:0 auto; }
+.section-title { font-family:'Playfair Display',serif; font-size:34px; text-align:center; color:var(--accent); margin-bottom:15px; }
+.section-sub { text-align:center; color:var(--gray); margin-bottom:45px; font-size:15px; }
+.includes-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:18px; }
+.inc-card { background:rgba(21,21,21,0.8); border:1px solid rgba(212,175,55,0.15); border-radius:12px; padding:22px; display:flex; gap:15px; align-items:flex-start; transition:all 0.3s; }
+.inc-card:hover { border-color:var(--accent); transform:translateY(-4px); }
+.inc-check { color:var(--accent); font-size:22px; flex-shrink:0; line-height:1; }
+.inc-text strong { display:block; color:var(--text); font-size:16px; margin-bottom:5px; }
+.inc-text span { color:var(--gray); font-size:13px; line-height:1.5; }
+.free-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:18px; }
+.free-card { background:rgba(21,21,21,0.8); border:1px solid rgba(212,175,55,0.15); border-radius:12px; padding:28px 20px; text-align:center; }
+.free-icon { font-size:40px; margin-bottom:12px; }
+.free-num { font-family:'Playfair Display',serif; font-size:38px; color:var(--accent); font-weight:700; }
+.free-label { color:var(--text); font-size:15px; margin:6px 0 4px; }
+.free-sub { color:var(--gray); font-size:12px; }
+.calc-box { background:rgba(21,21,21,0.85); border:1px solid rgba(212,175,55,0.25); border-radius:16px; padding:35px; max-width:700px; margin:0 auto; }
+.calc-row { display:flex; justify-content:space-between; align-items:center; gap:15px; padding:18px 0; border-bottom:1px solid rgba(255,255,255,0.05); flex-wrap:wrap; }
+.calc-row:last-of-type { border-bottom:none; }
+.calc-info { flex:1; min-width:180px; }
+.calc-info strong { display:block; color:var(--text); font-size:16px; margin-bottom:4px; }
+.calc-info span { color:var(--gray); font-size:12px; }
+.calc-control { display:flex; align-items:center; gap:12px; }
+.calc-btn { width:38px; height:38px; border-radius:50%; border:1px solid rgba(212,175,55,0.4); background:rgba(212,175,55,0.1); color:var(--accent); font-size:20px; font-weight:700; cursor:pointer; transition:all 0.2s; line-height:1; }
+.calc-btn:hover { background:var(--accent); color:#000; }
+.calc-val { width:50px; text-align:center; font-size:20px; font-weight:700; color:var(--text); }
+.calc-extra { color:var(--success); font-size:13px; font-weight:600; min-width:90px; text-align:right; }
+.calc-total { margin-top:25px; padding-top:25px; border-top:2px solid rgba(212,175,55,0.3); }
+.calc-line { display:flex; justify-content:space-between; padding:6px 0; color:var(--gray); font-size:14px; }
+.calc-line.final { color:var(--accent); font-size:26px; font-weight:700; font-family:'Playfair Display',serif; padding-top:14px; }
+.steps-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:25px; }
+.step-card { text-align:center; padding:25px 15px; }
+.step-n { width:50px; height:50px; margin:0 auto 18px; border-radius:50%; background:linear-gradient(135deg,#d4af37,#b8860b); color:#000; font-family:'Playfair Display',serif; font-size:24px; font-weight:700; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 20px rgba(212,175,55,0.3); }
+.step-card h3 { color:var(--text); font-size:17px; margin-bottom:10px; }
+.step-card p { color:var(--gray); font-size:13px; line-height:1.6; }
+.time-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:20px; max-width:800px; margin:0 auto; }
+.time-card { background:rgba(21,21,21,0.8); border:1px solid rgba(212,175,55,0.15); border-radius:12px; padding:30px; text-align:center; }
+.time-card .t-icon { font-size:36px; margin-bottom:12px; }
+.time-card .t-val { font-family:'Playfair Display',serif; font-size:30px; color:var(--accent); margin-bottom:8px; }
+.time-card .t-desc { color:var(--gray); font-size:13px; line-height:1.6; }
+.promise { background:rgba(212,175,55,0.06); border-left:4px solid var(--accent); border-radius:8px; padding:30px; max-width:800px; margin:0 auto; text-align:center; }
+.promise p { color:var(--text); font-size:16px; line-height:1.7; }
+.promise .p-small { color:var(--gray); font-size:13px; margin-top:12px; }
+.cta { text-align:center; padding:70px 20px; }
+.cta h2 { font-family:'Playfair Display',serif; font-size:34px; color:var(--accent); margin-bottom:15px; }
+.cta p { color:var(--gray); margin-bottom:30px; font-size:16px; }
+.btn-cta { background:linear-gradient(135deg,#d4af37 0%,#b8860b 100%); color:#000; padding:18px 50px; border:none; border-radius:30px; font-size:17px; font-weight:700; cursor:pointer; transition:all 0.3s; box-shadow:0 6px 25px rgba(212,175,55,0.4); text-decoration:none; display:inline-block; }
+.btn-cta:hover { transform:translateY(-3px); box-shadow:0 10px 35px rgba(212,175,55,0.6); }
+.mission { text-align:center; color:var(--gray); font-size:13px; max-width:600px; margin:30px auto 0; line-height:1.6; font-style:italic; }
+.mission span { color:var(--accent); }
+footer { background:#050505; padding:60px 40px; text-align:center; border-top:1px solid rgba(255,255,255,0.05); }
+.footer-links { display:flex; justify-content:center; gap:40px; margin-bottom:30px; flex-wrap:wrap; }
+.footer-links a { color:var(--gray); text-decoration:none; transition:all 0.3s; font-size:14px; text-transform:uppercase; letter-spacing:1px; }
+.footer-links a:hover { color:var(--accent); }
+.footer-copy { font-size:12px; color:#444; }
+@media (max-width:768px) {
+header { padding:15px 20px; flex-direction:column; gap:15px; }
+.header-buttons { width:100%; justify-content:center; flex-wrap:wrap; }
+.hero { padding:60px 20px 30px; }
+.hero h1 { font-size:32px; }
+.price-num { font-size:42px; }
+.section-title { font-size:26px; }
+.calc-box { padding:22px; }
+.calc-row { flex-direction:column; align-items:flex-start; gap:12px; }
+.calc-extra { text-align:left; }
 }
 </style>
 </head>
 <body>
 
 <header>
-    <div class="logo">
-        <span class="logo-icon">❤️</span>
-        <span class="logo-text">Сердце Памяти</span>
-    </div>
-    <a href="index.html" class="btn-home">← На главную</a>
+<div class="logo">
+<span class="logo-icon">❤️</span>
+<span class="logo-text">Сердце Памяти</span>
+</div>
+<div class="header-buttons">
+<a href="index.html" class="btn-header ghost">На главную</a>
+<a href="index.html#map" class="btn-header ghost">Карта</a>
+<a href="admin.html" class="btn-header">Админка</a>
+</div>
 </header>
 
-<section class="hero-services">
-    <h1>Услуги и стоимость</h1>
-    <p>Мы создаём цифровые мемориалы, которые сохраняют память о близких на века. Простая и прозрачная цена без скрытых платежей.</p>
+<section class="hero reveal">
+<h1>Память, которая <span>живёт вечно</span></h1>
+<p>Один честный тариф. Вечная страница памяти, мемориальная табличка и всё для установки — уже внутри. Никаких скрытых доплат.</p>
+<div class="price-badge">
+<div class="price-num">2 500 ₽</div>
+<div class="price-sub">ВСЁ ВКЛЮЧЕНО</div>
+</div>
+<br>
+<div class="delivery-tag">🚚 Бесплатная доставка по всей России</div>
 </section>
 
-<section class="tariff-section">
-    <div class="tariff-card">
-        <span class="tariff-badge">Память</span>
-        <div class="tariff-price">2 000 <span>₽</span></div>
-        <div class="tariff-desc">Всё необходимое для сохранения памяти</div>
-        
-        <ul class="tariff-list">
-            <li>Мемориальная табличка из ПВХ с защитным покрытием (устойчива к любым погодным условиям)</li>
-            <li>NFC метка + QR код для мгновенного доступа</li>
-            <li>Персональная страница памяти на нашем сайте</li>
-            <li>Размещение до 10 фотографий + текст биографии</li>
-            <li>Видеоархив (до 3 видео)</li>
-            <li>Кнопка «Зажечь свечу» для посетителей</li>
-            <li>Место на интерактивной карте России</li>
-            <li>Вечное хранение без абонентской платы</li>
-            <li>Бережная упаковка и доставка по всей России</li>
-        </ul>
-        
-        <button class="btn-order">Заказать мемориал</button>
-    </div>
+<section class="section reveal">
+<h2 class="section-title">Что входит в заказ</h2>
+<p class="section-sub">Вы получаете готовый комплект — от цифровой страницы до таблички в руках</p>
+<div class="includes-grid">
+<div class="inc-card"><div class="inc-check">✓</div><div class="inc-text"><strong>Вечная страница памяти</strong><span>История, фото, видео, музыка, свечи и отметки посетителей — навсегда в сети</span></div></div>
+<div class="inc-card"><div class="inc-check">✓</div><div class="inc-text"><strong>Табличка 9×9 см</strong><span>Чёрный корпус «под гранит», золото, вечный огонь и QR под защитной смолой</span></div></div>
+<div class="inc-card"><div class="inc-check">✓</div><div class="inc-text"><strong>NFC + QR-код</strong><span>Навёл телефон — открылась страница. Работает сквозь корпус, без батареек</span></div></div>
+<div class="inc-card"><div class="inc-check">✓</div><div class="inc-text"><strong>Монтажный комплект</strong><span>Скотч, клей, салфетки, стяжки и инструкция — крепёж на лето и на зиму</span></div></div>
+<div class="inc-card"><div class="inc-check">✓</div><div class="inc-text"><strong>Защита от погоды</strong><span>Держит мороз, жару, дождь и снег — проверено на перепадах температур</span></div></div>
+<div class="inc-card"><div class="inc-check">✓</div><div class="inc-text"><strong>Доставка по РФ</strong><span>Отправляем Почтой России с трек-номером — бесплатно, в любую точку</span></div></div>
+</div>
 </section>
 
-<section class="calc-section">
-    <h2 class="calc-title">Дополнительные опции</h2>
-    <p class="calc-subtitle">По желанию можно добавить эти услуги к базовому тарифу</p>
-    
-    <div class="calc-container">
-        <div class="calc-row">
-            <span class="calc-label">LED подсветка таблички (тёплый золотой свет)</span>
-            <span class="calc-price">+1 000 ₽</span>
-            <input type="checkbox" class="calc-checkbox" data-price="1000">
-        </div>
-        <div class="calc-row">
-            <span class="calc-label">Голосовое приветствие (запись голоса родных)</span>
-            <span class="calc-price">+700 ₽</span>
-            <input type="checkbox" class="calc-checkbox" data-price="700">
-        </div>
-        <div class="calc-row">
-            <span class="calc-label">Книга памяти (печатный альбом с историей)</span>
-            <span class="calc-price">+1 500 ₽</span>
-            <input type="checkbox" class="calc-checkbox" data-price="1500">
-        </div>
-        
-        <div class="calc-total">
-            Итого: <span id="total-price">2 000</span> ₽
-        </div>
-    </div>
+<section class="section reveal">
+<h2 class="section-title">Бесплатно в каждом заказе</h2>
+<p class="section-sub">Загружайте архив памяти — в пределах лимитов это уже включено в цену</p>
+<div class="free-grid">
+<div class="free-card"><div class="free-icon">📷</div><div class="free-num">20</div><div class="free-label">фотографий</div><div class="free-sub">бесплатно</div></div>
+<div class="free-card"><div class="free-icon">🎬</div><div class="free-num">20</div><div class="free-label">видео</div><div class="free-sub">бесплатно</div></div>
+<div class="free-card"><div class="free-icon">🎵</div><div class="free-num">10</div><div class="free-label">аудио / музыка</div><div class="free-sub">бесплатно</div></div>
+</div>
 </section>
 
-<section class="principles">
-    <h2 class="principles-title">Наши принципы</h2>
-    <div class="principles-grid">
-        <div class="principle-card">
-            <div class="principle-icon">💰</div>
-            <div class="principle-title">Честные цены</div>
-            <div class="principle-desc">Мы не наживаемся на горе. Наши цены покрывают только расходы на материалы и работу.</div>
-        </div>
-        <div class="principle-card">
-            <div class="principle-icon"></div>
-            <div class="principle-title">Прозрачность</div>
-            <div class="principle-desc">Никаких скрытых платежей. Вы платите ровно столько, сколько указано при заказе.</div>
-        </div>
-        <div class="principle-card">
-            <div class="principle-icon">❤️</div>
-            <div class="principle-title">Миссия</div>
-            <div class="principle-desc">Мы помогаем сохранить память о близких, а не продаём ритуальные услуги.</div>
-        </div>
-    </div>
+<section class="section reveal">
+<h2 class="section-title">Нужно больше, чем в базе?</h2>
+<p class="section-sub">В базе уже 20 фото, 20 видео и 10 аудио. Ползунок добавляет файлы СВЕРХ лимита — по 50 ₽ каждый</p>
+<div class="calc-box">
+<div class="calc-row">
+<div class="calc-info"><strong>📷 Дополнительные фото</strong><span>сверх бесплатных 20 · +50 ₽ за штуку</span></div>
+<div class="calc-control"><button class="calc-btn" onclick="chg('photo',-1)">−</button><span class="calc-val" id="v-photo">0</span><button class="calc-btn" onclick="chg('photo',1)">+</button></div>
+<div class="calc-extra" id="e-photo"></div>
+</div>
+<div class="calc-row">
+<div class="calc-info"><strong>🎬 Дополнительные видео</strong><span>сверх бесплатных 20 · +50 ₽ за штуку</span></div>
+<div class="calc-control"><button class="calc-btn" onclick="chg('video',-1)">−</button><span class="calc-val" id="v-video">0</span><button class="calc-btn" onclick="chg('video',1)">+</button></div>
+<div class="calc-extra" id="e-video"></div>
+</div>
+<div class="calc-row">
+<div class="calc-info"><strong>🎵 Дополнительные аудио</strong><span>сверх бесплатных 10 · +50 ₽ за штуку</span></div>
+<div class="calc-control"><button class="calc-btn" onclick="chg('audio',-1)">−</button><span class="calc-val" id="v-audio">0</span><button class="calc-btn" onclick="chg('audio',1)">+</button></div>
+<div class="calc-extra" id="e-audio"></div>
+</div>
+<div class="calc-total">
+<div class="calc-line"><span>Базовый комплект «всё включено»</span><span>2 500 ₽</span></div>
+<div class="calc-line"><span>Доплата за файлы сверх лимита</span><span id="extra-sum">0 ₽</span></div>
+<div class="calc-line final"><span>Итого</span><span id="final-sum">2 500 ₽</span></div>
+</div>
+</div>
+</section>
+
+<section class="section reveal">
+<h2 class="section-title">Как заказать</h2>
+<div class="steps-grid">
+<div class="step-card"><div class="step-n">1</div><h3>Свяжитесь с нами</h3><p>Напишите в Telegram или позвоните — расскажем детали и ответим на вопросы</p></div>
+<div class="step-card"><div class="step-n">2</div><h3>Пришлите материалы</h3><p>Фото, видео, музыку, ФИО, даты и пару слов о человеке — всё, что дорого</p></div>
+<div class="step-card"><div class="step-n">3</div><h3>Мы создаём память</h3><p>Делаем страницу и собираем табличку вручную, с душой и проверкой качества</p></div>
+<div class="step-card"><div class="step-n">4</div><h3>Отправляем вам</h3><p>Упаковываем с уважением и шлём Почтой России с трек-номером</p></div>
+</div>
+</section>
+
+<section class="section reveal">
+<h2 class="section-title">Сроки</h2>
+<div class="time-grid">
+<div class="time-card"><div class="t-icon">🛠️</div><div class="t-val">3–5 дней</div><div class="t-desc">Изготовление страницы и таблички с момента получения всех материалов. Смола и герметик должны полностью застыть — поэтому мы не торопимся в ущерб качеству.</div></div>
+<div class="time-card"><div class="t-icon">📦</div><div class="t-val">+ доставка</div><div class="t-desc">Отправляем на следующий рабочий день после готовности. Срок в пути зависит от региона и идёт по треку Почты России.</div></div>
+</div>
+</section>
+
+<section class="section reveal">
+<div class="promise">
+<p>Табличка переживает мороз, жару, дождь и снег. Если что-то пойдёт не так — мы не бросим: подскажем, поможем, доведём до результата. Для нас это не товар, а память о человеке.</p>
+<div class="p-small">Крепится на мрамор, гранит, дерево и металл — в комплекте два способа монтажа: клеевой для тёплой погоды и механический стяжками для мороза.</div>
+</div>
+</section>
+
+<section class="cta reveal">
+<h2>Сохраните память сегодня</h2>
+<p>2 500 ₽ · всё включено · бесплатная доставка по России</p>
+<a href="https://t.me/ВАШ_ТЕЛЕГРАМ" class="btn-cta">Заказать / написать нам</a>
+<p class="mission">Часть средств с каждого заказа мы направляем на помощь пожилым людям — <span>память о близких превращается в добро для живых</span>.</p>
 </section>
 
 <footer>
-    <div class="footer-links">
-        <a href="index.html">Главная</a>
-        <a href="#contacts">Контакты</a>
-        <a href="#privacy">Политика конфиденциальности</a>
-    </div>
-    <div class="footer-copy">© 2026 Сердце Памяти</div>
+<div class="footer-links">
+<a href="index.html">О проекте</a>
+<a href="https://t.me/ВАШ_ТЕЛЕГРАМ">Контакты</a>
+<a href="index.html#map">Карта памяти</a>
+</div>
+<div class="footer-copy">© 2026 Сердце Памяти</div>
 </footer>
 
 <script>
-const checkboxes = document.querySelectorAll('.calc-checkbox');
-const totalPriceEl = document.getElementById('total-price');
-const basePrice = 2000;
+var PRICE_EXTRA = 50;
+var BASE = 2500;
+var counts = { photo:0, video:0, audio:0 };
 
-function updateTotal() {
-    let total = basePrice;
-    checkboxes.forEach(cb => {
-        if (cb.checked) total += parseInt(cb.dataset.price);
-    });
-    totalPriceEl.textContent = total.toLocaleString('ru-RU');
+function chg(type, delta) {
+    counts[type] = Math.max(0, counts[type] + delta);
+    document.getElementById('v-' + type).textContent = counts[type];
+    calc();
 }
 
-checkboxes.forEach(cb => cb.addEventListener('change', updateTotal));
+function calc() {
+    var extra = 0;
+    var types = ['photo','video','audio'];
+    for (var i = 0; i < types.length; i++) {
+        var t = types[i];
+        var sum = counts[t] * PRICE_EXTRA;
+        extra += sum;
+        var el = document.getElementById('e-' + t);
+        el.textContent = counts[t] > 0 ? ('+' + sum + ' ₽') : '';
+    }
+    document.getElementById('extra-sum').textContent = extra + ' ₽';
+    document.getElementById('final-sum').textContent = (BASE + extra).toLocaleString('ru-RU') + ' ₽';
+}
+
+var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+        if (entry.isIntersecting) entry.target.classList.add('active');
+    });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(function(el) { observer.observe(el); });
+
+calc();
 </script>
 
 </body>
