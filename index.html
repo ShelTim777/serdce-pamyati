@@ -3,270 +3,476 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Услуги и тариф - Сердце Памяти</title>
+<title>Сердце Памяти - Общероссийская сеть сохранения памяти</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
-:root { --bg:#0a0a0a; --text:#e8e8e8; --accent:#d4af37; --gray:#888; --dark-gray:#151515; --success:#4caf50; }
-* { box-sizing:border-box; margin:0; padding:0; }
-body { background:linear-gradient(180deg, rgba(212,175,55,0.05) 0%, var(--bg) 100%); color:var(--text); font-family:'Inter',sans-serif; min-height:100vh; overflow-x:hidden; }
-.reveal { opacity:0; transform:translateY(40px); transition:all 0.9s cubic-bezier(0.5,0,0,1); }
-.reveal.active { opacity:1; transform:translateY(0); }
-header { background:rgba(10,10,10,0.8); padding:20px 40px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(212,175,55,0.2); position:sticky; top:0; z-index:1000; backdrop-filter:blur(15px); }
-.logo { display:flex; align-items:center; gap:15px; }
-.logo-icon { font-size:32px; filter:drop-shadow(0 0 10px rgba(212,175,55,0.5)); }
-.logo-text { font-family:'Playfair Display',serif; font-size:24px; font-weight:700; color:var(--accent); letter-spacing:1px; }
-.header-buttons { display:flex; gap:15px; }
-.btn-header { background:linear-gradient(135deg,#d4af37 0%,#b8860b 100%); color:#000; padding:12px 25px; border:none; border-radius:30px; font-size:14px; font-weight:700; cursor:pointer; transition:all 0.3s; box-shadow:0 4px 20px rgba(212,175,55,0.3); text-decoration:none; display:inline-block; }
-.btn-header:hover { transform:translateY(-3px); box-shadow:0 8px 30px rgba(212,175,55,0.6); }
-.btn-header.ghost { background:transparent; border:1px solid rgba(212,175,55,0.4); color:var(--accent); box-shadow:none; }
-.hero { text-align:center; padding:90px 20px 50px; max-width:900px; margin:0 auto; }
-.hero h1 { font-family:'Playfair Display',serif; font-size:46px; margin-bottom:20px; line-height:1.2; }
-.hero h1 span { color:var(--accent); }
-.hero p { font-size:18px; color:var(--gray); line-height:1.7; max-width:650px; margin:0 auto 35px; }
-.price-badge { display:inline-block; background:rgba(21,21,21,0.9); border:2px solid var(--accent); border-radius:16px; padding:25px 45px; box-shadow:0 0 40px rgba(212,175,55,0.2); margin-bottom:18px; }
-.price-num { font-family:'Playfair Display',serif; font-size:54px; font-weight:700; color:var(--accent); line-height:1; }
-.price-sub { color:var(--gray); font-size:14px; margin-top:8px; letter-spacing:1px; }
-.delivery-tag { display:inline-block; background:linear-gradient(135deg, rgba(76,175,80,0.15), rgba(76,175,80,0.05)); border:1px solid rgba(76,175,80,0.4); color:#8fd994; padding:10px 22px; border-radius:30px; font-size:14px; font-weight:600; }
-.section { padding:60px 20px; max-width:1100px; margin:0 auto; }
-.section-title { font-family:'Playfair Display',serif; font-size:34px; text-align:center; color:var(--accent); margin-bottom:15px; }
-.section-sub { text-align:center; color:var(--gray); margin-bottom:45px; font-size:15px; }
-.includes-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:18px; }
-.inc-card { background:rgba(21,21,21,0.8); border:1px solid rgba(212,175,55,0.15); border-radius:12px; padding:22px; display:flex; gap:15px; align-items:flex-start; transition:all 0.3s; }
-.inc-card:hover { border-color:var(--accent); transform:translateY(-4px); }
-.inc-check { color:var(--accent); font-size:22px; flex-shrink:0; line-height:1; }
-.inc-text strong { display:block; color:var(--text); font-size:16px; margin-bottom:5px; }
-.inc-text span { color:var(--gray); font-size:13px; line-height:1.5; }
-.preview-wrap { display:flex; justify-content:center; padding:20px 0 10px; }
-.tablet-preview { width:240px; height:240px; background:linear-gradient(135deg,#1a1a1a,#0d0d0d); border:2px solid rgba(212,175,55,0.5); border-radius:10px; box-shadow:0 15px 50px rgba(0,0,0,0.6), 0 0 30px rgba(212,175,55,0.15); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; padding:20px; position:relative; }
-.tablet-preview::before { content:''; position:absolute; inset:8px; border:1px solid rgba(212,175,55,0.25); border-radius:6px; pointer-events:none; }
-.tp-flame { font-size:34px; filter:drop-shadow(0 0 12px rgba(212,175,55,0.7)); }
-.tp-title { font-family:'Playfair Display',serif; color:var(--accent); font-size:17px; letter-spacing:1px; text-shadow:0 0 12px rgba(212,175,55,0.4); }
-.tp-qr { width:62px; height:62px; background:#fff; border-radius:6px; display:flex; align-items:center; justify-content:center; color:#000; font-size:9px; font-weight:700; text-align:center; line-height:1.1; }
-.tp-hint { color:var(--accent); font-size:9px; letter-spacing:1px; }
-.preview-note { text-align:center; color:var(--gray); font-size:13px; margin-top:15px; font-style:italic; }
-.free-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:18px; }
-.free-card { background:rgba(21,21,21,0.8); border:1px solid rgba(212,175,55,0.15); border-radius:12px; padding:28px 20px; text-align:center; }
-.free-icon { font-size:40px; margin-bottom:12px; }
-.free-num { font-family:'Playfair Display',serif; font-size:38px; color:var(--accent); font-weight:700; }
-.free-label { color:var(--text); font-size:15px; margin:6px 0 4px; }
-.free-sub { color:var(--gray); font-size:12px; }
-.calc-box { background:rgba(21,21,21,0.85); border:1px solid rgba(212,175,55,0.25); border-radius:16px; padding:35px; max-width:700px; margin:0 auto; }
-.calc-row { display:flex; justify-content:space-between; align-items:center; gap:15px; padding:18px 0; border-bottom:1px solid rgba(255,255,255,0.05); flex-wrap:wrap; }
-.calc-row:last-of-type { border-bottom:none; }
-.calc-info { flex:1; min-width:180px; }
-.calc-info strong { display:block; color:var(--text); font-size:16px; margin-bottom:4px; }
-.calc-info span { color:var(--gray); font-size:12px; }
-.calc-control { display:flex; align-items:center; gap:12px; }
-.calc-btn { width:38px; height:38px; border-radius:50%; border:1px solid rgba(212,175,55,0.4); background:rgba(212,175,55,0.1); color:var(--accent); font-size:20px; font-weight:700; cursor:pointer; transition:all 0.2s; line-height:1; }
-.calc-btn:hover { background:var(--accent); color:#000; }
-.calc-val { width:50px; text-align:center; font-size:20px; font-weight:700; color:var(--text); }
-.calc-extra { color:var(--success); font-size:12px; min-width:90px; text-align:right; }
-.calc-total { margin-top:25px; padding-top:25px; border-top:2px solid rgba(212,175,55,0.3); }
-.calc-line { display:flex; justify-content:space-between; padding:6px 0; color:var(--gray); font-size:14px; }
-.calc-line.final { color:var(--accent); font-size:26px; font-weight:700; font-family:'Playfair Display',serif; padding-top:14px; }
-.steps-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:25px; }
-.step-card { text-align:center; padding:25px 15px; }
-.step-n { width:50px; height:50px; margin:0 auto 18px; border-radius:50%; background:linear-gradient(135deg,#d4af37,#b8860b); color:#000; font-family:'Playfair Display',serif; font-size:24px; font-weight:700; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 20px rgba(212,175,55,0.3); }
-.step-card h3 { color:var(--text); font-size:17px; margin-bottom:10px; }
-.step-card p { color:var(--gray); font-size:13px; line-height:1.6; }
-.time-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:20px; max-width:800px; margin:0 auto; }
-.time-card { background:rgba(21,21,21,0.8); border:1px solid rgba(212,175,55,0.15); border-radius:12px; padding:30px; text-align:center; }
-.time-card .t-icon { font-size:36px; margin-bottom:12px; }
-.time-card .t-val { font-family:'Playfair Display',serif; font-size:30px; color:var(--accent); margin-bottom:8px; }
-.time-card .t-desc { color:var(--gray); font-size:13px; line-height:1.6; }
-.promise { background:rgba(212,175,55,0.06); border-left:4px solid var(--accent); border-radius:8px; padding:30px; max-width:800px; margin:0 auto; text-align:center; }
-.promise p { color:var(--text); font-size:16px; line-height:1.7; }
-.promise .p-small { color:var(--gray); font-size:13px; margin-top:12px; }
-.cta { text-align:center; padding:70px 20px; }
-.cta h2 { font-family:'Playfair Display',serif; font-size:34px; color:var(--accent); margin-bottom:15px; }
-.cta p { color:var(--gray); margin-bottom:30px; font-size:16px; }
-.btn-cta { background:linear-gradient(135deg,#d4af37 0%,#b8860b 100%); color:#000; padding:18px 50px; border:none; border-radius:30px; font-size:17px; font-weight:700; cursor:pointer; transition:all 0.3s; box-shadow:0 6px 25px rgba(212,175,55,0.4); text-decoration:none; display:inline-block; }
-.btn-cta:hover { transform:translateY(-3px); box-shadow:0 10px 35px rgba(212,175,55,0.6); }
-.mission { text-align:center; color:var(--gray); font-size:13px; max-width:600px; margin:30px auto 0; line-height:1.6; font-style:italic; }
-.mission span { color:var(--accent); }
-footer { background:#050505; padding:60px 40px; text-align:center; border-top:1px solid rgba(255,255,255,0.05); }
-.footer-links { display:flex; justify-content:center; gap:40px; margin-bottom:30px; flex-wrap:wrap; }
-.footer-links a { color:var(--gray); text-decoration:none; transition:all 0.3s; font-size:14px; text-transform:uppercase; letter-spacing:1px; }
-.footer-links a:hover { color:var(--accent); }
-.footer-copy { font-size:12px; color:#444; }
-@media (max-width:768px) {
-header { padding:15px 20px; flex-direction:column; gap:15px; }
-.header-buttons { width:100%; justify-content:center; flex-wrap:wrap; }
-.hero { padding:60px 20px 30px; }
-.hero h1 { font-size:32px; }
-.price-num { font-size:42px; }
-.section-title { font-size:26px; }
-.calc-box { padding:22px; }
-.calc-row { flex-direction:column; align-items:flex-start; gap:12px; }
-.calc-extra { text-align:left; }
+:root {
+--bg: #0a0a0a;
+--text: #e8e8e8;
+--accent: #d4af37;
+--gray: #888;
+--dark-gray: #151515;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+background-color: var(--bg);
+color: var(--text);
+font-family: 'Inter', sans-serif;
+min-height: 100vh;
+overflow-x: hidden;
+position: relative;
+}
+#particles-canvas {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+z-index: -1;
+pointer-events: none;
+}
+@keyframes pulse-ring {
+0% { transform: scale(0.8); opacity: 1; }
+100% { transform: scale(2.5); opacity: 0; }
+}
+@keyframes cursor-blink {
+0%, 100% { opacity: 1; }
+50% { opacity: 0; }
+}
+.reveal {
+opacity: 0;
+transform: translateY(50px);
+transition: all 1s cubic-bezier(0.5, 0, 0, 1);
+}
+.reveal.active {
+opacity: 1;
+transform: translateY(0);
+}
+header {
+background: rgba(10, 10, 10, 0.8);
+padding: 20px 40px;
+display: flex;
+justify-content: space-between;
+align-items: center;
+border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+position: sticky;
+top: 0;
+z-index: 1000;
+backdrop-filter: blur(15px);
+}
+.logo { display: flex; align-items: center; gap: 15px; }
+.logo-icon { font-size: 32px; filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.5)); }
+.logo-text {
+font-family: 'Playfair Display', serif;
+font-size: 24px;
+font-weight: 700;
+color: var(--accent);
+letter-spacing: 1px;
+}
+.header-buttons { display: flex; gap: 15px; }
+.btn-header {
+background: linear-gradient(135deg, #d4af37 0%, #b8860b 100%);
+color: #000;
+padding: 12px 25px;
+border: none;
+border-radius: 30px;
+font-size: 14px;
+font-weight: 700;
+cursor: pointer;
+transition: all 0.3s;
+box-shadow: 0 4px 20px rgba(212, 175, 55, 0.3);
+text-decoration: none;
+display: inline-block;
+}
+.btn-header:hover {
+transform: translateY(-3px);
+box-shadow: 0 8px 30px rgba(212, 175, 55, 0.6);
+}
+.hero {
+text-align: center;
+padding: 120px 20px 80px;
+min-height: 60vh;
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+}
+.hero h1 {
+font-family: 'Playfair Display', serif;
+font-size: 56px;
+margin-bottom: 20px;
+color: var(--text);
+min-height: 70px;
+}
+.typing-cursor {
+display: inline-block;
+width: 3px;
+height: 50px;
+background: var(--accent);
+margin-left: 5px;
+animation: cursor-blink 1s infinite;
+vertical-align: middle;
+}
+.hero p {
+font-size: 20px;
+color: var(--gray);
+margin-bottom: 40px;
+max-width: 700px;
+line-height: 1.6;
+}
+.btn-map {
+background: transparent;
+border: 2px solid var(--accent);
+color: var(--accent);
+padding: 16px 40px;
+font-size: 16px;
+font-weight: 600;
+cursor: pointer;
+border-radius: 30px;
+transition: all 0.3s;
+text-transform: uppercase;
+letter-spacing: 1px;
+}
+.btn-map:hover {
+background: var(--accent);
+color: #000;
+transform: translateY(-3px);
+box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4);
+}
+.categories {
+display: grid;
+grid-template-columns: repeat(4, 1fr);
+gap: 20px;
+padding: 40px;
+max-width: 1200px;
+margin: 0 auto;
+}
+.category-card {
+background: rgba(21, 21, 21, 0.8);
+border: 1px solid rgba(255, 255, 255, 0.05);
+border-radius: 12px;
+padding: 40px 20px;
+text-align: center;
+cursor: pointer;
+transition: all 0.4s ease;
+backdrop-filter: blur(10px);
+}
+.category-card:hover {
+border-color: var(--accent);
+box-shadow: 0 15px 40px rgba(212, 175, 55, 0.15);
+transform: translateY(-10px);
+}
+.category-icon { font-size: 56px; margin-bottom: 20px; transition: transform 0.3s; }
+.category-card:hover .category-icon { transform: scale(1.15) rotate(5deg); }
+.category-name { font-size: 20px; font-weight: 600; margin-bottom: 10px; color: var(--text); }
+.category-desc { font-size: 14px; color: var(--gray); line-height: 1.5; }
+.map-section { padding: 60px 40px; max-width: 1400px; margin: 0 auto; }
+.map-container {
+position: relative;
+height: 650px;
+border-radius: 16px;
+overflow: hidden;
+border: 1px solid rgba(212, 175, 55, 0.2);
+box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+#map { width: 100%; height: 100%; }
+.map-stats {
+position: absolute;
+top: 30px;
+left: 30px;
+background: rgba(10, 10, 10, 0.9);
+padding: 30px;
+border-radius: 12px;
+border: 1px solid rgba(212, 175, 55, 0.3);
+z-index: 100;
+backdrop-filter: blur(15px);
+min-width: 220px;
+}
+.stat-item { margin-bottom: 25px; }
+.stat-item:last-child { margin-bottom: 0; }
+.stat-label { font-size: 11px; color: var(--gray); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; }
+.stat-value { font-size: 36px; font-weight: 700; color: var(--accent); font-family: 'Playfair Display', serif; }
+.how-it-works { padding: 100px 40px; text-align: center; background: rgba(21, 21, 21, 0.5); }
+.how-it-works h2 { font-family: 'Playfair Display', serif; font-size: 42px; margin-bottom: 70px; color: var(--accent); }
+.steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 50px; max-width: 1100px; margin: 0 auto; }
+.step { text-align: center; transition: transform 0.3s; }
+.step:hover { transform: translateY(-10px); }
+.step-icon { font-size: 72px; margin-bottom: 25px; }
+.step-title { font-size: 22px; font-weight: 600; margin-bottom: 15px; color: var(--text); }
+.step-desc { font-size: 15px; color: var(--gray); line-height: 1.6; }
+footer { background: #050505; padding: 60px 40px; text-align: center; border-top: 1px solid rgba(255, 255, 255, 0.05); }
+.footer-content { max-width: 1200px; margin: 0 auto; }
+.footer-links { display: flex; justify-content: center; gap: 40px; margin-bottom: 30px; flex-wrap: wrap; }
+.footer-links a { color: var(--gray); text-decoration: none; transition: all 0.3s; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; }
+.footer-links a:hover { color: var(--accent); }
+.footer-copy { font-size: 12px; color: #444; }
+@media (max-width: 1024px) {
+.categories { grid-template-columns: repeat(2, 1fr); }
+.hero h1 { font-size: 44px; }
+.typing-cursor { height: 44px; }
+}
+@media (max-width: 768px) {
+header { padding: 15px 20px; flex-direction: column; gap: 15px; }
+.header-buttons { width: 100%; justify-content: center; flex-wrap: wrap; }
+.hero { padding: 80px 20px 50px; min-height: auto; }
+.hero h1 { font-size: 32px; min-height: auto; }
+.typing-cursor { height: 32px; }
+.hero p { font-size: 16px; }
+.categories { grid-template-columns: 1fr; padding: 20px; }
+.category-card { padding: 25px 15px; }
+.category-icon { font-size: 40px; }
+.map-section { padding: 30px 20px; }
+.map-container { height: 450px; }
+.map-stats { position: relative; top: auto; left: auto; margin-bottom: 15px; min-width: auto; }
+.stat-value { font-size: 28px; }
+.how-it-works { padding: 60px 20px; }
+.how-it-works h2 { font-size: 32px; margin-bottom: 40px; }
+.steps { grid-template-columns: 1fr; gap: 40px; }
+.step-icon { font-size: 50px; }
+footer { padding: 40px 20px; }
+}
+@media (max-width: 480px) {
+.hero h1 { font-size: 26px; }
+.typing-cursor { height: 26px; }
+.btn-map { padding: 14px 30px; font-size: 14px; }
+.btn-header { padding: 10px 20px; font-size: 12px; }
 }
 </style>
 </head>
 <body>
-
+<canvas id="particles-canvas"></canvas>
 <header>
 <div class="logo">
 <span class="logo-icon">❤️</span>
 <span class="logo-text">Сердце Памяти</span>
 </div>
 <div class="header-buttons">
-<a href="index.html" class="btn-header ghost">На главную</a>
-<a href="index.html#map" class="btn-header ghost">Карта</a>
-<a href="admin.html" class="btn-header">Админка</a>
+<a href="services.html" class="btn-header">Услуги</a>
+<button class="btn-header" onclick="document.getElementById('map').scrollIntoView({behavior: 'smooth'})">Карта</button>
+<button class="btn-header" onclick="window.location.href='admin.html'">Админка</button>
 </div>
 </header>
-
 <section class="hero reveal">
-<h1>Память, которая <span>живёт вечно</span></h1>
-<p>Один честный тариф. Вечная страница памяти, мемориальная табличка и всё для установки — уже внутри. Никаких скрытых доплат.</p>
-<div class="price-badge">
-<div class="price-num">2 500 ₽</div>
-<div class="price-sub">ВСЁ ВКЛЮЧЕНО</div>
-</div>
-<br>
-<div class="delivery-tag">🚚 Бесплатная доставка по всей России</div>
+<h1><span id="typing-text"></span><span class="typing-cursor"></span></h1>
+<p>Интерактивная карта героев, ветеранов и значимых людей России. Сохраняем историю, чтобы она жила вечно.</p>
+<button class="btn-map" onclick="document.getElementById('map').scrollIntoView({behavior: 'smooth'})">
+Найти на карте
+</button>
 </section>
-
-<section class="section reveal">
-<h2 class="section-title">Что входит в заказ</h2>
-<p class="section-sub">Вы получаете готовый комплект — от цифровой страницы до таблички в руках</p>
-<div class="includes-grid">
-<div class="inc-card"><div class="inc-check">✓</div><div class="inc-text"><strong>Вечная страница памяти</strong><span>История, фото, видео, музыка, свечи и отметки посетителей — навсегда в сети</span></div></div>
-<div class="inc-card"><div class="inc-check">✓</div><div class="inc-text"><strong>Табличка 9×9 см</strong><span>Чёрный корпус «под гранит», золото, вечный огонь и QR под защитной смолой</span></div></div>
-<div class="inc-card"><div class="inc-check">✓</div><div class="inc-text"><strong>NFC + QR-код</strong><span>Навёл телефон — открылась страница. Работает сквозь корпус, без батареек</span></div></div>
-<div class="inc-card"><div class="inc-check">✓</div><div class="inc-text"><strong>Монтажный комплект</strong><span>Скотч, клей, салфетки, стяжки и инструкция — крепёж на лето и на зиму</span></div></div>
-<div class="inc-card"><div class="inc-check">✓</div><div class="inc-text"><strong>Защита от погоды</strong><span>Держит мороз, жару, дождь и снег — проверено на перепадах температур</span></div></div>
-<div class="inc-card"><div class="inc-check">✓</div><div class="inc-text"><strong>Доставка по РФ</strong><span>Отправляем Почтой России с трек-номером — бесплатно, в любую точку</span></div></div>
+<section class="categories">
+<div class="category-card reveal" onclick="filterMap('svo')">
+<div class="category-icon">⭐</div>
+<div class="category-name">Герои СВО</div>
+<div class="category-desc">Защитники Родины, проявившие мужество и отвагу</div>
 </div>
-</section>
-
-<section class="section reveal">
-<h2 class="section-title">Как выглядит табличка</h2>
-<div class="preview-wrap">
-<div class="tablet-preview">
-<div class="tp-flame">🔥</div>
-<div class="tp-title">ПАМЯТЬ ГЕРОЯ</div>
-<div class="tp-qr">QR</div>
-<div class="tp-hint">НАВЕДИТЕ ТЕЛЕФОН</div>
+<div class="category-card reveal" onclick="filterMap('veteran')">
+<div class="category-icon">🎖️</div>
+<div class="category-name">Ветераны</div>
+<div class="category-desc">Участники ВОВ и локальных конфликтов</div>
 </div>
+<div class="category-card reveal" onclick="filterMap('significant')">
+<div class="category-icon"></div>
+<div class="category-name">Значимые люди</div>
+<div class="category-desc">Врачи, учителя, деятели культуры и науки</div>
 </div>
-<p class="preview-note">Размер 9×9 см · золото по чёрному · QR залит прозрачной смолой навечно</p>
-</section>
-
-<section class="section reveal">
-<h2 class="section-title">Бесплатно в каждом заказе</h2>
-<p class="section-sub">Загружайте архив памяти — в пределах лимитов это уже включено в цену</p>
-<div class="free-grid">
-<div class="free-card"><div class="free-icon">📷</div><div class="free-num">20</div><div class="free-label">фотографий</div><div class="free-sub">бесплатно</div></div>
-<div class="free-card"><div class="free-icon">🎬</div><div class="free-num">20</div><div class="free-label">видео</div><div class="free-sub">бесплатно</div></div>
-<div class="free-card"><div class="free-icon">🎵</div><div class="free-num">10</div><div class="free-label">аудио / музыка</div><div class="free-sub">бесплатно</div></div>
+<div class="category-card reveal" onclick="filterMap('personal')">
+<div class="category-icon">❤️</div>
+<div class="category-name">Личная память</div>
+<div class="category-desc">Семья, близкие и родные люди</div>
 </div>
 </section>
-
-<section class="section reveal">
-<h2 class="section-title">Калькулятор дополнительного объёма</h2>
-<p class="section-sub">Нужно больше файлов? Каждый сверх лимита — 50 ₽. Считайте прямо здесь</p>
-<div class="calc-box">
-<div class="calc-row">
-<div class="calc-info"><strong>📷 Фотографии</strong><span>бесплатно до 20 шт, далее +50 ₽/шт</span></div>
-<div class="calc-control"><button class="calc-btn" onclick="chg('photo',-1)">−</button><span class="calc-val" id="v-photo">0</span><button class="calc-btn" onclick="chg('photo',1)">+</button></div>
-<div class="calc-extra" id="e-photo"></div>
+<section class="map-section reveal">
+<div class="map-container">
+<div class="map-stats">
+<div class="stat-item">
+<div class="stat-label">Всего мемориалов</div>
+<div class="stat-value" id="total-memorials">0</div>
 </div>
-<div class="calc-row">
-<div class="calc-info"><strong>🎬 Видео</strong><span>бесплатно до 20 шт, далее +50 ₽/шт</span></div>
-<div class="calc-control"><button class="calc-btn" onclick="chg('video',-1)">−</button><span class="calc-val" id="v-video">0</span><button class="calc-btn" onclick="chg('video',1)">+</button></div>
-<div class="calc-extra" id="e-video"></div>
+<div class="stat-item">
+<div class="stat-label">Городов</div>
+<div class="stat-value" id="total-cities">0</div>
 </div>
-<div class="calc-row">
-<div class="calc-info"><strong>🎵 Аудио / музыка</strong><span>бесплатно до 10 шт, далее +50 ₽/шт</span></div>
-<div class="calc-control"><button class="calc-btn" onclick="chg('audio',-1)">−</button><span class="calc-val" id="v-audio">0</span><button class="calc-btn" onclick="chg('audio',1)">+</button></div>
-<div class="calc-extra" id="e-audio"></div>
+<div class="stat-item">
+<div class="stat-label">Свечей зажжено</div>
+<div class="stat-value" id="total-candles">0</div>
 </div>
-<div class="calc-total">
-<div class="calc-line"><span>Базовый комплект «всё включено»</span><span>2 500 ₽</span></div>
-<div class="calc-line"><span>Доплата за файлы сверх лимита</span><span id="extra-sum">0 ₽</span></div>
-<div class="calc-line final"><span>Итого</span><span id="final-sum">2 500 ₽</span></div>
+</div>
+<div id="map"></div>
+</div>
+</section>
+<section class="how-it-works reveal">
+<h2>Как это работает</h2>
+<div class="steps">
+<div class="step">
+<div class="step-icon"></div>
+<div class="step-title">Сканируете NFC/QR</div>
+<div class="step-desc">Наведите телефон на мемориальную табличку</div>
+</div>
+<div class="step">
+<div class="step-icon">🗺️</div>
+<div class="step-title">Открывается страница</div>
+<div class="step-desc">История жизни, фотографии и видеоархив</div>
+</div>
+<div class="step">
+<div class="step-icon">🕯️</div>
+<div class="step-title">Зажигаете свечу</div>
+<div class="step-desc">Оставьте виртуальную свечу и слова благодарности</div>
 </div>
 </div>
 </section>
-
-<section class="section reveal">
-<h2 class="section-title">Как заказать</h2>
-<div class="steps-grid">
-<div class="step-card"><div class="step-n">1</div><h3>Свяжитесь с нами</h3><p>Напишите в Telegram или позвоните — расскажем детали и ответим на вопросы</p></div>
-<div class="step-card"><div class="step-n">2</div><h3>Пришлите материалы</h3><p>Фото, видео, музыку, ФИО, даты и пару слов о человеке — всё, что дорого</p></div>
-<div class="step-card"><div class="step-n">3</div><h3>Мы создаём память</h3><p>Делаем страницу и собираем табличку вручную, с душой и проверкой качества</p></div>
-<div class="step-card"><div class="step-n">4</div><h3>Отправляем вам</h3><p>Упаковываем с уважением и шлём Почтой России с трек-номером</p></div>
-</div>
-</section>
-
-<section class="section reveal">
-<h2 class="section-title">Сроки</h2>
-<div class="time-grid">
-<div class="time-card"><div class="t-icon">🛠️</div><div class="t-val">3–5 дней</div><div class="t-desc">Изготовление страницы и таблички с момента получения всех материалов. Смола и герметик должны полностью застыть — поэтому мы не торопимся в ущерб качеству.</div></div>
-<div class="time-card"><div class="t-icon">📦</div><div class="t-val">+ доставка</div><div class="t-desc">Отправляем на следующий рабочий день после готовности. Срок в пути зависит от региона и идёт по треку Почты России.</div></div>
-</div>
-</section>
-
-<section class="section reveal">
-<div class="promise">
-<p>Табличка переживает мороз, жару, дождь и снег. Если что-то пойдёт не так — мы не бросим: подскажем, поможем, доведём до результата. Для нас это не товар, а память о человеке.</p>
-<div class="p-small">Крепится на мрамор, гранит, дерево и металл — в комплекте два способа монтажа: клеевой для тёплой погоды и механический стяжками для мороза.</div>
-</div>
-</section>
-
-<section class="cta reveal">
-<h2>Сохраните память сегодня</h2>
-<p>2 500 ₽ · всё включено · бесплатная доставка по России</p>
-<a href="https://t.me/ВАШ_ТЕЛЕГРАМ" class="btn-cta">Заказать / написать нам</a>
-<p class="mission">Часть средств с каждого заказа мы направляем на помощь пожилым людям — <span>память о близких превращается в добро для живых</span>.</p>
-</section>
-
 <footer>
+<div class="footer-content">
 <div class="footer-links">
-<a href="index.html">О проекте</a>
-<a href="https://t.me/ВАШ_ТЕЛЕГРАМ">Контакты</a>
-<a href="index.html#map">Карта памяти</a>
+<a href="#about">О проекте</a>
+<a href="#contacts">Контакты</a>
+<a href="#privacy">Политика конфиденциальности</a>
 </div>
 <div class="footer-copy">© 2026 Сердце Памяти</div>
+</div>
 </footer>
-
+<script src="https://api-maps.yandex.ru/2.1/?apikey=ТВОЙ_API_КЛЮЧ&lang=ru_RU"></script>
 <script>
-var limits = { photo:20, video:20, audio:10 };
-var counts = { photo:0, video:0, audio:0 };
-var PRICE_EXTRA = 50;
-var BASE = 2500;
-
-function chg(type, delta) {
-    counts[type] = Math.max(0, counts[type] + delta);
-    document.getElementById('v-' + type).textContent = counts[type];
-    calc();
+const canvas = document.getElementById('particles-canvas');
+const ctx = canvas.getContext('2d');
+let particles = [];
+function resizeCanvas() {
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 }
-
-function calc() {
-    var extra = 0;
-    var types = ['photo','video','audio'];
-    for (var i = 0; i < types.length; i++) {
-        var t = types[i];
-        var over = Math.max(0, counts[t] - limits[t]);
-        var sum = over * PRICE_EXTRA;
-        extra += sum;
-        var el = document.getElementById('e-' + t);
-        el.textContent = over > 0 ? ('+' + sum + ' ₽') : '';
-    }
-    document.getElementById('extra-sum').textContent = extra + ' ₽';
-    document.getElementById('final-sum').textContent = (BASE + extra).toLocaleString('ru-RU') + ' ₽';
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+class Particle {
+constructor() {
+this.x = Math.random() * canvas.width;
+this.y = Math.random() * canvas.height;
+this.size = Math.random() * 2 + 0.5;
+this.speedY = Math.random() * 0.5 + 0.1;
+this.opacity = Math.random() * 0.5 + 0.1;
 }
-
-var observer = new IntersectionObserver(function(entries) {
-    entries.forEach(function(entry) {
-        if (entry.isIntersecting) entry.target.classList.add('active');
-    });
+update() {
+this.y -= this.speedY;
+if (this.y < 0) {
+this.y = canvas.height;
+this.x = Math.random() * canvas.width;
+}
+}
+draw() {
+ctx.fillStyle = `rgba(212, 175, 55, ${this.opacity})`;
+ctx.beginPath();
+ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+ctx.fill();
+}
+}
+function initParticles() {
+particles = [];
+for (let i = 0; i < 60; i++) {
+particles.push(new Particle());
+}
+}
+function animateParticles() {
+ctx.clearRect(0, 0, canvas.width, canvas.height);
+particles.forEach(p => {
+p.update();
+p.draw();
+});
+requestAnimationFrame(animateParticles);
+}
+initParticles();
+animateParticles();
+const textToType = "Общероссийская сеть сохранения памяти";
+const typingElement = document.getElementById('typing-text');
+let charIndex = 0;
+function typeText() {
+if (charIndex < textToType.length) {
+typingElement.textContent += textToType.charAt(charIndex);
+charIndex++;
+setTimeout(typeText, 60);
+}
+}
+setTimeout(typeText, 500);
+const observer = new IntersectionObserver((entries) => {
+entries.forEach(entry => {
+if (entry.isIntersecting) {
+entry.target.classList.add('active');
+}
+});
 }, { threshold: 0.1 });
-document.querySelectorAll('.reveal').forEach(function(el) { observer.observe(el); });
-
-calc();
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+function animateValue(element, start, end, duration) {
+let startTimestamp = null;
+const step = (timestamp) => {
+if (!startTimestamp) startTimestamp = timestamp;
+const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+const value = Math.floor(progress * (end - start) + start);
+element.textContent = value;
+if (progress < 1) window.requestAnimationFrame(step);
+};
+window.requestAnimationFrame(step);
+}
+const memorials = [
+{
+id: 'grigorev_dmitriy',
+name: 'Григорьев Дмитрий Николаевич',
+dates: '23.08.1993',
+category: 'svo',
+city: 'Москва',
+coords: [55.7558, 37.6173],
+link: 'memorial/grigorev_dmitriy/',
+candles: 0
+}
+];
+let map;
+let placemarks = [];
+ymaps.ready(function () {
+map = new ymaps.Map("map", {
+center: [55.7558, 37.6173],
+zoom: 5,
+controls: ['zoomControl', 'fullscreenControl']
+});
+const pulsingLayout = ymaps.templateLayoutFactory.createClass(
+`<div style="position: relative; width: 40px; height: 40px; display: flex; justify-content: center; align-items: center;">
+<div style="position: absolute; width: 100%; height: 100%; background: rgba(212, 175, 55, 0.3); border-radius: 50%; animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;"></div>
+<div style="position: absolute; width: 16px; height: 16px; background: #d4af37; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 0 15px #d4af37; z-index: 2;"></div>
+</div>`
+);
+memorials.forEach(memorial => {
+const placemark = new ymaps.Placemark(memorial.coords, {
+hintContent: memorial.name,
+balloonContent: `
+<div style="padding: 20px; max-width: 320px; font-family: 'Inter', sans-serif;">
+<h3 style="margin-bottom: 12px; color: #d4af37; font-family: 'Playfair Display', serif; font-size: 20px;">${memorial.name}</h3>
+<p style="margin-bottom: 8px; color: #888; font-size: 14px;">${memorial.dates}</p>
+<p style="margin-bottom: 20px; font-style: italic; color: #aaa;">${memorial.city}</p>
+<a href="${memorial.link}" target="_blank"
+style="color: #000; background: #d4af37; text-decoration: none; font-weight: 700; display: inline-block; padding: 10px 20px; border-radius: 20px; font-size: 14px;">
+Открыть страницу памяти →
+</a>
+</div>
+`
+}, {
+iconLayout: pulsingLayout,
+iconShape: { type: 'Circle', coordinates: [20, 20], radius: 20 }
+});
+map.geoObjects.add(placemark);
+placemarks.push({ placemark, memorial });
+});
+setTimeout(updateStats, 1500);
+});
+function filterMap(category) {
+placemarks.forEach(({ placemark, memorial }) => {
+placemark.options.set('visible', category === 'all' || memorial.category === category);
+});
+document.getElementById('map').scrollIntoView({behavior: 'smooth'});
+}
+function updateStats() {
+const totalMemorials = memorials.length;
+const cities = new Set(memorials.map(m => m.city));
+const totalCities = cities.size;
+const candles = memorials.reduce((sum, m) => sum + m.candles, 0);
+animateValue(document.getElementById('total-memorials'), 0, totalMemorials, 2000);
+animateValue(document.getElementById('total-cities'), 0, totalCities, 2000);
+animateValue(document.getElementById('total-candles'), 0, candles, 2000);
+}
 </script>
-
 </body>
 </html>
