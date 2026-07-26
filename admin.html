@@ -14,6 +14,7 @@ body{background:radial-gradient(100% 60% at 80% -10%,rgba(212,175,55,.06),transp
 #gate .box{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:40px;max-width:380px;width:100%;text-align:center;box-shadow:0 30px 80px rgba(0,0,0,.6)}
 #gate .h{font-size:46px;animation:beat 2.6s ease-in-out infinite}
 @keyframes beat{0%,100%{transform:scale(1)}14%{transform:scale(1.16)}28%{transform:scale(1)}42%{transform:scale(1.1)}}
+@keyframes savedflash{0%{box-shadow:0 0 0 0 rgba(95,184,120,.5)}100%{box-shadow:0 0 0 10px rgba(95,184,120,0)}}
 #gate h1{font-family:'Playfair Display',serif;color:var(--accent);font-size:24px;margin:14px 0 6px}
 #gate p{color:var(--muted);font-size:13px;margin-bottom:22px}
 #gate input{width:100%;padding:13px;background:var(--soft);border:1px solid var(--line);border-radius:10px;color:var(--text);font-size:15px;text-align:center;margin-bottom:14px}
@@ -29,11 +30,15 @@ body{background:radial-gradient(100% 60% at 80% -10%,rgba(212,175,55,.06),transp
 .tokstat{font-size:12px;display:flex;align-items:center;gap:6px;color:var(--muted)}
 .tokstat .d{width:8px;height:8px;border-radius:50%;background:var(--err)}
 .tokstat.on .d{background:var(--ok);box-shadow:0 0 8px var(--ok)}
+.savestat{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:5px}
+.savestat .d{width:7px;height:7px;border-radius:50%;background:var(--ok);box-shadow:0 0 6px var(--ok)}
 .tb{background:var(--panel2);border:1px solid var(--line);color:var(--text);padding:9px 16px;border-radius:24px;font-size:13px;font-weight:600;cursor:pointer;transition:.2s;font-family:'Inter'}
 .tb:hover{border-color:var(--line2);transform:translateY(-1px)}
 .tb.primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#000;border:none}
 .tb.primary:hover{box-shadow:0 6px 20px rgba(212,175,55,.4)}
 .tb.ghost{background:transparent}
+.tb.warn{color:var(--err);border-color:rgba(224,121,95,.3)}
+.tb.warn:hover{border-color:var(--err);background:rgba(224,121,95,.08)}
 .wrap{display:grid;grid-template-columns:minmax(0,1fr) 420px;gap:0;align-items:start}
 .editor{padding:26px 26px 80px;max-width:820px}
 .preview-col{position:sticky;top:64px;height:calc(100vh - 64px);padding:22px 22px 22px 0;display:flex;flex-direction:column;gap:12px}
@@ -140,7 +145,9 @@ body{background:radial-gradient(100% 60% at 80% -10%,rgba(212,175,55,.06),transp
 <div id="app">
 <div class="topbar">
 <div class="logo"><span class="h">❤️</span><span class="t">Сердце Памяти</span><small>конструктор</small></div>
+<div class="savestat" title="форма сохраняется в этом браузере автоматически"><span class="d"></span>автосохранение</div>
 <div class="tokstat" id="tokstat"><span class="d"></span><span id="toktxt">токен не задан · режим скачивания</span></div>
+<button class="tb warn" onclick="newPerson()">🆕 Новый</button>
 <button class="tb ghost" onclick="toggleTok()">🔑 Токен</button>
 <button class="tb" onclick="copyPerson()">📋 Копировать данные</button>
 <button class="tb" onclick="downloadHtml()">⬇ Скачать index.html</button>
@@ -192,7 +199,7 @@ body{background:radial-gradient(100% 60% at 80% -10%,rgba(212,175,55,.06),transp
 <div class="sec" id="s2">
 <div class="sec-h"><span class="n">2</span>Шапка страницы</div>
 <div class="sec-sub">Портрет, цитата и мелодия памяти.</div>
-<div class="field"><label>Главное фото (путь в папке)</label><input id="mainPhoto" placeholder="img/portrait.jpg" oninput="onInput()"><div class="hint">Положи файл в memorial/&lt;id&gt;/img/ и укажи имя. Оставь пусто — будет заглушка.</div></div>
+<div class="field"><label>Главное фото (путь в папке)</label><input id="mainPhoto" placeholder="portrait.jpg" oninput="onInput()"><div class="hint">Имя файла ОТНОСИТЕЛЬНО папки мемориала: <b style="color:var(--text)">portrait.jpg</b> (если в корне) или <b style="color:var(--text)">img/01.jpg</b> (если в img/). Без «memorial/...» впереди.</div></div>
 <div class="field"><label>Цитата / слова человека</label><textarea id="quote" placeholder="Мы не просто защищали землю…" oninput="onInput()"></textarea></div>
 <div class="field"><label>Мелодия памяти (файл)</label><input id="music" placeholder="golubye-berety-sineva.mp3" oninput="onInput()"><div class="hint">Файл кладётся в папку memorial/&lt;id&gt;/ рядом с index.html.</div></div>
 </div>
@@ -220,7 +227,7 @@ body{background:radial-gradient(100% 60% at 80% -10%,rgba(212,175,55,.06),transp
 <div style="background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:16px;font-size:13px;color:var(--muted);line-height:1.7">
 📷 Фото — клади в папку <b style="color:var(--accent)">memorial/&lt;id&gt;/img/</b><br>
 🎬 Видео — клади в папку <b style="color:var(--accent)">memorial/&lt;id&gt;/videos/</b><br>
-Называй по порядку (<span style="color:var(--text)">1.jpg, 2.jpg…</span>). Страница подхватит их сама и расставит кнопками. Перед загрузкой <b style="color:var(--text)">сожми фото</b> до 300–500 КБ (TinyPNG / Squoosh) — чтобы открывалось на кладбище при плохой связи.
+Называй по порядку (<span style="color:var(--text)">01.jpg, 02.jpg…</span>). Страница подхватит их сама и расставит кнопками. Перед загрузкой <b style="color:var(--text)">сожми фото</b> до 300–500 КБ (TinyPNG / Squoosh) — чтобы открывалось на кладбище при плохой связи.
 </div>
 </div>
 </div>
@@ -240,11 +247,19 @@ const PASS='serdce2026';
 const REPO='ShelTim777', RNAME='serdce-pamyati';
 const API='https://api.github.com/repos/'+REPO+'/'+RNAME+'/contents/';
 const TEMPLATE_PATH='memorial/_template.html';
-let person={
-category:'svo', fullName:'', badge:'', birth:'', death:'', city:'',
-lat:'', lng:'', id:'', mainPhoto:'', quote:'', music:'',
-timeline:[], words:'', wordsSign:'', restPlace:'', restAddr:''
-};
+const SAVE_KEY='sp_person_v1';
+
+function emptyPerson(){
+return {category:'svo',fullName:'',badge:'',birth:'',death:'',city:'',
+lat:'',lng:'',id:'',mainPhoto:'',quote:'',music:'',
+timeline:[],words:'',wordsSign:'',restPlace:'',restAddr:''};
+}
+let person=emptyPerson();
+
+/* ---------- память формы ---------- */
+function savePerson(){ try{ localStorage.setItem(SAVE_KEY, JSON.stringify(person)); }catch(e){} }
+function loadSaved(){ try{ const s=localStorage.getItem(SAVE_KEY); if(!s)return null; const o=JSON.parse(s); return (o&&typeof o==='object')?o:null; }catch(e){ return null; } }
+
 function login(){
 if(document.getElementById('pw').value===PASS){
 document.getElementById('gate').style.display='none';
@@ -252,39 +267,45 @@ document.getElementById('app').style.display='block';
 init();
 } else { document.getElementById('pwe').textContent='Неверный пароль'; document.getElementById('pw').value=''; }
 }
+
 function init(){
 loadToken();
 document.querySelectorAll('#catseg button').forEach(b=>b.onclick=()=>{person.category=b.dataset.c;syncCat();onInput();});
 document.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{document.getElementById(c.dataset.go).scrollIntoView({behavior:'smooth'});});
-if(person.timeline.length===0){
-person.timeline=[
-{year:'1993',title:'Рождение',text:'На свет появился человек, которого будут помнить.',photo:''},
-{year:'∞',title:'Память живёт',text:'Его имя — в сердцах близких.',photo:'',final:true}
-];
-}
-loadDemo();
+const saved=loadSaved();
+if(saved){ person=Object.assign(emptyPerson(), saved); if(!Array.isArray(person.timeline))person.timeline=[]; }
+else { loadDemo(); }
 syncAll();
 renderEv();
 onInput();
 scrollSpy();
 }
 function loadDemo(){
+person=emptyPerson();
 person.category='svo';
 person.fullName='ГРИГОРЬЕВ ДМИТРИЙ НИКОЛАЕВИЧ';
 person.badge='Герой Российской Федерации';
 person.birth='23.08.1993'; person.death=''; person.city='Москва';
 person.lat='55.7558'; person.lng='37.6173'; person.id='grigorev_dmitriy';
-person.mainPhoto='img/14.jpg';
+person.mainPhoto='portrait.jpg';
 person.quote='Мы не просто защищали землю. Мы защищали тех, кто стоит за нашей спиной.';
 person.music='golubye-berety-sineva.mp3';
 person.timeline=[
-{year:'1993',title:'Рождение',text:'23 августа на свет появился Дмитрий — долгожданный сын.',photo:''},
-{year:'Детство',title:'Годы взросления',text:'Школа, первые друзья, упорный и добрый характер.',photo:''},
-{year:'Служба',title:'Стал защитником',text:'Надел форму и принял присягу.',photo:''},
-{year:'СВО',title:'На передовой',text:'Проявлял мужество, выручал товарищей. Награждён медалью «За отвагу».',photo:''},
-{year:'∞',title:'Память живёт',text:'Герой Российской Федерации. Имя — на карте памяти страны.',photo:'',final:true}
+{year:'1993',title:'Рождение',text:'23 августа на свет появился Дмитрий — долгожданный сын.',photo:'01.jpg'},
+{year:'Детство',title:'Годы взросления',text:'Школа, первые друзья, упорный и добрый характер.',photo:'05.jpg'},
+{year:'Служба',title:'Стал защитником',text:'Надел форму и принял присягу.',photo:'10.jpg'},
+{year:'СВО',title:'На передовой',text:'Проявлял мужество, выручал товарищей. Награждён медалью «За отвагу».',photo:'13.jpg'},
+{year:'∞',title:'Память живёт',text:'Герой Российской Федерации. Имя — на карте памяти страны.',photo:'22.jpg',final:true}
 ];
 }
+function newPerson(){
+if(!confirm('Очистить форму под нового человека? Поля редактора сотрутся (опубликованные страницы и файлы НЕ тронутся).'))return;
+person=emptyPerson();
+savePerson(); syncAll(); renderEv(); onInput();
+document.getElementById('s1').scrollIntoView({behavior:'smooth'});
+toast('Форма очищена — заполняй нового человека','ok');
+}
+
 const F=['fullName','badge','birth','death','city','lat','lng','id','mainPhoto','quote','music','words','wordsSign','restPlace','restAddr'];
 function syncAll(){
 F.forEach(k=>{const el=document.getElementById(k);if(el)el.value=person[k]||'';});
@@ -295,11 +316,13 @@ function onInput(){
 F.forEach(k=>{const el=document.getElementById(k);if(el)person[k]=el.value.trim();});
 validate();
 renderPreview();
+savePerson();
 }
 function validate(){
 const need=[['f-name',person.fullName],['f-lat',person.lat],['f-lng',person.lng]];
 need.forEach(([id,v])=>{const el=document.getElementById(id);if(el)el.classList.toggle('bad',!v);});
 }
+
 function renderEv(){
 const box=document.getElementById('evlist');
 box.innerHTML=person.timeline.map((e,i)=>`
@@ -315,18 +338,28 @@ box.innerHTML=person.timeline.map((e,i)=>`
 </div>
 <input placeholder="Заголовок события" value="${esc(e.title||'')}" oninput="setEv(${i},'title',this.value)">
 <textarea placeholder="Что произошло в этот период" oninput="setEv(${i},'text',this.value)">${esc(e.text||'')}</textarea>
-<input placeholder="фото (необязательно, имя файла в img/)" value="${esc(e.photo||'')}" oninput="setEv(${i},'photo',this.value)">
+<input placeholder="фото (необязательно, имя файла в img/, напр. 01.jpg)" value="${esc(e.photo||'')}" oninput="setEv(${i},'photo',this.value)">
 </div>`).join('');
 }
 function addEv(){person.timeline.push({year:'',title:'',text:'',photo:'',final:false});renderEv();onInput();}
 function delEv(i){person.timeline.splice(i,1);renderEv();onInput();}
 function setEv(i,k,v){person.timeline[i][k]=v;onInput();}
 function moveEv(i,d){const t=person.timeline;const j=i+d;if(j<0||j>=t.length)return;[t[i],t[j]]=[t[j],t[i]];renderEv();onInput();}
+
 const THEMES={svo:{sym:'★',badge:'Герой · Ветеран СВО'},veteran:{sym:'🎖️',badge:'Ветеран'},significant:{sym:'🌿',badge:'Значимый человек'},personal:{sym:'❤️',badge:'Личная память'}};
+/* путь для ПРЕВЬЮ админки: mainPhoto хранится относительно папки мемориала,
+   а админка лежит в корне сайта — поэтому добавляем memorial/<id>/ */
+function resolvePhoto(p){
+if(!p)return '';
+if(/^https?:\/\//.test(p)||p.charAt(0)==='/')return p;
+if(p.indexOf('memorial/')===0)return p;
+const id=person.id||slug(person.fullName)||'person';
+return 'memorial/'+id+'/'+p;
+}
 function renderPreview(){
 const th=THEMES[person.category]||THEMES.personal;
 const ribbon=(person.category==='svo'||person.category==='veteran')?'on':'';
-const portrait=person.mainPhoto?`<img src="${esc(person.mainPhoto)}" alt="">`:'🕊️';
+const portrait=person.mainPhoto?`<img src="${esc(resolvePhoto(person.mainPhoto))}" alt="">`:'🕊️';
 const death=person.death?`<div class="d"><small>память</small>${esc(person.death)}</div>`:'';
 const quote=person.quote?`<div class="pv-quote">«${esc(person.quote)}»</div>`:'';
 const tl=(person.timeline||[]).length?person.timeline.map(e=>`
@@ -350,6 +383,7 @@ ${quote}
 <div class="pv-tl">${tl}</div>
 ${words}${rest}`;
 }
+
 function buildPersonObj(){
 const o={
 category:person.category, fullName:person.fullName, birth:person.birth, death:person.death,
@@ -367,6 +401,7 @@ coords:[parseFloat(person.lat)||0,parseFloat(person.lng)||0],link:'memorial/'+o.
 function slug(s){return (s||'person').toLowerCase().replace(/ё/g,'e').replace(/[а-я]/g,c=>{const m='абвгдежзийклмнопрстуфхцчшщъыьэюя';const l='abvgdezzijklmnoprstufhcsch_y_eua';const i=m.indexOf(c);return i>=0?l[i]:'_';}).replace(/[^a-z0-9]+/g,'_').replace(/^_|_$/g,'')||'person';}
 function cap(s){return s?s.charAt(0)+s.slice(1).toLowerCase():s;}
 function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
 let templateCache=null;
 async function getTemplate(){
 if(templateCache)return templateCache;
@@ -385,6 +420,7 @@ const tpl=await getTemplate(); if(!tpl)return null;
 const o=buildPersonObj();
 return tpl.replace('%%PERSON%%', JSON.stringify(o,null,2));
 }
+
 function copyPerson(){
 const o=buildPersonObj();
 navigator.clipboard.writeText(JSON.stringify(o,null,2)).then(()=>toast('Данные PERSON скопированы','ok')).catch(()=>toast('Не удалось скопировать','err'));
@@ -405,6 +441,7 @@ document.body.appendChild(a);
 a.click();
 setTimeout(()=>{ try{document.body.removeChild(a);}catch(e){} URL.revokeObjectURL(url); },1500);
 }
+
 function tok(){return (document.getElementById('token')?document.getElementById('token').value:'').trim();}
 function authH(){return {'Authorization':'token '+tok(),'Accept':'application/vnd.github.v3+json'};}
 async function ghGet(path){const r=await fetch(API+path,{headers:authH()});if(!r.ok)return null;return r.json();}
@@ -432,10 +469,12 @@ const entry=mapEntry(o);
 const idx=list.findIndex(x=>x.id===o.id);
 if(idx>=0)list[idx]=entry; else list.push(entry);
 await ghPut('memorials.json', JSON.stringify(list,null,2), 'Сердце Памяти: обновлена карта');
+savePerson();
 toast('✅ Опубликовано! Страница и карта обновятся через 1–2 мин. Открой memorial/'+o.id+'/','ok');
 }catch(e){toast('Ошибка публикации: '+e.message,'err');}
 finally{if(btn){btn.disabled=false;btn.textContent='🚀 Опубликовать';}}
 }
+
 function toggleTok(force){const s=document.getElementById('stok');const show=force||(s.style.display==='none');s.style.display=show?'block':'none';if(show)document.getElementById('stok').scrollIntoView({behavior:'smooth'});}
 function saveToken(){const t=document.getElementById('token').value.trim();const rem=document.getElementById('remember').checked;
 if(rem)localStorage.setItem('sp_token',t);else localStorage.removeItem('sp_token');updateTokStat();}
@@ -443,7 +482,9 @@ function clearToken(){document.getElementById('token').value='';localStorage.rem
 function loadToken(){const t=localStorage.getItem('sp_token')||'';const el=document.getElementById('token');if(el)el.value=t;updateTokStat();}
 function updateTokStat(){const on=!!tok();const s=document.getElementById('tokstat');s.classList.toggle('on',on);
 document.getElementById('toktxt').textContent=on?'токен задан · публикация включена':'токен не задан · режим скачивания';}
+
 let toastT;function toast(msg,kind){const t=document.getElementById('toast');t.textContent=msg;t.className='on '+(kind||'');clearTimeout(toastT);toastT=setTimeout(()=>t.className='',4200);}
+
 function scrollSpy(){
 const secs=['s1','s2','s3','s4','s5','s6'];
 const obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){
@@ -452,11 +493,13 @@ document.querySelectorAll('.sec').forEach(s=>s.classList.remove('hot'));e.target
 }}),{rootMargin:'-45% 0px -45% 0px'});
 secs.forEach(id=>{const el=document.getElementById(id);if(el)obs.observe(el);});
 }
+
 function mobTab(w){
 document.getElementById('mtab-edit').classList.toggle('on',w==='edit');
 document.getElementById('mtab-pv').classList.toggle('on',w==='pv');
 document.getElementById('pvcol').classList.toggle('show',w==='pv');
 }
+
 (function(){const cv=document.getElementById('embers'),x=cv.getContext('2d');let W,H,ps=[];function rs(){W=cv.width=innerWidth;H=cv.height=innerHeight;}addEventListener('resize',rs);rs();for(let i=0;i<22;i++)ps.push({x:Math.random()*W,y:Math.random()*H,s:Math.random()*1.4+.3,v:Math.random()*.3+.08,o:Math.random()*.3+.05,d:Math.random()*2-1});(function loop(){x.clearRect(0,0,W,H);ps.forEach(p=>{p.y-=p.v;p.x+=p.d*.15;if(p.y<0){p.y=H;p.x=Math.random()*W;}x.fillStyle='rgba(212,175,55,'+p.o+')';x.beginPath();x.arc(p.x,p.y,p.s,0,7);x.fill();});requestAnimationFrame(loop);})();})();
 </script>
 </body>
