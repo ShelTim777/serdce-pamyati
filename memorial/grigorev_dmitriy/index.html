@@ -19,10 +19,10 @@ body.theme-svo::before,body.theme-veteran::before{content:'';position:fixed;top:
 header{position:sticky;top:0;z-index:1000;display:flex;justify-content:space-between;align-items:center;padding:16px 32px;background:rgba(10,10,10,.72);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
 .logo{display:flex;align-items:center;gap:12px;text-decoration:none}.logo .h{font-size:26px;animation:beat 2.6s ease-in-out infinite;filter:drop-shadow(0 0 8px rgba(212,175,55,.5))}.logo .t{font-family:'Playfair Display',serif;font-weight:700;color:var(--accent);font-size:19px;letter-spacing:.5px}
 .nav{display:flex;gap:10px}.nav a{color:var(--muted);text-decoration:none;font-size:13px;letter-spacing:1px;text-transform:uppercase;padding:8px 16px;border:1px solid transparent;border-radius:30px;transition:.3s}.nav a:hover{color:var(--accent);border-color:var(--line)}
-.hero{max-width:1080px;margin:0 auto;padding:70px 24px 40px;display:grid;grid-template-columns:300px 1fr;gap:46px;align-items:center}
-.portrait{position:relative;border-radius:14px;overflow:hidden;border:2px solid var(--line);box-shadow:0 24px 60px rgba(0,0,0,.6),0 0 0 6px rgba(212,175,55,.05);aspect-ratio:3/4;background:#000}
-.portrait img{width:100%;height:100%;object-fit:cover;display:block;filter:saturate(.92) contrast(1.02)}
-.portrait::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(10,10,10,.55))}
+/* ===== ШАПКА: рамка портрета теперь РЕЗИНОВАЯ и показывает фото ЦЕЛИКОМ (паспарту) ===== */
+.hero{max-width:1120px;margin:0 auto;padding:70px 24px 40px;display:grid;grid-template-columns:minmax(260px,460px) 1fr;gap:46px;align-items:center}
+.portrait{position:relative;border-radius:14px;overflow:hidden;border:2px solid var(--line);box-shadow:0 24px 60px rgba(0,0,0,.6),0 0 0 6px rgba(212,175,55,.05);background:#000;display:flex;align-items:center;justify-content:center;max-height:560px}
+.portrait img{max-width:100%;max-height:560px;width:auto;height:auto;object-fit:contain;display:block;filter:saturate(.94) contrast(1.02)}
 .badge{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:#000;background:linear-gradient(135deg,var(--accent),#b8860b);padding:7px 16px;border-radius:30px;box-shadow:0 4px 18px rgba(212,175,55,.35)}.badge .sym{font-size:14px}
 .name{font-family:'Playfair Display',serif;font-weight:900;font-size:clamp(30px,5vw,52px);line-height:1.05;margin:16px 0 18px;letter-spacing:.5px}
 .lifeline{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-bottom:18px}
@@ -43,7 +43,7 @@ header{position:sticky;top:0;z-index:1000;display:flex;justify-content:space-bet
 .ev .dot{position:absolute;left:122px;top:6px;width:14px;height:14px;border-radius:50%;background:var(--bg);border:2px solid var(--accent);box-shadow:0 0 0 4px rgba(212,175,55,.08);transition:.4s;z-index:2}
 .ev.in .dot{background:var(--accent);box-shadow:0 0 16px var(--accent),0 0 0 5px rgba(212,175,55,.12)}
 .ev .body{padding-left:30px}.ev .body h3{font-size:18px;font-weight:600;margin-bottom:7px}.ev .body p{color:var(--muted);font-size:14.5px;line-height:1.65}
-.ev .body .ph{margin-top:12px;border-radius:10px;overflow:hidden;border:1px solid var(--line);max-width:340px}.ev .body .ph img{width:100%;display:block;filter:saturate(.9)}
+.ev .body .ph{margin-top:12px;border-radius:10px;overflow:hidden;border:1px solid var(--line);max-width:420px;background:#000;display:flex;align-items:center;justify-content:center}.ev .body .ph img{max-width:100%;max-height:360px;width:auto;height:auto;object-fit:contain;display:block;filter:saturate(.9)}
 .ev.final .dot{animation:flicker 2.4s ease-in-out infinite}.ev.final .yr{color:#e8c45a}
 .media-btns{display:grid;grid-template-columns:repeat(auto-fill,minmax(62px,1fr));gap:9px;margin-bottom:24px}.media-btns.vid{grid-template-columns:repeat(auto-fill,minmax(110px,1fr))}
 .mbtn{background:var(--accent-soft);border:1px solid var(--line);color:var(--accent);border-radius:8px;padding:11px 4px;font-size:14px;font-weight:600;cursor:pointer;transition:.25s;font-family:'Inter'}.mbtn:hover{background:rgba(212,175,55,.28);transform:translateY(-2px)}.mbtn.on{background:var(--accent);color:#000}
@@ -61,50 +61,50 @@ header{position:sticky;top:0;z-index:1000;display:flex;justify-content:space-bet
 .cap-q{color:var(--muted);font-size:14px;margin:18px 0 8px}.cap-i{width:100%;padding:12px;background:var(--accent-soft);border:1px solid var(--line);border-radius:8px;color:var(--text);font-size:16px}.cap-i:focus{outline:none;border-color:var(--accent)}.mo-go{width:100%;margin-top:18px;background:linear-gradient(135deg,var(--accent),#b8860b);color:#000;border:none;padding:13px;border-radius:30px;font-weight:700;font-size:15px;cursor:pointer}
 .cta{text-align:center;padding:60px 24px;border-top:1px solid var(--line);margin-top:30px}.cta h2{font-family:'Playfair Display',serif;font-size:clamp(24px,3.5vw,32px);color:var(--accent);margin-bottom:12px}.cta p{color:var(--muted);margin-bottom:26px;font-size:15px}.cta a{display:inline-block;background:linear-gradient(135deg,var(--accent),#b8860b);color:#000;text-decoration:none;padding:15px 42px;border-radius:30px;font-weight:700;box-shadow:0 6px 24px rgba(212,175,55,.4);transition:.3s}.cta a:hover{transform:translateY(-3px);box-shadow:0 10px 32px rgba(212,175,55,.6)}
 footer{background:#050505;padding:40px 24px;text-align:center;border-top:1px solid rgba(255,255,255,.05)}footer a{color:var(--accent);text-decoration:none;font-weight:600}footer .c{color:#444;font-size:12px;margin-top:16px}
-@media(max-width:760px){header{padding:14px 18px}.nav a{padding:7px 11px;font-size:11px}.hero{grid-template-columns:1fr;gap:26px;padding:46px 20px 30px;text-align:center}.portrait{max-width:240px;margin:0 auto}.lifeline{justify-content:center}.quote{margin-left:auto;margin-right:auto;text-align:left}.tl::before{left:18px}.ev{grid-template-columns:1fr;gap:6px;padding-left:42px}.ev .yr{text-align:left;font-size:20px}.ev .dot{left:12px}.ev .body{padding-left:0}}
+@media(max-width:760px){header{padding:14px 18px}.nav a{padding:7px 11px;font-size:11px}.hero{grid-template-columns:1fr;gap:26px;padding:46px 20px 30px;text-align:center}.portrait{max-width:100%;max-height:70vh;margin:0 auto}.lifeline{justify-content:center}.quote{margin-left:auto;margin-right:auto;text-align:left}.tl::before{left:18px}.ev{grid-template-columns:1fr;gap:6px;padding-left:42px}.ev .yr{text-align:left;font-size:20px}.ev .dot{left:12px}.ev .body{padding-left:0}}
 </style>
 </head>
 <body>
 <canvas id="embers"></canvas>
 <header>
-  <a class="logo" href="../../index.html"><span class="h">❤️</span><span class="t">Сердце Памяти</span></a>
-  <nav class="nav"><a href="../../index.html">Карта</a><a href="../../services.html">Услуги</a></nav>
+<a class="logo" href="../../index.html"><span class="h">❤️</span><span class="t">Сердце Памяти</span></a>
+<nav class="nav"><a href="../../index.html">Карта</a><a href="../../services.html">Услуги</a></nav>
 </header>
 <section class="hero reveal">
-  <div class="portrait"><img id="m-photo" src="" alt=""></div>
-  <div>
-    <span class="badge"><span class="sym" id="m-sym"></span><span id="m-badge"></span></span>
-    <h1 class="name" id="m-name"></h1>
-    <div class="lifeline">
-      <div class="ll-date"><small>рождение</small><span id="m-birth"></span></div>
-      <div class="ll-bar"></div>
-      <div class="ll-date" id="m-death-wrap"><small>память</small><span id="m-death"></span></div>
-    </div>
-    <div class="city" id="m-city"></div>
-    <p class="quote" id="m-quote"></p>
-  </div>
+<div class="portrait"><img id="m-photo" src="" alt=""></div>
+<div>
+<span class="badge"><span class="sym" id="m-sym"></span><span id="m-badge"></span></span>
+<h1 class="name" id="m-name"></h1>
+<div class="lifeline">
+<div class="ll-date"><small>рождение</small><span id="m-birth"></span></div>
+<div class="ll-bar"></div>
+<div class="ll-date" id="m-death-wrap"><small>память</small><span id="m-death"></span></div>
+</div>
+<div class="city" id="m-city"></div>
+<p class="quote" id="m-quote"></p>
+</div>
 </section>
 <div class="music reveal">
-  <button class="btn-music" id="musicBtn" onclick="toggleMusic()"><span class="mi">🎵</span><span class="waves"><i></i><i></i><i></i><i></i><i></i></span><span id="musicTxt">Мелодия памяти</span></button>
+<button class="btn-music" id="musicBtn" onclick="toggleMusic()"><span class="mi">🎵</span><span class="waves"><i></i><i></i><i></i><i></i><i></i></span><span id="musicTxt">Мелодия памяти</span></button>
 </div>
 <audio id="audio" loop></audio>
 <section class="sec"><h2 class="sec-h reveal">Жизненный путь</h2><p class="sec-sub reveal">От первого вздоха до вечной памяти — год за годом</p><div class="tl" id="timeline"></div></section>
 <section class="sec"><h2 class="sec-h reveal">Фотоархив</h2><p class="sec-sub reveal">Мгновения, которые остались с нами</p>
-  <div class="media-btns" id="photo-btns"></div>
-  <div class="viewer" id="photo-viewer"><img id="photo-img" src="" alt=""><div class="cap" id="photo-cap"></div></div>
-  <div class="mnav" id="photo-nav" style="display:none"><button id="photo-prev" onclick="photoStep(-1)">← Назад</button><button id="photo-next" onclick="photoStep(1)">Вперёд →</button></div>
-  <p class="mhint" id="photo-hint">Загрузка архива…</p>
+<div class="media-btns" id="photo-btns"></div>
+<div class="viewer" id="photo-viewer"><img id="photo-img" src="" alt=""><div class="cap" id="photo-cap"></div></div>
+<div class="mnav" id="photo-nav" style="display:none"><button id="photo-prev" onclick="photoStep(-1)">← Назад</button><button id="photo-next" onclick="photoStep(1)">Вперёд →</button></div>
+<p class="mhint" id="photo-hint">Загрузка архива…</p>
 </section>
 <section class="sec"><h2 class="sec-h reveal">Видеоархив</h2><p class="sec-sub reveal">Живые кадры памяти</p>
-  <div class="media-btns vid" id="video-btns"></div>
-  <div class="viewer" id="video-viewer"><video id="video-el" controls></video><div class="cap" id="video-cap"></div></div>
-  <div class="mnav" id="video-nav" style="display:none"><button id="video-prev" onclick="videoStep(-1)">← Назад</button><button id="video-next" onclick="videoStep(1)">Вперёд →</button></div>
-  <p class="mhint" id="video-hint">Загрузка архива…</p>
+<div class="media-btns vid" id="video-btns"></div>
+<div class="viewer" id="video-viewer"><video id="video-el" controls></video><div class="cap" id="video-cap"></div></div>
+<div class="mnav" id="video-nav" style="display:none"><button id="video-prev" onclick="videoStep(-1)">← Назад</button><button id="video-next" onclick="videoStep(1)">Вперёд →</button></div>
+<p class="mhint" id="video-hint">Загрузка архива…</p>
 </section>
 <section class="sec" id="words-sec" style="display:none"><h2 class="sec-h reveal">Слова памяти</h2><div class="words reveal"><div class="big" id="words-text"></div><div class="sign" id="words-sign"></div></div></section>
 <section class="sec">
-  <div class="candle-wrap reveal"><button class="btn-candle" id="btn-candle" onclick="lightCandle()">🕯️ Зажечь свет памяти</button><div class="cnt">Свет зажгли: <b id="candle-count">…</b> раз</div></div>
-  <div class="visitors reveal"><h2 class="sec-h" style="font-size:26px;margin-bottom:6px">Здесь побывали</h2><button class="btn-visit" onclick="openVisit()">🕊️ Я был тут сегодня</button><p class="vhint">🛡️ Защита от спама: не чаще раза в сутки</p><div class="vlist" id="vlist"><p class="vempty">Загрузка…</p></div></div>
+<div class="candle-wrap reveal"><button class="btn-candle" id="btn-candle" onclick="lightCandle()">🕯️ Зажечь свет памяти</button><div class="cnt">Свет зажгли: <b id="candle-count">…</b> раз</div></div>
+<div class="visitors reveal"><h2 class="sec-h" style="font-size:26px;margin-bottom:6px">Здесь побывали</h2><button class="btn-visit" onclick="openVisit()">🕊️ Я был тут сегодня</button><p class="vhint">🛡️ Защита от спама: не чаще раза в сутки</p><div class="vlist" id="vlist"><p class="vempty">Загрузка…</p></div></div>
 </section>
 <section class="sec" id="rest-sec" style="display:none"><div class="rest reveal"><div class="ic">🕊️</div><div class="pl" id="rest-place"></div><div class="ad" id="rest-addr"></div></div></section>
 <section class="cta reveal"><h2>Память можно сохранить навсегда</h2><p>Создайте такую же страницу для своего близкого — с табличкой NFC+QR на памятнике</p><a href="../../services.html">Сохранить память →</a></section>
@@ -139,19 +139,19 @@ const PERSON = {
       "year": "Служба",
       "title": "Стал защитником",
       "text": "Надел форму и принял присягу.",
-      "photo": "10.jpg"
+      "photo": "18.jpg"
     },
     {
       "year": "СВО",
       "title": "На передовой",
-      "text": "Проявлял мужество, выручал товарищей. Награждён медалью «За отвагу».",
-      "photo": "13.jpg"
+      "text": "Проявлял мужество, выручал товарищей.",
+      "photo": "38.jpg"
     },
     {
       "year": "∞",
       "title": "Память живёт",
       "text": "Герой Российской Федерации. Имя — на карте памяти страны.",
-      "photo": "22.jpg",
+      "photo": "35.jpg",
       "final": true
     }
   ],
@@ -164,22 +164,22 @@ const PERSON = {
 
 const THEMES={svo:{sym:'★',badge:'Герой · Ветеран СВО'},veteran:{sym:'🎖️',badge:'Ветеран'},significant:{sym:'🌿',badge:'Значимый человек'},personal:{sym:'❤️',badge:'Личная память'}};
 (function apply(){
-  const th=THEMES[PERSON.category]||THEMES.personal;
-  document.body.classList.add('theme-'+PERSON.category);
-  document.title=(PERSON.fullName||'Память')+' — Сердце Памяти';
-  document.getElementById('m-photo').src=PERSON.mainPhoto||'';
-  document.getElementById('m-photo').alt=PERSON.fullName||'';
-  document.getElementById('m-sym').textContent=th.sym;
-  document.getElementById('m-badge').textContent=PERSON.badge||th.badge;
-  document.getElementById('m-name').textContent=PERSON.fullName||'';
-  document.getElementById('m-birth').textContent=PERSON.birth||'—';
-  if(PERSON.death){document.getElementById('m-death').textContent=PERSON.death;}else{document.getElementById('m-death-wrap').style.display='none';}
-  document.getElementById('m-city').textContent=PERSON.city?('📍 '+PERSON.city):'';
-  const q=document.getElementById('m-quote');if(PERSON.quote)q.textContent='«'+PERSON.quote+'»';else q.style.display='none';
-  const a=document.getElementById('audio');if(PERSON.music){a.innerHTML='<source src="'+PERSON.music+'" type="audio/mpeg">';}else{document.querySelector('.music').style.display='none';}
-  if(PERSON.words){document.getElementById('words-sec').style.display='';document.getElementById('words-text').textContent='«'+PERSON.words+'»';document.getElementById('words-sign').textContent=PERSON.wordsSign||'';}
-  if(PERSON.restPlace||PERSON.restAddr){document.getElementById('rest-sec').style.display='';document.getElementById('rest-place').textContent=PERSON.restPlace||'';document.getElementById('rest-addr').textContent=PERSON.restAddr||'';}
-  renderTimeline();
+const th=THEMES[PERSON.category]||THEMES.personal;
+document.body.classList.add('theme-'+PERSON.category);
+document.title=(PERSON.fullName||'Память')+' — Сердце Памяти';
+document.getElementById('m-photo').src=PERSON.mainPhoto||'';
+document.getElementById('m-photo').alt=PERSON.fullName||'';
+document.getElementById('m-sym').textContent=th.sym;
+document.getElementById('m-badge').textContent=PERSON.badge||th.badge;
+document.getElementById('m-name').textContent=PERSON.fullName||'';
+document.getElementById('m-birth').textContent=PERSON.birth||'—';
+if(PERSON.death){document.getElementById('m-death').textContent=PERSON.death;}else{document.getElementById('m-death-wrap').style.display='none';}
+document.getElementById('m-city').textContent=PERSON.city?('📍 '+PERSON.city):'';
+const q=document.getElementById('m-quote');if(PERSON.quote)q.textContent='«'+PERSON.quote+'»';else q.style.display='none';
+const a=document.getElementById('audio');if(PERSON.music){a.innerHTML='<source src="'+PERSON.music+'" type="audio/mpeg">';}else{document.querySelector('.music').style.display='none';}
+if(PERSON.words){document.getElementById('words-sec').style.display='';document.getElementById('words-text').textContent='«'+PERSON.words+'»';document.getElementById('words-sign').textContent=PERSON.wordsSign||'';}
+if(PERSON.restPlace||PERSON.restAddr){document.getElementById('rest-sec').style.display='';document.getElementById('rest-place').textContent=PERSON.restPlace||'';document.getElementById('rest-addr').textContent=PERSON.restAddr||'';}
+renderTimeline();
 })();
 function renderTimeline(){const box=document.getElementById('timeline');let h='';(PERSON.timeline||[]).forEach(e=>{h+='<div class="ev reveal'+(e.final?' final':'')+'"><div class="yr">'+(e.year||'')+'</div><div class="dot"></div><div class="body"><h3>'+e.title+'</h3><p>'+e.text+'</p>'+(e.photo?'<div class="ph"><img src="img/'+e.photo+'" alt=""></div>':'')+'</div></div>';});box.innerHTML=h;}
 const REPO='ShelTim777',RNAME='serdce-pamyati',MPATH='memorial/'+(PERSON.id||'person');
