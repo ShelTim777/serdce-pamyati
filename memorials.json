@@ -11,5 +11,18 @@
     ],
     "link": "memorial/grigorev_dmitriy/",
     "candles": 0
+  },
+  {
+    "id": "bajbakov_fidan_floriduly",
+    "name": "Байбаков фидан флоридулы",
+    "dates": "26.02.1989",
+    "category": "svo",
+    "city": "Уфа",
+    "coords": [
+      54.7431,
+      55.9678
+    ],
+    "link": "memorial/bajbakov_fidan_floriduly/",
+    "candles": 0
   }
 ]
