@@ -92,6 +92,24 @@ body{background:radial-gradient(100% 60% at 80% -10%,rgba(212,175,55,.06),transp
 .trcard input.f-in{font-size:12px;color:var(--muted)}
 .tokrow{display:flex;gap:8px;align-items:center}
 .tokrow input{flex:1}
+/* ===== хаб выбора человека ===== */
+.hub-box{max-width:560px}
+.hub-sub{color:var(--muted);font-size:12.5px;text-align:center;margin:-12px 0 16px;line-height:1.5}
+.hub-search{width:100%;padding:11px 14px;background:var(--soft);border:1px solid var(--line);border-radius:10px;color:var(--text);font-size:14px;margin-bottom:12px;font-family:'Inter'}
+.hub-search:focus{outline:none;border-color:var(--accent)}
+.hub-list{max-height:46vh;overflow-y:auto;display:grid;gap:8px;margin-bottom:14px;padding-right:4px}
+.hub-list::-webkit-scrollbar{width:6px}.hub-list::-webkit-scrollbar-thumb{background:var(--line);border-radius:3px}
+.hub-item{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:var(--bg2);border:1px solid var(--line);border-radius:11px;padding:12px 14px;cursor:pointer;transition:.2s;font-family:'Inter'}
+.hub-item:hover{border-color:var(--accent);transform:translateX(4px);background:var(--soft)}
+.hub-item .hi-ic{flex:0 0 auto;width:38px;height:38px;border-radius:50%;background:var(--soft);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:17px}
+.hub-item .hi-tx{flex:1;min-width:0}
+.hub-item .hi-nm{font-size:14px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hub-item .hi-id{font-size:11px;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hub-item .hi-go{flex:0 0 auto;color:var(--accent);font-size:16px;opacity:.5;transition:.2s}
+.hub-item:hover .hi-go{opacity:1;transform:translateX(2px)}
+.hub-empty,.hub-loading{color:var(--muted);font-size:13px;text-align:center;padding:24px 10px;font-style:italic;line-height:1.6}
+.hub-new{width:100%;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#000;border:none;padding:13px;border-radius:30px;font-weight:700;font-size:14px;cursor:pointer;transition:.2s;font-family:'Inter'}
+.hub-new:hover{box-shadow:0 6px 20px rgba(212,175,55,.4);transform:translateY(-1px)}
 .pv-label{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);text-align:center}
 .phone{flex:1;background:#000;border:10px solid #1a1712;border-radius:30px;overflow:hidden;box-shadow:0 30px 70px rgba(0,0,0,.6);position:relative;display:flex;flex-direction:column}
 .phone .notch{height:18px;background:#1a1712;display:flex;justify-content:center;align-items:center}.phone .notch i{width:50px;height:5px;border-radius:3px;background:#000}
@@ -161,6 +179,7 @@ body{background:radial-gradient(100% 60% at 80% -10%,rgba(212,175,55,.06),transp
 <div class="savestat" title="форма сохраняется в этом браузере автоматически"><span class="d"></span>автосохранение</div>
 <div class="tokstat" id="tokstat"><span class="d"></span><span id="toktxt">токен не задан · режим скачивания</span></div>
 <button class="tb warn" onclick="newPerson()">🆕 Новый</button>
+<button class="tb" onclick="openHub()">📂 Открыть</button>
 <button class="tb ghost" onclick="toggleTok()">🔑 Токен</button>
 <button class="tb" onclick="copyPerson()">📋 Копировать данные</button>
 <button class="tb" onclick="downloadHtml()">⬇ Скачать index.html</button>
@@ -261,6 +280,8 @@ body{background:radial-gradient(100% 60% at 80% -10%,rgba(212,175,55,.06),transp
 <button id="mtab-pv" onclick="mobTab('pv')">👁 Превью</button>
 </div>
 </div>
+<div class="mo" id="visitMo"><div class="mo-box"><button class="mo-x" onclick="closeVisit()">&times;</button><h3 class="mo-t">Отметить посещение</h3><div id="opts"></div><p class="cap-q">Проверка: сколько будет <span id="c1">0</span> + <span id="c2">0</span>?</p><input type="number" class="cap-i" id="capIn" placeholder="Введите ответ"><button class="mo-go" onclick="submitVisit()">Отметить посещение</button></div></div>
+<div class="mo" id="hub"><div class="mo-box hub-box"><button class="mo-x" onclick="closeHub()">&times;</button><h3 class="mo-t">Кого редактируем?</h3><p class="hub-sub">Выбери опубликованного человека, чтобы поправить — или создай нового.</p><input class="hub-search" id="hubSearch" placeholder="🔍 Поиск по имени или id…" oninput="filterHub(this.value)"><div class="hub-list" id="hubList"><p class="hub-loading">Загружаю список с сайта…</p></div><button class="hub-new" onclick="closeHub();newPerson()">＋ Создать нового человека</button></div></div>
 <div id="toast"></div>
 <script>
 const PASS='serdce2026';
@@ -296,6 +317,8 @@ renderEv();
 renderTracks();
 onInput();
 scrollSpy();
+/* если токен задан — сразу предлагаем выбрать существующего или нового */
+if(tok()) setTimeout(openHub,300);
 }
 function loadDemo(){
 person=emptyPerson();
@@ -484,6 +507,9 @@ setTimeout(()=>{ try{document.body.removeChild(a);}catch(e){} URL.revokeObjectUR
 function tok(){return (document.getElementById('token')?document.getElementById('token').value:'').trim();}
 function authH(){return {'Authorization':'token '+tok(),'Accept':'application/vnd.github.v3+json'};}
 async function ghGet(path){const r=await fetch(API+path,{headers:authH()});if(!r.ok)return null;return r.json();}
+/* чтение файла: с токеном если есть, иначе публично (репо открыт) */
+async function ghRead(path){const h=tok()?authH():{'Accept':'application/vnd.github.v3+json'};const r=await fetch(API+path,{headers:h});if(!r.ok)return null;return r.json();}
+function decodeContent(c){try{return decodeURIComponent(escape(atob(c)));}catch(e){return null;}}
 async function ghPut(path,content,msg){
 const exist=await ghGet(path);
 const body={message:msg,content:b64(content)};
@@ -513,6 +539,75 @@ toast('✅ Опубликовано! Страница и карта обновя
 }catch(e){toast('Ошибка публикации: '+e.message,'err');}
 finally{if(btn){btn.disabled=false;btn.textContent='🚀 Опубликовать';}}
 }
+/* ===== хаб: список опубликованных + загрузка данных из их страницы ===== */
+let hubData=[];
+async function loadPeopleList(){
+const cur=await ghRead('memorials.json');
+if(!cur||!cur.content)return [];
+try{const list=JSON.parse(decodeContent(cur.content)||'[]');return Array.isArray(list)?list:[];}catch(e){return [];}
+}
+/* достаём объект PERSON из опубликованного index.html (балансировщик скобок, не regex) */
+function extractPerson(html){
+const m=html.indexOf('const PERSON =');
+if(m<0)return null;
+const start=html.indexOf('{',m);
+if(start<0)return null;
+let depth=0,inStr=false,escp=false,q='';
+for(let i=start;i<html.length;i++){
+const c=html[i];
+if(escp){escp=false;continue;}
+if(inStr){if(c==='\\'){escp=true;}else if(c===q){inStr=false;}continue;}
+if(c==='"'||c==="'"){inStr=true;q=c;continue;}
+if(c==='{')depth++;
+else if(c==='}'){depth--;if(depth===0){try{return JSON.parse(html.slice(start,i+1));}catch(e){return null;}}}
+}
+return null;
+}
+async function loadPersonFromRepo(id){
+toast('Загружаю '+id+'…','');
+const cur=await ghRead('memorial/'+encodeURIComponent(id)+'/index.html');
+if(!cur||!cur.content){toast('Не удалось прочитать страницу '+id+' (проверь токен/связь)','err');return;}
+const html=decodeContent(cur.content);
+if(!html){toast('Ошибка декодирования страницы','err');return;}
+const p=extractPerson(html);
+if(!p){toast('Не нашёл данные на странице '+id+' — возможно, она собрана старым шаблоном. Переопубликуй её заново.','err');return;}
+person=Object.assign(emptyPerson(),p);
+if(!Array.isArray(person.timeline))person.timeline=[];
+if(!Array.isArray(person.tracks))person.tracks=[];
+savePerson();syncAll();renderEv();renderTracks();onInput();
+closeHub();
+document.getElementById('s1').scrollIntoView({behavior:'smooth'});
+toast('✅ Загружен: '+(person.fullName||id)+' — правь и жми «Опубликовать»','ok');
+}
+function renderHub(list){
+hubData=list||[];
+const box=document.getElementById('hubList');
+if(!hubData.length){box.innerHTML='<p class="hub-empty">На сайте пока нет опубликованных страниц.<br>Создай первую кнопкой ниже.</p>';return;}
+filterHub(document.getElementById('hubSearch').value||'');
+}
+function filterHub(q){
+const box=document.getElementById('hubList');
+const qq=(q||'').trim().toLowerCase();
+const list=hubData.filter(p=>!qq||(p.name||'').toLowerCase().includes(qq)||(p.id||'').toLowerCase().includes(qq));
+if(!list.length){box.innerHTML='<p class="hub-empty">Никого не нашлось по запросу «'+esc(q)+'».</p>';return;}
+box.innerHTML=list.map(p=>{
+const th=THEMES[p.category]||THEMES.personal;
+const nm=esc(p.name||p.id||'—');
+const dates=esc(p.dates||'');
+return '<button class="hub-item" onclick="loadPersonFromRepo(\''+esc(p.id)+'\')">'
++'<span class="hi-ic">'+th.sym+'</span>'
++'<span class="hi-tx"><span class="hi-nm">'+nm+'</span><span class="hi-id">'+esc(p.id||'')+(dates?' · '+dates:'')+'</span></span>'
++'<span class="hi-go">→</span></button>';
+}).join('');
+}
+async function openHub(){
+const s=document.getElementById('hubSearch');if(s)s.value='';
+document.getElementById('hubList').innerHTML='<p class="hub-loading">Загружаю список с сайта…</p>';
+document.getElementById('hub').classList.add('on');
+const list=await loadPeopleList();
+renderHub(list);
+}
+function closeHub(){document.getElementById('hub').classList.remove('on');}
 function toggleTok(force){const s=document.getElementById('stok');const show=force||(s.style.display==='none');s.style.display=show?'block':'none';if(show)document.getElementById('stok').scrollIntoView({behavior:'smooth'});}
 function saveToken(){const t=document.getElementById('token').value.trim();const rem=document.getElementById('remember').checked;
 if(rem)localStorage.setItem('sp_token',t);else localStorage.removeItem('sp_token');updateTokStat();}
@@ -534,6 +629,7 @@ document.getElementById('mtab-edit').classList.toggle('on',w==='edit');
 document.getElementById('mtab-pv').classList.toggle('on',w==='pv');
 document.getElementById('pvcol').classList.toggle('show',w==='pv');
 }
+window.onclick=e=>{const t=e.target;if(t.id==='visitMo')closeVisit();if(t.id==='hub')closeHub();};
 (function(){const cv=document.getElementById('embers'),x=cv.getContext('2d');let W,H,ps=[];function rs(){W=cv.width=innerWidth;H=cv.height=innerHeight;}addEventListener('resize',rs);rs();for(let i=0;i<22;i++)ps.push({x:Math.random()*W,y:Math.random()*H,s:Math.random()*1.4+.3,v:Math.random()*.3+.08,o:Math.random()*.3+.05,d:Math.random()*2-1});(function loop(){x.clearRect(0,0,W,H);ps.forEach(p=>{p.y-=p.v;p.x+=p.d*.15;if(p.y<0){p.y=H;p.x=Math.random()*W;}x.fillStyle='rgba(212,175,55,'+p.o+')';x.beginPath();x.arc(p.x,p.y,p.s,0,7);x.fill();});requestAnimationFrame(loop);})();})();
 </script>
 </body>
