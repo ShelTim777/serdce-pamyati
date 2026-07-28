@@ -19,7 +19,6 @@ body.theme-svo::before,body.theme-veteran::before{content:'';position:fixed;top:
 header{position:sticky;top:0;z-index:1000;display:flex;justify-content:space-between;align-items:center;padding:16px 32px;background:rgba(10,10,10,.72);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
 .logo{display:flex;align-items:center;gap:12px;text-decoration:none}.logo .h{font-size:26px;animation:beat 2.6s ease-in-out infinite;filter:drop-shadow(0 0 8px rgba(212,175,55,.5))}.logo .t{font-family:'Playfair Display',serif;font-weight:700;color:var(--accent);font-size:19px;letter-spacing:.5px}
 .nav{display:flex;gap:10px}.nav a{color:var(--muted);text-decoration:none;font-size:13px;letter-spacing:1px;text-transform:uppercase;padding:8px 16px;border:1px solid transparent;border-radius:30px;transition:.3s}.nav a:hover{color:var(--accent);border-color:var(--line)}
-/* ===== ШАПКА: рамка портрета теперь РЕЗИНОВАЯ и показывает фото ЦЕЛИКОМ (паспарту) ===== */
 .hero{max-width:1120px;margin:0 auto;padding:70px 24px 40px;display:grid;grid-template-columns:minmax(260px,460px) 1fr;gap:46px;align-items:center}
 .portrait{position:relative;border-radius:14px;overflow:hidden;border:2px solid var(--line);box-shadow:0 24px 60px rgba(0,0,0,.6),0 0 0 6px rgba(212,175,55,.05);background:#000;display:flex;align-items:center;justify-content:center;max-height:560px}
 .portrait img{max-width:100%;max-height:560px;width:auto;height:auto;object-fit:contain;display:block;filter:saturate(.94) contrast(1.02)}
@@ -50,6 +49,21 @@ header{position:sticky;top:0;z-index:1000;display:flex;justify-content:space-bet
 .viewer{display:none;border:2px solid var(--line);border-radius:12px;overflow:hidden;background:#000;box-shadow:0 16px 50px rgba(0,0,0,.5)}.viewer.on{display:block}.viewer img{width:100%;max-height:74vh;object-fit:contain;display:block}.viewer video{width:100%;display:block;background:#000}.viewer .cap{text-align:center;color:var(--muted);font-size:12px;letter-spacing:1px;padding:11px;background:rgba(10,10,10,.9)}
 .mnav{display:flex;justify-content:center;gap:14px;margin-top:18px}.mnav button{background:var(--accent-soft);border:1px solid var(--line);color:var(--accent);padding:10px 24px;border-radius:30px;cursor:pointer;font-weight:600;transition:.25s}.mnav button:hover{background:var(--accent);color:#000}.mnav button:disabled{opacity:.3;cursor:not-allowed}
 .mhint{text-align:center;color:#5f5a52;font-style:italic;padding:24px}
+/* ===== плейлист песен ===== */
+.track-list{max-width:760px;margin:0 auto;display:grid;gap:10px}
+.trk{display:flex;align-items:center;gap:14px;width:100%;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 18px;cursor:pointer;transition:.25s;position:relative;overflow:hidden;font-family:'Inter'}
+.trk:hover{border-color:var(--accent);transform:translateX(4px)}
+.trk.on{border-color:var(--accent);background:var(--accent-soft)}
+.trk-ic{flex:0 0 auto;width:36px;height:36px;border-radius:50%;background:var(--accent-soft);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;color:var(--accent);font-size:12px;transition:.25s}
+.trk.on .trk-ic{background:var(--accent);color:#000}
+.trk-ic .pl-wave{display:none;gap:2px;align-items:center;height:14px}
+.trk.on .pl-play{display:none}.trk.on .pl-wave{display:inline-flex}
+.trk-ic .pl-wave i{width:2px;background:currentColor;border-radius:2px;animation:wave 1s ease-in-out infinite}
+.trk-ic .pl-wave i:nth-child(2){animation-delay:.15s}.trk-ic .pl-wave i:nth-child(3){animation-delay:.3s}
+.trk-t{flex:1;font-size:15px;color:var(--text);font-weight:500;line-height:1.3}
+.trk-n{flex:0 0 auto;color:var(--muted);font-size:13px;font-family:'Playfair Display',serif}
+.trk-prog{position:absolute;left:0;bottom:0;height:2px;width:100%;background:transparent}
+.trk-prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),#b8860b)}
 .words{max-width:760px;margin:0 auto;text-align:center}.words .big{font-family:'Playfair Display',serif;font-size:clamp(20px,3vw,28px);line-height:1.55;color:#d8d1c4;font-style:italic}.words .sign{margin-top:22px;color:var(--muted);font-size:13px;letter-spacing:1px}
 .candle-wrap{text-align:center}.btn-candle{background:linear-gradient(135deg,var(--accent),#b8860b);color:#000;border:none;padding:15px 38px;border-radius:30px;font-size:16px;font-weight:700;cursor:pointer;box-shadow:0 6px 22px rgba(212,175,55,.4);transition:.3s}.btn-candle:hover{transform:translateY(-3px);box-shadow:0 10px 30px rgba(212,175,55,.6)}
 .cnt{margin-top:18px;color:var(--muted);font-size:14px}.cnt b{color:var(--accent);font-size:18px}
@@ -68,7 +82,7 @@ footer{background:#050505;padding:40px 24px;text-align:center;border-top:1px sol
 <canvas id="embers"></canvas>
 <header>
 <a class="logo" href="../../index.html"><span class="h">❤️</span><span class="t">Сердце Памяти</span></a>
-<nav class="nav"><a href="../../index.html">Карта</a><a href="../../services.html">Услуги</a></nav>
+<nav class="nav"><a href="../../index.html">Карта памяти</a></nav>
 </header>
 <section class="hero reveal">
 <div class="portrait"><img id="m-photo" src="" alt=""></div>
@@ -101,17 +115,22 @@ footer{background:#050505;padding:40px 24px;text-align:center;border-top:1px sol
 <div class="mnav" id="video-nav" style="display:none"><button id="video-prev" onclick="videoStep(-1)">← Назад</button><button id="video-next" onclick="videoStep(1)">Вперёд →</button></div>
 <p class="mhint" id="video-hint">Загрузка архива…</p>
 </section>
+<section class="sec" id="tracks-sec" style="display:none"><h2 class="sec-h reveal">Песни памяти</h2><p class="sec-sub reveal">Те, что ассоциируются с ним — включите и послушайте</p>
+<div class="track-list reveal" id="track-btns"></div>
+<p class="mhint" id="track-hint">Загрузка…</p>
+</section>
+<audio id="plAudio" preload="none"></audio>
 <section class="sec" id="words-sec" style="display:none"><h2 class="sec-h reveal">Слова памяти</h2><div class="words reveal"><div class="big" id="words-text"></div><div class="sign" id="words-sign"></div></div></section>
 <section class="sec">
 <div class="candle-wrap reveal"><button class="btn-candle" id="btn-candle" onclick="lightCandle()">🕯️ Зажечь свет памяти</button><div class="cnt">Свет зажгли: <b id="candle-count">…</b> раз</div></div>
 <div class="visitors reveal"><h2 class="sec-h" style="font-size:26px;margin-bottom:6px">Здесь побывали</h2><button class="btn-visit" onclick="openVisit()">🕊️ Я был тут сегодня</button><p class="vhint">🛡️ Защита от спама: не чаще раза в сутки</p><div class="vlist" id="vlist"><p class="vempty">Загрузка…</p></div></div>
 </section>
 <section class="sec" id="rest-sec" style="display:none"><div class="rest reveal"><div class="ic">🕊️</div><div class="pl" id="rest-place"></div><div class="ad" id="rest-addr"></div></div></section>
-<section class="cta reveal"><h2>Память можно сохранить навсегда</h2><p>Создайте такую же страницу для своего близкого — с табличкой NFC+QR на памятнике</p><a href="../../services.html">Сохранить память →</a></section>
-<footer><a href="../../index.html">❤️ Сердце Памяти — карта памяти России</a><div class="c">© 2026 Сердце Памяти</div></footer>
+<section class="cta reveal"><h2>Он не один на этой карте</h2><p>Рядом — другие, кого помнят. Посмотрите, кто ещё живёт в памяти страны.</p><a href="../../index.html">Открыть карту памяти →</a></section>
+<footer><a href="../../index.html">❤️ Сердце Памяти — карта памяти России</a><div class="c">© 2026 Сердце Памяти · на странице человека — только память</div></footer>
 <div class="mo" id="visitMo"><div class="mo-box"><button class="mo-x" onclick="closeVisit()">&times;</button><h3 class="mo-t">Отметить посещение</h3><div id="opts"></div><p class="cap-q">Проверка: сколько будет <span id="c1">0</span> + <span id="c2">0</span>?</p><input type="number" class="cap-i" id="capIn" placeholder="Введите ответ"><button class="mo-go" onclick="submitVisit()">Отметить посещение</button></div></div>
 <script>
-/* ⬇⬇ АДМИНКА ПОДСТАВЛЯЕТ СЮДА ДАННЫЕ. ВРУЧНУЮ НЕ ПРАВИМ. ⬇⬇ */
+/* ⬇ АДМИНКА ПОДСТАВЛЯЕТ СЮДА ДАННЫЕ. ВРУЧНУЮ НЕ ПРАВИМ. ⬇ */
 const PERSON = {
   "category": "svo",
   "fullName": "Байбаков Фидан Флоридулы",
@@ -142,14 +161,15 @@ const PERSON = {
       "photo": "07.jpg"
     }
   ],
+  "tracks": [],
   "words": "",
   "wordsSign": "",
   "restPlace": "Чекмагушевский район. дер. Киндеркулева",
   "restAddr": "",
   "id": "bajbakov_fidan_floriduly"
 };
-
 const THEMES={svo:{sym:'★',badge:'Герой · Ветеран СВО'},veteran:{sym:'🎖️',badge:'Ветеран'},significant:{sym:'🌿',badge:'Значимый человек'},personal:{sym:'❤️',badge:'Личная память'}};
+function escHtml(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 (function apply(){
 const th=THEMES[PERSON.category]||THEMES.personal;
 document.body.classList.add('theme-'+PERSON.category);
@@ -170,7 +190,7 @@ renderTimeline();
 })();
 function renderTimeline(){const box=document.getElementById('timeline');let h='';(PERSON.timeline||[]).forEach(e=>{h+='<div class="ev reveal'+(e.final?' final':'')+'"><div class="yr">'+(e.year||'')+'</div><div class="dot"></div><div class="body"><h3>'+e.title+'</h3><p>'+e.text+'</p>'+(e.photo?'<div class="ph"><img src="img/'+e.photo+'" alt=""></div>':'')+'</div></div>';});box.innerHTML=h;}
 const REPO='ShelTim777',RNAME='serdce-pamyati',MPATH='memorial/'+(PERSON.id||'person');
-const PEXT=['.jpg','.jpeg','.png','.webp'],VEXT=['.mp4','.webm','.mov'];
+const PEXT=['.jpg','.jpeg','.png','.webp'],VEXT=['.mp4','.webm','.mov'],AEXT=['.mp3','.m4a','.ogg','.wav'];
 let photos=[],videos=[],curP=-1,curV=-1;
 const numKey=n=>{const m=String(n).match(/\d+/);return m?+m[0]:99999;};
 function loadRepo(sub,exts,cb){fetch('https://api.github.com/repos/'+REPO+'/'+RNAME+'/contents/'+MPATH+'/'+sub,{headers:{Accept:'application/vnd.github.v3+json'}}).then(r=>r.ok?r.json():Promise.reject()).then(list=>{cb(list.filter(x=>x.type==='file'&&exts.some(e=>x.name.toLowerCase().endsWith(e))).sort((a,b)=>numKey(a.name)-numKey(b.name)).map(x=>sub+'/'+x.name));}).catch(()=>cb([]));}
@@ -180,9 +200,49 @@ function photoStep(d){showP(curP+d);}
 function renderV(){const b=document.getElementById('video-btns');let h='';videos.forEach((_,i)=>h+='<button class="mbtn" id="vb-'+i+'" onclick="showV('+i+')">🎬 '+(i+1)+'</button>');b.innerHTML=h;document.getElementById('video-hint').textContent=videos.length?'Выберите видео выше':'Видео пока нет — загрузите в папку videos/';}
 function showV(i){if(i<0||i>=videos.length)return;curV=i;const v=document.getElementById('video-el');v.src=videos[i];v.load();document.getElementById('video-cap').textContent='Видео '+(i+1)+' из '+videos.length;document.getElementById('video-viewer').classList.add('on');document.getElementById('video-nav').style.display='flex';document.getElementById('video-hint').style.display='none';document.getElementById('video-prev').disabled=i===0;document.getElementById('video-next').disabled=i===videos.length-1;document.querySelectorAll('#video-btns .mbtn').forEach(b=>b.classList.remove('on'));const c=document.getElementById('vb-'+i);if(c)c.classList.add('on');document.getElementById('video-viewer').scrollIntoView({behavior:'smooth',block:'center'});}
 function videoStep(d){showV(curV+d);}
-let playing=false;function toggleMusic(){const a=document.getElementById('audio'),b=document.getElementById('musicBtn'),t=document.getElementById('musicTxt');if(playing){a.pause();b.classList.remove('on');t.textContent='Мелодия памяти';}else{a.volume=.5;a.play().catch(()=>{});b.classList.add('on');t.textContent='Пауза';}playing=!playing;}
+/* ===== музыка: фон (пластинка) и плейлист не играют вместе ===== */
+let playing=false;
+function stopBg(){const a=document.getElementById('audio');if(a)a.pause();const b=document.getElementById('musicBtn');if(b)b.classList.remove('on');const t=document.getElementById('musicTxt');if(t)t.textContent='Мелодия памяти';playing=false;}
+function stopPl(){const a=document.getElementById('plAudio');if(a)a.pause();}
+function toggleMusic(){const a=document.getElementById('audio'),b=document.getElementById('musicBtn'),t=document.getElementById('musicTxt');if(playing){a.pause();b.classList.remove('on');t.textContent='Мелодия памяти';playing=false;}else{stopPl();a.volume=.5;a.play().catch(()=>{});b.classList.add('on');t.textContent='Пауза';playing=true;}}
+/* ===== плейлист песен ===== */
+let tracks=[],curT=-1;
+function pad2(n){return String(n).padStart(2,'0');}
+function prettyName(fn){return String(fn).replace(/\.[^.]+$/,'').replace(/[-_]+/g,' ').replace(/\s+/g,' ').trim().replace(/\b\w/g,c=>c.toUpperCase());}
+function buildTracksFromData(){
+  const t=PERSON.tracks||[];
+  return t.map((x,i)=>{
+    const file=(x.file||'').trim();
+    const src=file?('audio/'+file):('audio/'+pad2(i+1)+'.mp3');
+    return {title:(x.title||'').trim()||prettyName(file||('track-'+pad2(i+1))),src:src};
+  }).filter(x=>x.title||x.src);
+}
+function renderTracks(){
+  const box=document.getElementById('track-btns');
+  if(!tracks.length){document.getElementById('track-hint').textContent='Песен пока нет — добавьте их в админке (⑥ Архивы → Плейлист) и положите mp3 в папку audio/';return;}
+  document.getElementById('track-hint').style.display='none';
+  box.innerHTML=tracks.map((t,i)=>'<button class="trk" id="trk-'+i+'" onclick="playTrack('+i+')"><span class="trk-ic"><span class="pl-play">▶</span><span class="pl-wave"><i></i><i></i><i></i></span></span><span class="trk-t">'+escHtml(t.title)+'</span><span class="trk-n">'+(i+1)+'</span><span class="trk-prog"><i></i></span></button>').join('');
+}
+function markAllTracks(){const paused=document.getElementById('plAudio').paused;tracks.forEach((_,i)=>{const b=document.getElementById('trk-'+i);if(b)b.classList.toggle('on',i===curT&&!paused);});}
+function playTrack(i){if(i<0||i>=tracks.length)return;stopBg();const a=document.getElementById('plAudio');if(curT===i&&!a.paused){a.pause();return;}curT=i;a.src=tracks[i].src;a.play().catch(()=>{});}
+function finalizeTracks(){
+  renderTracks();
+  const sec=document.getElementById('tracks-sec');
+  if(tracks.length){sec.style.display='';}
+  sec.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+}
+(function initPlaylist(){
+  const a=document.getElementById('plAudio');
+  a.addEventListener('play',markAllTracks);
+  a.addEventListener('pause',markAllTracks);
+  a.addEventListener('ended',()=>{if(curT<tracks.length-1)playTrack(curT+1);});
+  a.addEventListener('timeupdate',function(){if(curT>=0&&this.duration){const b=document.getElementById('trk-'+curT);if(b){const bar=b.querySelector('.trk-prog i');if(bar)bar.style.width=(this.currentTime/this.duration*100)+'%';}}});
+  const fromData=buildTracksFromData();
+  if(fromData.length){tracks=fromData;finalizeTracks();}
+  else{loadRepo('audio',AEXT,list=>{tracks=list.map(src=>({title:prettyName(src.split('/').pop()),src:src}));finalizeTracks();});}
+})();
 const CID='serdce-pamyati-'+(PERSON.id||'person');
-function loadCandles(){fetch('https://api.countapi.xyz/get/'+CID+'/candles').then(r=>r.json()).then(d=>document.getElementById('candle-count').textContent=d.value||0).catch(()=>document.getElementById('candle-count').textContent='0');}
+function loadCandles(){fetch('https://api.countapi.xyz/get/'+CID+'/candles').then(r=>r.json().catch(()=>({value:0})).then(d=>document.getElementById('candle-count').textContent=d.value||0)).catch(()=>document.getElementById('candle-count').textContent='0');}
 function lightCandle(){const k='lc_'+CID,last=localStorage.getItem(k);if(last){const h=(Date.now()-+last)/36e5;if(h<1){alert('Следующая свеча через '+Math.ceil(1-h)+' ч.');return;}}const b=document.getElementById('btn-candle'),o=b.textContent;b.disabled=true;b.textContent='Зажигаем…';fetch('https://api.countapi.xyz/hit/'+CID+'/candles').then(r=>r.json()).then(d=>{localStorage.setItem(k,Date.now().toString());document.getElementById('candle-count').textContent=d.value;b.textContent='🕯️ Свет зажжён!';setTimeout(()=>{b.textContent=o;b.disabled=false;},2000);}).catch(()=>{b.textContent=o;b.disabled=false;alert('Нет соединения.');});}
 const ACT={candle:'🕯️ Зажёг свечу памяти',flowers:'🌹 Положил цветы',pray:'🙏 Вспомнил и помолился',bow:'🕊️ Склонил голову в память'};let capAns=0;
 function buildOpts(){const o=[['candle','🕯️ Зажёг свечу памяти'],['flowers','🌹 Положил цветы'],['pray','🙏 Вспомнил и помолился'],['bow','🕊️ Склонил голову в память']];document.getElementById('opts').innerHTML=o.map(x=>'<label class="opt"><input type="radio" name="va" value="'+x[0]+'"><span>'+x[1]+'</span></label>').join('');}
