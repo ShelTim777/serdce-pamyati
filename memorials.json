@@ -24,5 +24,18 @@
     ],
     "link": "memorial/bajbakov_fidan_floriduly/",
     "candles": 0
+  },
+  {
+    "id": "mendelev_vladimir_viktorovis",
+    "name": "Менделев владимир викторович",
+    "dates": "23.04.1975",
+    "category": "svo",
+    "city": "Тобольск",
+    "coords": [
+      58.1981,
+      68.2546
+    ],
+    "link": "memorial/mendelev_vladimir_viktorovis/",
+    "candles": 0
   }
 ]
