@@ -79,6 +79,17 @@ body{background:radial-gradient(100% 60% at 80% -10%,rgba(212,175,55,.06),transp
 .evcard .del{background:none;border:none;color:var(--err);cursor:pointer;font-size:18px;margin-left:auto;padding:0 4px}
 .evcard input,.evcard textarea{width:100%;padding:9px 11px;background:var(--panel);border:1px solid var(--line);border-radius:8px;color:var(--text);font-size:13px;font-family:'Inter';margin-bottom:8px}
 .evcard input:focus,.evcard textarea:focus{outline:none;border-color:var(--accent)}
+/* карточка песни (плейлист) */
+.trcard{background:var(--bg2);border:1px solid var(--line);border-radius:11px;padding:14px;margin-bottom:12px;position:relative}
+.trcard .top{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.trcard .ord{display:flex;flex-direction:column;gap:3px}
+.trcard .ord button{background:var(--panel2);border:1px solid var(--line);color:var(--accent);width:26px;height:20px;border-radius:6px;cursor:pointer;font-size:11px;line-height:1}
+.trcard .ord button:hover{background:var(--soft)}
+.trcard .del{background:none;border:none;color:var(--err);cursor:pointer;font-size:18px;margin-left:auto;padding:0 4px}
+.trcard .ic{font-size:18px}
+.trcard input{width:100%;padding:9px 11px;background:var(--panel);border:1px solid var(--line);border-radius:8px;color:var(--text);font-size:13px;font-family:'Inter';margin-bottom:8px}
+.trcard input:focus{outline:none;border-color:var(--accent)}
+.trcard input.f-in{font-size:12px;color:var(--muted)}
 .tokrow{display:flex;gap:8px;align-items:center}
 .tokrow input{flex:1}
 .pv-label{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);text-align:center}
@@ -110,6 +121,8 @@ body{background:radial-gradient(100% 60% at 80% -10%,rgba(212,175,55,.06),transp
 .pv-ev.final .y{color:#e8c45a}
 .pv-empty{color:#5f5a52;font-size:10px;text-align:center;padding:10px;font-style:italic}
 .pv-words{padding:0 20px 10px;text-align:center;font-family:'Playfair Display',serif;font-style:italic;font-size:12px;color:#d8d1c4}
+.pv-tracks{padding:0 20px 6px;text-align:center;font-size:10px;color:var(--muted);line-height:1.7}
+.pv-tracks b{color:var(--accent);font-weight:600}
 .pv-rest{margin:6px 18px 14px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px;text-align:center;font-size:10px;color:var(--muted)}
 #toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(120px);z-index:6000;background:var(--panel2);border:1px solid var(--line2);color:var(--text);padding:13px 22px;border-radius:30px;font-size:13px;box-shadow:0 12px 40px rgba(0,0,0,.6);transition:transform .35s cubic-bezier(.2,.8,.2,1);max-width:90vw;text-align:center}
 #toast.on{transform:translateX(-50%) translateY(0)}
@@ -222,12 +235,19 @@ body{background:radial-gradient(100% 60% at 80% -10%,rgba(212,175,55,.06),transp
 <div class="field"><label>Адрес / как найти</label><input id="restAddr" placeholder="участок 12, ряд 4" oninput="onInput()"></div>
 </div>
 <div class="sec" id="s6">
-<div class="sec-h"><span class="n">6</span>Фото- и видеоархив</div>
-<div class="sec-sub">Архивы собираются АВТОМАТОМ из папок — сюда вводить ничего не надо.</div>
+<div class="sec-h"><span class="n">6</span>Фото-, видео- и аудиоархив</div>
+<div class="sec-sub">Фото и видео собираются АВТОМАТОМ из папок. Песни — добавляй списком ниже и пиши им названия.</div>
 <div style="background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:16px;font-size:13px;color:var(--muted);line-height:1.7">
 📷 Фото — клади в папку <b style="color:var(--accent)">memorial/&lt;id&gt;/img/</b><br>
 🎬 Видео — клади в папку <b style="color:var(--accent)">memorial/&lt;id&gt;/videos/</b><br>
-Называй по порядку (<span style="color:var(--text)">01.jpg, 02.jpg…</span>). Страница подхватит их сама и расставит кнопками. Перед загрузкой <b style="color:var(--text)">сожми фото</b> до 300–500 КБ (TinyPNG / Squoosh) — чтобы открывалось на кладбище при плохой связи.
+🎵 Песни — клади в папку <b style="color:var(--accent)">memorial/&lt;id&gt;/audio/</b> по порядку (<span style="color:var(--text)">01.mp3, 02.mp3…</span>)<br>
+Называй фото/видео по порядку (<span style="color:var(--text)">01.jpg, 02.jpg…</span>). Перед загрузкой <b style="color:var(--text)">сожми фото</b> до 300–500 КБ (TinyPNG / Squoosh).
+</div>
+<div style="margin-top:18px">
+<div style="font-family:'Playfair Display',serif;color:var(--accent);font-size:16px;margin-bottom:4px">🎵 Плейлист песен</div>
+<div style="color:var(--muted);font-size:12px;margin-bottom:12px;line-height:1.6">Добавляй по одной песне. <b style="color:var(--text)">Название</b> — что увидит семья (пиши как хочешь, по-русски). <b style="color:var(--text)">Файл</b> можно НЕ писать — тогда песня возьмётся из <span style="color:var(--accent)">audio/</span> по номеру в списке (1-я строка → 01.mp3, 2-я → 02.mp3…). Пиши файл только если имя другое.</div>
+<div id="trlist"></div>
+<button class="tl-add" onclick="addTrack()">＋ Добавить песню</button>
 </div>
 </div>
 </div>
@@ -248,18 +268,15 @@ const REPO='ShelTim777', RNAME='serdce-pamyati';
 const API='https://api.github.com/repos/'+REPO+'/'+RNAME+'/contents/';
 const TEMPLATE_PATH='memorial/_template.html';
 const SAVE_KEY='sp_person_v1';
-
 function emptyPerson(){
 return {category:'svo',fullName:'',badge:'',birth:'',death:'',city:'',
 lat:'',lng:'',id:'',mainPhoto:'',quote:'',music:'',
-timeline:[],words:'',wordsSign:'',restPlace:'',restAddr:''};
+timeline:[],tracks:[],words:'',wordsSign:'',restPlace:'',restAddr:''};
 }
 let person=emptyPerson();
-
 /* ---------- память формы ---------- */
 function savePerson(){ try{ localStorage.setItem(SAVE_KEY, JSON.stringify(person)); }catch(e){} }
 function loadSaved(){ try{ const s=localStorage.getItem(SAVE_KEY); if(!s)return null; const o=JSON.parse(s); return (o&&typeof o==='object')?o:null; }catch(e){ return null; } }
-
 function login(){
 if(document.getElementById('pw').value===PASS){
 document.getElementById('gate').style.display='none';
@@ -267,16 +284,16 @@ document.getElementById('app').style.display='block';
 init();
 } else { document.getElementById('pwe').textContent='Неверный пароль'; document.getElementById('pw').value=''; }
 }
-
 function init(){
 loadToken();
 document.querySelectorAll('#catseg button').forEach(b=>b.onclick=()=>{person.category=b.dataset.c;syncCat();onInput();});
 document.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{document.getElementById(c.dataset.go).scrollIntoView({behavior:'smooth'});});
 const saved=loadSaved();
-if(saved){ person=Object.assign(emptyPerson(), saved); if(!Array.isArray(person.timeline))person.timeline=[]; }
+if(saved){ person=Object.assign(emptyPerson(), saved); if(!Array.isArray(person.timeline))person.timeline=[]; if(!Array.isArray(person.tracks))person.tracks=[]; }
 else { loadDemo(); }
 syncAll();
 renderEv();
+renderTracks();
 onInput();
 scrollSpy();
 }
@@ -297,15 +314,18 @@ person.timeline=[
 {year:'СВО',title:'На передовой',text:'Проявлял мужество, выручал товарищей. Награждён медалью «За отвагу».',photo:'13.jpg'},
 {year:'∞',title:'Память живёт',text:'Герой Российской Федерации. Имя — на карте памяти страны.',photo:'22.jpg',final:true}
 ];
+person.tracks=[
+{title:'Голубые береты — Синева',file:''},
+{title:'День Победы',file:''}
+];
 }
 function newPerson(){
 if(!confirm('Очистить форму под нового человека? Поля редактора сотрутся (опубликованные страницы и файлы НЕ тронутся).'))return;
 person=emptyPerson();
-savePerson(); syncAll(); renderEv(); onInput();
+savePerson(); syncAll(); renderEv(); renderTracks(); onInput();
 document.getElementById('s1').scrollIntoView({behavior:'smooth'});
 toast('Форма очищена — заполняй нового человека','ok');
 }
-
 const F=['fullName','badge','birth','death','city','lat','lng','id','mainPhoto','quote','music','words','wordsSign','restPlace','restAddr'];
 function syncAll(){
 F.forEach(k=>{const el=document.getElementById(k);if(el)el.value=person[k]||'';});
@@ -322,7 +342,6 @@ function validate(){
 const need=[['f-name',person.fullName],['f-lat',person.lat],['f-lng',person.lng]];
 need.forEach(([id,v])=>{const el=document.getElementById(id);if(el)el.classList.toggle('bad',!v);});
 }
-
 function renderEv(){
 const box=document.getElementById('evlist');
 box.innerHTML=person.timeline.map((e,i)=>`
@@ -345,10 +364,31 @@ function addEv(){person.timeline.push({year:'',title:'',text:'',photo:'',final:f
 function delEv(i){person.timeline.splice(i,1);renderEv();onInput();}
 function setEv(i,k,v){person.timeline[i][k]=v;onInput();}
 function moveEv(i,d){const t=person.timeline;const j=i+d;if(j<0||j>=t.length)return;[t[i],t[j]]=[t[j],t[i]];renderEv();onInput();}
-
+/* ---------- плейлист песен ---------- */
+function renderTracks(){
+const box=document.getElementById('trlist');
+box.innerHTML=(person.tracks||[]).map((t,i)=>`
+<div class="trcard">
+<div class="top">
+<span class="ic">🎵</span>
+<div class="ord">
+<button onclick="moveTrack(${i},-1)" ${i===0?'disabled':''}>▲</button>
+<button onclick="moveTrack(${i},1)" ${i===person.tracks.length-1?'disabled':''}>▼</button>
+</div>
+<span style="font-size:11px;color:var(--muted)">№${i+1} → audio/${String(i+1).padStart(2,'0')}.mp3</span>
+<button class="del" onclick="delTrack(${i})" title="удалить">×</button>
+</div>
+<input placeholder="Название песни (увидит семья), напр. Голубые береты — Синева" value="${esc(t.title||'')}" oninput="setTrack(${i},'title',this.value)">
+<input class="f-in" placeholder="файл в audio/ (НЕобязательно — оставь пусто, возьмётся по номеру выше)" value="${esc(t.file||'')}" oninput="setTrack(${i},'file',this.value)">
+</div>`).join('');
+}
+function addTrack(){person.tracks.push({title:'',file:''});renderTracks();onInput();}
+function delTrack(i){person.tracks.splice(i,1);renderTracks();onInput();}
+function setTrack(i,k,v){person.tracks[i][k]=v;onInput();renderTracks();}
+function moveTrack(i,d){const t=person.tracks;const j=i+d;if(j<0||j>=t.length)return;[t[i],t[j]]=[t[j],t[i]];renderTracks();onInput();}
 const THEMES={svo:{sym:'★',badge:'Герой · Ветеран СВО'},veteran:{sym:'🎖️',badge:'Ветеран'},significant:{sym:'🌿',badge:'Значимый человек'},personal:{sym:'❤️',badge:'Личная память'}};
 /* путь для ПРЕВЬЮ админки: mainPhoto хранится относительно папки мемориала,
-   а админка лежит в корне сайта — поэтому добавляем memorial/<id>/ */
+а админка лежит в корне сайта — поэтому добавляем memorial/<id>/ */
 function resolvePhoto(p){
 if(!p)return '';
 if(/^https?:\/\//.test(p)||p.charAt(0)==='/')return p;
@@ -367,6 +407,8 @@ const tl=(person.timeline||[]).length?person.timeline.map(e=>`
 <div class="b"><h4>${esc(e.title||'')}</h4><p>${esc(e.text||'')}</p></div></div>`).join('')
 :'<div class="pv-empty">добавьте события жизненного пути</div>';
 const words=person.words?`<div class="pv-sec-t">Слова памяти</div><div class="pv-words">«${esc(person.words)}»</div>`:'';
+const trs=(person.tracks||[]).filter(t=>(t.title||'').trim()||(t.file||'').trim());
+const tracks=trs.length?`<div class="pv-sec-t">Песни памяти</div><div class="pv-tracks">🎵 ${trs.map(t=>'<b>'+esc(t.title||t.file||'трек')+'</b>').join('<br>🎵 ')}</div>`:'';
 const rest=(person.restPlace||person.restAddr)?`<div class="pv-rest">🕊️ ${esc(person.restPlace||'')}<br>${esc(person.restAddr||'')}</div>`:'';
 document.getElementById('pv').innerHTML=`
 <div class="pv-ribbon ${ribbon}"></div>
@@ -381,14 +423,14 @@ ${quote}
 <div class="pv-sec-t">Жизненный путь</div>
 <div class="pv-sec-s">год за годом</div>
 <div class="pv-tl">${tl}</div>
-${words}${rest}`;
+${words}${tracks}${rest}`;
 }
-
 function buildPersonObj(){
 const o={
 category:person.category, fullName:person.fullName, birth:person.birth, death:person.death,
 city:person.city, badge:person.badge, mainPhoto:person.mainPhoto, quote:person.quote, music:person.music,
 timeline:person.timeline.map(e=>{const x={year:e.year,title:e.title,text:e.text};if(e.photo)x.photo=e.photo;if(e.final)x.final=true;return x;}),
+tracks:(person.tracks||[]).map(t=>({title:(t.title||'').trim(),file:(t.file||'').trim()})).filter(t=>t.title||t.file),
 words:person.words, wordsSign:person.wordsSign, restPlace:person.restPlace, restAddr:person.restAddr,
 id:person.id||slug(person.fullName)
 };
@@ -401,7 +443,6 @@ coords:[parseFloat(person.lat)||0,parseFloat(person.lng)||0],link:'memorial/'+o.
 function slug(s){return (s||'person').toLowerCase().replace(/ё/g,'e').replace(/[а-я]/g,c=>{const m='абвгдежзийклмнопрстуфхцчшщъыьэюя';const l='abvgdezzijklmnoprstufhcsch_y_eua';const i=m.indexOf(c);return i>=0?l[i]:'_';}).replace(/[^a-z0-9]+/g,'_').replace(/^_|_$/g,'')||'person';}
 function cap(s){return s?s.charAt(0)+s.slice(1).toLowerCase():s;}
 function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-
 let templateCache=null;
 async function getTemplate(){
 if(templateCache)return templateCache;
@@ -420,7 +461,6 @@ const tpl=await getTemplate(); if(!tpl)return null;
 const o=buildPersonObj();
 return tpl.replace('%%PERSON%%', JSON.stringify(o,null,2));
 }
-
 function copyPerson(){
 const o=buildPersonObj();
 navigator.clipboard.writeText(JSON.stringify(o,null,2)).then(()=>toast('Данные PERSON скопированы','ok')).catch(()=>toast('Не удалось скопировать','err'));
@@ -441,7 +481,6 @@ document.body.appendChild(a);
 a.click();
 setTimeout(()=>{ try{document.body.removeChild(a);}catch(e){} URL.revokeObjectURL(url); },1500);
 }
-
 function tok(){return (document.getElementById('token')?document.getElementById('token').value:'').trim();}
 function authH(){return {'Authorization':'token '+tok(),'Accept':'application/vnd.github.v3+json'};}
 async function ghGet(path){const r=await fetch(API+path,{headers:authH()});if(!r.ok)return null;return r.json();}
@@ -474,7 +513,6 @@ toast('✅ Опубликовано! Страница и карта обновя
 }catch(e){toast('Ошибка публикации: '+e.message,'err');}
 finally{if(btn){btn.disabled=false;btn.textContent='🚀 Опубликовать';}}
 }
-
 function toggleTok(force){const s=document.getElementById('stok');const show=force||(s.style.display==='none');s.style.display=show?'block':'none';if(show)document.getElementById('stok').scrollIntoView({behavior:'smooth'});}
 function saveToken(){const t=document.getElementById('token').value.trim();const rem=document.getElementById('remember').checked;
 if(rem)localStorage.setItem('sp_token',t);else localStorage.removeItem('sp_token');updateTokStat();}
@@ -482,9 +520,7 @@ function clearToken(){document.getElementById('token').value='';localStorage.rem
 function loadToken(){const t=localStorage.getItem('sp_token')||'';const el=document.getElementById('token');if(el)el.value=t;updateTokStat();}
 function updateTokStat(){const on=!!tok();const s=document.getElementById('tokstat');s.classList.toggle('on',on);
 document.getElementById('toktxt').textContent=on?'токен задан · публикация включена':'токен не задан · режим скачивания';}
-
 let toastT;function toast(msg,kind){const t=document.getElementById('toast');t.textContent=msg;t.className='on '+(kind||'');clearTimeout(toastT);toastT=setTimeout(()=>t.className='',4200);}
-
 function scrollSpy(){
 const secs=['s1','s2','s3','s4','s5','s6'];
 const obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){
@@ -493,13 +529,11 @@ document.querySelectorAll('.sec').forEach(s=>s.classList.remove('hot'));e.target
 }}),{rootMargin:'-45% 0px -45% 0px'});
 secs.forEach(id=>{const el=document.getElementById(id);if(el)obs.observe(el);});
 }
-
 function mobTab(w){
 document.getElementById('mtab-edit').classList.toggle('on',w==='edit');
 document.getElementById('mtab-pv').classList.toggle('on',w==='pv');
 document.getElementById('pvcol').classList.toggle('show',w==='pv');
 }
-
 (function(){const cv=document.getElementById('embers'),x=cv.getContext('2d');let W,H,ps=[];function rs(){W=cv.width=innerWidth;H=cv.height=innerHeight;}addEventListener('resize',rs);rs();for(let i=0;i<22;i++)ps.push({x:Math.random()*W,y:Math.random()*H,s:Math.random()*1.4+.3,v:Math.random()*.3+.08,o:Math.random()*.3+.05,d:Math.random()*2-1});(function loop(){x.clearRect(0,0,W,H);ps.forEach(p=>{p.y-=p.v;p.x+=p.d*.15;if(p.y<0){p.y=H;p.x=Math.random()*W;}x.fillStyle='rgba(212,175,55,'+p.o+')';x.beginPath();x.arc(p.x,p.y,p.s,0,7);x.fill();});requestAnimationFrame(loop);})();})();
 </script>
 </body>
