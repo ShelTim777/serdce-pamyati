@@ -409,38 +409,50 @@ if (progress < 1) window.requestAnimationFrame(step);
 };
 window.requestAnimationFrame(step);
 }
-const memorials = [
-{
-id: 'grigorev_dmitriy',
-name: 'Григорьев Дмитрий Николаевич',
-dates: '23.08.1993',
-category: 'svo',
-city: 'Москва',
-coords: [55.7558, 37.6173],
-link: 'memorial/grigorev_dmitriy/',
-candles: 0
-}
-];
+
+/* ============================================================ */
+/*  АВТОЗАГРУЗКА ЛЮДЕЙ: список больше не зашит в код.           */
+/*  Карта сама берёт всех людей из memorials.json.             */
+/*  Добавил человека в json — он сам появился на карте.        */
+/* ============================================================ */
+let memorials = [];
 let map;
 let placemarks = [];
-ymaps.ready(function () {
+
+function cap(s) {
+return String(s || '').replace(/(^|\s)\S/g, function (c) { return c.toUpperCase(); });
+}
+
+fetch('memorials.json?t=' + Date.now())
+.then(function (r) { return r.json(); })
+.then(function (data) {
+memorials = data;
+ymaps.ready(initMap);
+})
+.catch(function () {
+ymaps.ready(initMap);
+});
+
+function initMap() {
 map = new ymaps.Map("map", {
 center: [55.7558, 37.6173],
 zoom: 5,
 controls: ['zoomControl', 'fullscreenControl']
 });
+
 const pulsingLayout = ymaps.templateLayoutFactory.createClass(
 `<div style="position: relative; width: 40px; height: 40px; display: flex; justify-content: center; align-items: center;">
 <div style="position: absolute; width: 100%; height: 100%; background: rgba(212, 175, 55, 0.3); border-radius: 50%; animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;"></div>
 <div style="position: absolute; width: 16px; height: 16px; background: #d4af37; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 0 15px #d4af37; z-index: 2;"></div>
 </div>`
 );
+
 memorials.forEach(memorial => {
 const placemark = new ymaps.Placemark(memorial.coords, {
-hintContent: memorial.name,
+hintContent: cap(memorial.name),
 balloonContent: `
 <div style="padding: 20px; max-width: 320px; font-family: 'Inter', sans-serif;">
-<h3 style="margin-bottom: 12px; color: #d4af37; font-family: 'Playfair Display', serif; font-size: 20px;">${memorial.name}</h3>
+<h3 style="margin-bottom: 12px; color: #d4af37; font-family: 'Playfair Display', serif; font-size: 20px;">${cap(memorial.name)}</h3>
 <p style="margin-bottom: 8px; color: #888; font-size: 14px;">${memorial.dates}</p>
 <p style="margin-bottom: 20px; font-style: italic; color: #aaa;">${memorial.city}</p>
 <a href="${memorial.link}" target="_blank"
@@ -456,8 +468,10 @@ iconShape: { type: 'Circle', coordinates: [20, 20], radius: 20 }
 map.geoObjects.add(placemark);
 placemarks.push({ placemark, memorial });
 });
+
 setTimeout(updateStats, 1500);
-});
+}
+
 function filterMap(category) {
 placemarks.forEach(({ placemark, memorial }) => {
 placemark.options.set('visible', category === 'all' || memorial.category === category);
