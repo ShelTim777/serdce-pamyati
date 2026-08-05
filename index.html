@@ -324,10 +324,11 @@ footer { padding: 40px 20px; }
 <div class="footer-content">
 <div class="footer-links">
 <a href="#about">О проекте</a>
-<a href="#contacts">Контакты</a>
-<a href="#privacy">Политика конфиденциальности</a>
+<a href="https://vk.ru/serdce_pamyati" target="_blank">ВКонтакте</a>
+<a href="index.html#map">Карта памяти</a>
+<a href="consent.html">Согласие на обработку данных</a>
 </div>
-<div class="footer-copy">© 2026 Сердце Памяти</div>
+<div class="footer-copy">© 2026 Сердце Памяти · Пока помним — они живы 🕯️</div>
 </div>
 </footer>
 <script src="https://api-maps.yandex.ru/2.1/?apikey=ТВОЙ_API_КЛЮЧ&lang=ru_RU"></script>
@@ -409,7 +410,6 @@ if (progress < 1) window.requestAnimationFrame(step);
 };
 window.requestAnimationFrame(step);
 }
-
 /* ============================================================ */
 /*  АВТОЗАГРУЗКА ЛЮДЕЙ: список больше не зашит в код.           */
 /*  Карта сама берёт всех людей из memorials.json.             */
@@ -418,11 +418,9 @@ window.requestAnimationFrame(step);
 let memorials = [];
 let map;
 let placemarks = [];
-
 function cap(s) {
 return String(s || '').replace(/(^|\s)\S/g, function (c) { return c.toUpperCase(); });
 }
-
 fetch('memorials.json?t=' + Date.now())
 .then(function (r) { return r.json(); })
 .then(function (data) {
@@ -432,21 +430,18 @@ ymaps.ready(initMap);
 .catch(function () {
 ymaps.ready(initMap);
 });
-
 function initMap() {
 map = new ymaps.Map("map", {
 center: [55.7558, 37.6173],
 zoom: 5,
 controls: ['zoomControl', 'fullscreenControl']
 });
-
 const pulsingLayout = ymaps.templateLayoutFactory.createClass(
 `<div style="position: relative; width: 40px; height: 40px; display: flex; justify-content: center; align-items: center;">
 <div style="position: absolute; width: 100%; height: 100%; background: rgba(212, 175, 55, 0.3); border-radius: 50%; animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;"></div>
 <div style="position: absolute; width: 16px; height: 16px; background: #d4af37; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 0 15px #d4af37; z-index: 2;"></div>
 </div>`
 );
-
 memorials.forEach(memorial => {
 const placemark = new ymaps.Placemark(memorial.coords, {
 hintContent: cap(memorial.name),
@@ -468,10 +463,8 @@ iconShape: { type: 'Circle', coordinates: [20, 20], radius: 20 }
 map.geoObjects.add(placemark);
 placemarks.push({ placemark, memorial });
 });
-
 setTimeout(updateStats, 1500);
 }
-
 function filterMap(category) {
 placemarks.forEach(({ placemark, memorial }) => {
 placemark.options.set('visible', category === 'all' || memorial.category === category);
