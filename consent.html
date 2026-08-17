@@ -3,13 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Согласие на обработку данных · Сердце Памяти</title>
+<title>Согласие на обработку данных · Всегда помним</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
 :root { --bg:#0a0a0a; --text:#e8e8e8; --accent:#d4af37; --gray:#888; }
 * { box-sizing:border-box; margin:0; padding:0; }
-body { background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; min-height:100vh; padding:40px 20px; }
-.container { max-width:900px; margin:0 auto; }
+body { background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; min-height:100vh; padding:0; }
+header { background:rgba(10,10,10,0.9); padding:20px 40px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(212,175,55,0.2); position:sticky; top:0; z-index:100; backdrop-filter:blur(15px); }
+.logo { display:flex; align-items:center; gap:15px; }
+.logo-icon { font-size:32px; filter:drop-shadow(0 0 10px rgba(212,175,55,0.5)); }
+.logo-text { font-family:'Playfair Display',serif; font-size:24px; font-weight:700; color:var(--accent); letter-spacing:2px; }
+.btn-header { background:transparent; border:1px solid rgba(212,175,55,0.4); color:var(--accent); padding:12px 25px; border-radius:30px; font-size:14px; font-weight:700; text-decoration:none; }
+.container { max-width:900px; margin:0 auto; padding:50px 20px 30px; }
+.brand-hero { text-align:center; margin-bottom:40px; }
+.brand-name { font-family:'Playfair Display',serif; font-size:38px; font-weight:700; letter-spacing:5px; color:var(--accent); margin-bottom:6px; text-shadow:0 0 30px rgba(212,175,55,0.3); }
+.brand-slogan { font-family:'Playfair Display',serif; font-style:italic; font-size:16px; color:var(--text); letter-spacing:1px; }
 h1 { font-family:'Playfair Display',serif; font-size:32px; color:var(--accent); margin-bottom:30px; text-align:center; }
 .section { background:rgba(21,21,21,0.8); border:1px solid rgba(212,175,55,0.15); border-radius:12px; padding:30px; margin-bottom:20px; }
 .section h2 { font-family:'Playfair Display',serif; font-size:22px; color:var(--accent); margin-bottom:15px; }
@@ -19,10 +27,27 @@ h1 { font-family:'Playfair Display',serif; font-size:32px; color:var(--accent); 
 .important { background:rgba(212,175,55,0.06); border-left:4px solid var(--accent); padding:20px; margin-top:20px; }
 .important p { color:var(--text); font-weight:600; }
 .back-btn { display:inline-block; background:linear-gradient(135deg,#d4af37 0%,#b8860b 100%); color:#000; padding:12px 25px; border-radius:30px; text-decoration:none; font-weight:700; margin-top:30px; text-align:center; }
+footer { background:#050505; padding:50px 40px; text-align:center; border-top:1px solid rgba(255,255,255,0.05); margin-top:40px; }
+.footer-brand { font-family:'Playfair Display',serif; font-size:20px; letter-spacing:4px; color:var(--accent); margin-bottom:10px; }
+.footer-links { display:flex; justify-content:center; gap:40px; margin-bottom:25px; flex-wrap:wrap; }
+.footer-links a { color:var(--gray); text-decoration:none; transition:all 0.3s; font-size:14px; text-transform:uppercase; letter-spacing:1px; }
+.footer-links a:hover { color:var(--accent); }
+.footer-copy { font-size:12px; color:#444; }
+@media (max-width:768px) { header { padding:15px 20px; flex-direction:column; gap:15px; } h1 { font-size:26px; } .brand-name { font-size:28px; letter-spacing:3px; } footer { padding:40px 20px; } }
 </style>
 </head>
 <body>
+<header>
+<div class="logo"><span class="logo-icon">🕯️</span><span class="logo-text">ВСЕГДА ПОМНИМ</span></div>
+<a href="index.html" class="btn-header">На главную</a>
+</header>
+
 <div class="container">
+<div class="brand-hero">
+<div class="brand-name">ВСЕГДА ПОМНИМ</div>
+<div class="brand-slogan">«Они живы. Всегда.»</div>
+</div>
+
 <h1>Согласие на обработку персональных данных и использование материалов</h1>
 
 <div class="section">
@@ -32,7 +57,7 @@ h1 { font-family:'Playfair Display',serif; font-size:32px; color:var(--accent); 
 <li>Вы являетесь правообладателем или имеете законное право на использование предоставленных материалов (фотографий, видео, аудиозаписей)</li>
 <li>Вы даёте согласие на публичное размещение этих материалов на странице памяти в сети Интернет</li>
 <li>Вы понимаете, что страница памяти будет доступна неограниченному кругу лиц</li>
-<li>Вы даёте согласие на использование материалов в рамках проекта «Сердце Памяти» без ограничения срока действия</li>
+<li>Вы даёте согласие на использование материалов в рамках проекта «Всегда помним» без ограничения срока действия</li>
 </ul>
 </div>
 
@@ -62,10 +87,20 @@ h1 { font-family:'Playfair Display',serif; font-size:32px; color:var(--accent); 
 </div>
 
 <div class="section important">
-<p>⚠️ <strong>Важно:</strong> Отправляя нам материалы для создания страницы памяти, вы автоматически подтверждаете, что ознакомились с данным согласием и даёте разрешение на использование предоставленных материалов в рамках проекта «Сердце Памяти».</p>
+<p>⚠️ <strong>Важно:</strong> Отправляя нам материалы для создания страницы памяти, вы автоматически подтверждаете, что ознакомились с данным согласием и даёте разрешение на использование предоставленных материалов в рамках проекта «Всегда помним».</p>
 </div>
 
 <a href="services.html" class="back-btn">← Вернуться к услугам</a>
 </div>
+
+<footer>
+<div class="footer-brand">ВСЕГДА ПОМНИМ</div>
+<div class="footer-links">
+<a href="index.html">О проекте</a>
+<a href="https://vk.ru/serdce_pamyati" target="_blank">ВКонтакте</a>
+<a href="index.html#map">Карта памяти</a>
+</div>
+<div class="footer-copy">© 2026 Всегда помним · «Они живы. Всегда.» 🕯️</div>
+</footer>
 </body>
 </html>
