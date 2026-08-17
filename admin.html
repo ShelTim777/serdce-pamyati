@@ -496,6 +496,8 @@ function showSetupScreen(){
 async function doSetupConfirm(){
   const code=document.getElementById('setupCode').value;
   if(verifyTotp(pendingSecret,code)){
+    /* === ИСПРАВЛЕНИЕ: сохраняем секрет в Firebase ДО локальных переменных === */
+    await window.fbSaveAdmin(pendingSecret,pendingRecovery);
     totpSecret=pendingSecret;recoveryCode=pendingRecovery;
     markLocalTotpOk();
     document.getElementById('setupCode').value='';
