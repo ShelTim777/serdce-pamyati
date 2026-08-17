@@ -22,13 +22,14 @@ body{background:radial-gradient(100% 60% at 80% -10%,rgba(212,175,55,.06),transp
 .gate-box button:disabled{opacity:.5;cursor:not-allowed}
 .gate-box button:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 6px 20px rgba(212,175,55,.4)}
 .gate-box .e{color:var(--err);font-size:12px;min-height:18px;margin-top:8px;line-height:1.4}
+.gate-box .link{background:none;border:none;color:var(--muted);font-size:12px;text-decoration:underline;cursor:pointer;margin-top:12px}
+.gate-box .link:hover{color:var(--accent)}
 .gate-box .qr{background:#fff;border-radius:12px;padding:16px;display:inline-block;margin:14px 0}
 .gate-box .secret-big{font-family:monospace;font-size:16px;letter-spacing:2px;color:var(--accent);background:var(--bg2);border:1px dashed var(--line2);border-radius:10px;padding:12px;margin:10px 0;word-break:break-all;line-height:1.6}
 .gate-box .otp-link{font-size:11px;color:var(--muted);word-break:break-all;margin-top:10px;line-height:1.5;padding:10px;background:var(--bg2);border-radius:8px;border:1px solid var(--line)}
 .gate-box .recovery{background:rgba(212,175,55,.08);border:1px solid var(--line);border-radius:10px;padding:14px;margin-top:14px;font-size:12px;color:var(--text);line-height:1.5;text-align:left}
 .gate-box .recovery b{color:var(--accent);display:block;margin-bottom:6px}
-.master-info{background:rgba(212,175,55,.06);border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:18px;font-size:12px;color:var(--muted);line-height:1.5;text-align:left}
-.master-info b{color:var(--accent)}
+.srv-note{background:rgba(95,184,120,.08);border:1px solid rgba(95,184,120,.3);border-radius:10px;padding:10px;margin-bottom:16px;font-size:11px;color:var(--ok);line-height:1.5}
 #app{position:relative;z-index:1;display:none}
 .topbar{position:sticky;top:0;z-index:1000;display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:14px 22px;background:rgba(10,10,10,.85);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
 .topbar .logo{display:flex;align-items:center;gap:10px;margin-right:auto}
@@ -154,8 +155,6 @@ body{background:radial-gradient(100% 60% at 80% -10%,rgba(212,175,55,.06),transp
 .mo-x{position:absolute;top:12px;right:14px;background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer}
 .mo-x:hover{color:var(--err)}
 .mo-t{font-family:'Playfair Display',serif;color:var(--accent);font-size:22px;margin-bottom:14px}
-.cap-q{color:var(--muted);font-size:13px;margin:10px 0 6px}
-.cap-i{width:100%;padding:11px;background:var(--bg2);border:1px solid var(--line);border-radius:9px;color:var(--text);font-size:14px;margin-bottom:12px}
 .mo-go{width:100%;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#000;border:none;padding:13px;border-radius:30px;font-weight:700;cursor:pointer;font-size:14px}
 .ord-card{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:12px}
 .ord-card.new{border-color:var(--accent)}
@@ -194,13 +193,15 @@ body{background:radial-gradient(100% 60% at 80% -10%,rgba(212,175,55,.06),transp
 <body>
 <canvas id="embers"></canvas>
 
-<div class="gate-screen" id="gate-login" style="display:none">
+<div class="gate-screen" id="gate-login">
 <div class="gate-box">
 <div class="h">🔐</div>
 <h1>ВСЕГДА ПОМНИМ</h1>
-<p class="sub">Админка · вход для своих 🕯️</p>
-<input type="password" id="pw" placeholder="Пароль" autocomplete="current-password" onkeydown="if(event.key==='Enter')tryLogin()">
-<button id="loginBtn" onclick="tryLogin()">Войти</button>
+<p class="sub">Админка · серверная авторизация 🕯️</p>
+<div class="srv-note">🛡️ Вход проверяет сервер Firebase. Перебор паролей блокируется автоматически.</div>
+<input type="email" id="email" placeholder="Email администратора" autocomplete="username">
+<input type="password" id="pw" placeholder="Пароль" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+<button id="loginBtn" onclick="doLogin()">Войти</button>
 <div class="e" id="pwe"></div>
 </div>
 </div>
@@ -209,41 +210,30 @@ body{background:radial-gradient(100% 60% at 80% -10%,rgba(212,175,55,.06),transp
 <div class="gate-box">
 <div class="h">🛡️</div>
 <h1>ДВУХФАКТОРКА</h1>
-<p class="sub">Введи 6 цифр из приложения-аутентификатора</p>
-<input type="text" id="totpCode" placeholder="000 000" maxlength="7" inputmode="numeric" oninput="this.value=this.value.replace(/[^0-9]/g,'')" onkeydown="if(event.key==='Enter')tryTotp()">
-<button onclick="tryTotp()">Подтвердить</button>
+<p class="sub">Сервер тебя узнал. Теперь 6 цифр из приложения</p>
+<input type="text" id="totpCode" placeholder="000 000" maxlength="7" inputmode="numeric" oninput="this.value=this.value.replace(/[^0-9]/g,'')" onkeydown="if(event.key==='Enter')doTotp()">
+<button onclick="doTotp()">Подтвердить</button>
 <div class="e" id="totpErr"></div>
-</div>
-</div>
-
-<div class="gate-screen" id="gate-setup-pw" style="display:none">
-<div class="gate-box">
-<div class="h">🔑</div>
-<h1>ПЕРВЫЙ ВХОД</h1>
-<p class="sub">Создание администратора</p>
-<div class="master-info">Для активации нужен <b>мастер-ключ первого входа</b>. Его знает только владелец проекта.</div>
-<input type="password" id="masterKey" placeholder="Мастер-ключ" autocomplete="off">
-<input type="password" id="newPw1" placeholder="Новый пароль (мин. 8 симв.)" autocomplete="new-password">
-<input type="password" id="newPw2" placeholder="Повтори пароль" autocomplete="new-password" onkeydown="if(event.key==='Enter')saveNewPw()">
-<button onclick="saveNewPw()">Создать администратора</button>
-<div class="e" id="newPwErr"></div>
+<button class="link" onclick="doRecovery()">Потерял аутентификатор — код восстановления</button>
 </div>
 </div>
 
 <div class="gate-screen" id="gate-setup-totp" style="display:none">
 <div class="gate-box">
 <div class="h">📱</div>
-<h1>ДВУХФАКТОРКА</h1>
+<h1>НАСТРОЙКА 2FA</h1>
 <p class="sub">Отсканируй QR в Google Authenticator<br>ИЛИ введи секрет вручную</p>
 <div class="qr" id="qrImg"></div>
 <div class="secret-big" id="secretBig"></div>
 <div class="otp-link" id="otpLink"></div>
+<input type="text" id="setupCode" placeholder="Введи 6 цифр для подтверждения" maxlength="7" inputmode="numeric" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
 <div class="recovery">
 <b>🔑 Код восстановления (сохрани!):</b>
 <span id="recoveryCode" style="font-family:monospace;letter-spacing:2px"></span>
-<div style="margin-top:8px;color:var(--muted);font-size:11px">Если потеряешь телефон — этот код даст доступ. Запиши на бумаге.</div>
+<div style="margin-top:8px;color:var(--muted);font-size:11px">Запиши на бумаге и спрячь. Он откроет доступ, если потеряешь телефон.</div>
 </div>
-<button onclick="finishTotpSetup()" style="margin-top:16px">Я добавил в приложение, продолжить</button>
+<button onclick="doSetupConfirm()" style="margin-top:16px">Подтвердить код и войти</button>
+<div class="e" id="setupErr"></div>
 </div>
 </div>
 
@@ -252,7 +242,7 @@ body{background:radial-gradient(100% 60% at 80% -10%,rgba(212,175,55,.06),transp
 <div class="logo"><span class="h">🕯️</span><span class="t">ВСЕГДА ПОМНИМ</span><small>конструктор</small></div>
 <div class="savestat"><span class="d"></span>автосохранение</div>
 <div class="tokstat" id="tokstat"><span class="d"></span><span id="toktxt">токен не задан · режим скачивания</span></div>
-<button class="tb" onclick="logout()">🚪 Выйти</button>
+<button class="tb" onclick="doLogout()">🚪 Выйти</button>
 <button class="tb warn" onclick="newPerson()">🆕 Новый</button>
 <button class="tb" onclick="openHub()">📂 Открыть</button>
 <button class="tb" onclick="openOrders()">📥 Заявки<span class="ord-badge" id="ordCnt" style="display:none">0</span></button>
@@ -348,7 +338,6 @@ body{background:radial-gradient(100% 60% at 80% -10%,rgba(212,175,55,.06),transp
 <button id="mtab-pv" onclick="mobTab('pv')">👁 Превью</button>
 </div>
 </div>
-<div class="mo" id="visitMo"><div class="mo-box"><button class="mo-x" onclick="closeVisit()">&times;</button><h3 class="mo-t">Отметить посещение</h3><div id="opts"></div><p class="cap-q">Проверка: сколько будет <span id="c1">0</span> + <span id="c2">0</span>?</p><input type="number" class="cap-i" id="capIn" placeholder="Введите ответ"><button class="mo-go" onclick="submitVisit()">Отметить</button></div></div>
 <div class="mo" id="hub"><div class="mo-box hub-box"><button class="mo-x" onclick="closeHub()">&times;</button><h3 class="mo-t">Кого редактируем?</h3><p class="hub-sub">Выбери человека или создай нового.</p><input class="hub-search" id="hubSearch" placeholder="🔍 Поиск…" oninput="filterHub(this.value)"><div class="hub-list" id="hubList"><p class="hub-loading">Загружаю…</p></div><button class="hub-new" onclick="closeHub();newPerson()">＋ Создать нового</button></div></div>
 <div class="mo" id="ordersMo"><div class="mo-box"><button class="mo-x" onclick="closeOrders()">&times;</button>
 <h3 class="mo-t">📥 Заявки на заказы</h3>
@@ -359,13 +348,13 @@ body{background:radial-gradient(100% 60% at 80% -10%,rgba(212,175,55,.06),transp
 
 <script>
 /* ============================================================ */
-/* 🔐 СВОЙ TOTP (SHA1+HMAC) — БЕЗ внешних библиотек              */
+/* 🔢 СВОЙ TOTP (SHA1+HMAC) — без внешних библиотек              */
 /* ============================================================ */
 function sha1Bytes(bytes){
   const ml=bytes.length;
   const total=Math.ceil((ml+9)/64)*64;
   const buf=new Uint8Array(total);
-  buf.set(bytes); buf[ml]=0x80;
+  buf.set(bytes);buf[ml]=0x80;
   const dv=new DataView(buf.buffer);
   const bitLen=ml*8;
   dv.setUint32(total-4,bitLen>>>0);
@@ -393,8 +382,8 @@ function sha1Bytes(bytes){
   return out;
 }
 function hmacSha1(key,msg){
-  let k=key; if(k.length>64)k=sha1Bytes(k);
-  const kb=new Uint8Array(64); kb.set(k);
+  let k=key;if(k.length>64)k=sha1Bytes(k);
+  const kb=new Uint8Array(64);kb.set(k);
   const ipad=new Uint8Array(64+msg.length);
   const opad=new Uint8Array(64+20);
   for(let i=0;i<64;i++){ipad[i]=kb[i]^0x36;opad[i]=kb[i]^0x5C;}
@@ -406,8 +395,8 @@ function base32Decode(s){
   const chars='ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
   let bits=0,value=0;const out=[];
   for(const c of s.replace(/=+$/,'').toUpperCase().replace(/\s/g,'')){
-    const idx=chars.indexOf(c); if(idx<0)continue;
-    value=(value<<5)|idx; bits+=5;
+    const idx=chars.indexOf(c);if(idx<0)continue;
+    value=(value<<5)|idx;bits+=5;
     if(bits>=8){out.push((value>>>(bits-8))&255);bits-=8;}
   }
   return new Uint8Array(out);
@@ -425,47 +414,10 @@ function totpCode(secretBase32,counter){
 }
 function verifyTotp(secret,input){
   const code=String(input||'').replace(/\s/g,'');
-  if(code.length!==6)return false;
+  if(code.length!==6||!secret)return false;
   const counter=Math.floor(Date.now()/1000/30);
-  for(let w=-1;w<=1;w++){
-    if(totpCode(secret,counter+w)===code)return true;
-  }
+  for(let w=-1;w<=1;w++){if(totpCode(secret,counter+w)===code)return true;}
   return false;
-}
-
-/* ============================================================ */
-/* 🔐 АУТЕНТИФИКАЦИЯ                                             */
-/* ============================================================ */
-const AUTH={
-  hashKey:'sp_admin_hash',
-  totpKey:'sp_admin_totp',
-  recoveryKey:'sp_admin_recovery',
-  confirmedKey:'sp_admin_totp_ok',
-  sessionKey:'sp_admin_session',
-  failsKey:'sp_admin_fails',
-  sessionTTL:24*60*60*1000,
-  lockTime:30*60*1000,
-  maxFails:5
-};
-const MASTER_KEY_REAL='VsegdaPomnim2026!MasterKey';
-
-async function sha256(text){
-  try{
-    if(window.crypto&&crypto.subtle){
-      const enc=new TextEncoder().encode(text);
-      const buf=await crypto.subtle.digest('SHA-256',enc);
-      return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
-    }
-  }catch(e){}
-  let h1=0xdeadbeef,h2=0x41c6ce57;
-  for(let i=0;i<text.length;i++){
-    const ch=text.charCodeAt(i);
-    h1=Math.imul(h1^ch,2654435761);
-    h2=Math.imul(h2^ch,1597334677);
-  }
-  h1=Math.imul(h1^(h1>>>16),2246822507)^Math.imul(h2^(h2>>>13),3266489909);
-  h2=Math.imul(h2^(h2>>>16),2246822507)^Math.imul(h1^(h1>>>13),3266489909);
-  return (h2>>>0).toString(16).padStart(8,'0')+(h1>>>0).toString(16).padStart(8,'0');
 }
 function generateBase32Secret(){
   const chars='ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
@@ -481,134 +433,87 @@ function generateRecoveryCode(){
   for(let i=0;i<12;i++){out+=chars[arr[i]%chars.length];if(i===3||i===7)out+='-';}
   return out;
 }
-function getFails(){
-  try{return JSON.parse(localStorage.getItem(AUTH.failsKey)||'{"count":0,"unlockAt":0}');}
-  catch(e){return{count:0,unlockAt:0};}
-}
-function setFails(d){localStorage.setItem(AUTH.failsKey,JSON.stringify(d));}
-function checkLock(){
-  const f=getFails();
-  if(f.unlockAt>Date.now())return{locked:true,remain:Math.ceil((f.unlockAt-Date.now())/1000)};
-  if(f.unlockAt>0)setFails({count:0,unlockAt:0});
-  return{locked:false};
-}
-function recordFail(){
-  const f=getFails();
-  f.count++;
-  if(f.count>=AUTH.maxFails){f.unlockAt=Date.now()+AUTH.lockTime;toast('⛔ 5 ошибок. Лок на 30 минут','err');}
-  else{toast('Неверно. Осталось попыток: '+(AUTH.maxFails-f.count),'err');}
-  setFails(f);
-}
-function recordSuccess(){
-  setFails({count:0,unlockAt:0});
-  localStorage.setItem(AUTH.sessionKey,String(Date.now()));
-}
-function hasSession(){
-  const t=parseInt(localStorage.getItem(AUTH.sessionKey)||'0');
-  return t>0&&(Date.now()-t)<AUTH.sessionTTL;
-}
 function showScreen(id){
-  ['gate-login','gate-totp','gate-setup-pw','gate-setup-totp'].forEach(s=>{
+  ['gate-login','gate-totp','gate-setup-totp'].forEach(s=>{
     document.getElementById(s).style.display=(s===id)?'flex':'none';
   });
 }
-async function boot(){
-  const hash=localStorage.getItem(AUTH.hashKey);
-  const totp=localStorage.getItem(AUTH.totpKey);
-  const confirmed=localStorage.getItem(AUTH.confirmedKey);
-  if(hash&&totp&&confirmed&&hasSession()){enterApp();return;}
-  if(!hash){showScreen('gate-setup-pw');return;}
-  if(totp&&!confirmed){showSetupTotp();return;}
-  if(!totp){showSetupTotp();return;}
-  showScreen('gate-login');
-  setTimeout(()=>document.getElementById('pw').focus(),100);
+let totpSecret=null,recoveryCode=null,pendingSecret=null,pendingRecovery=null;
+const TOTP_OK_KEY='sp_totp_ok_24h';
+function hasLocalTotpOk(){
+  const t=parseInt(localStorage.getItem(TOTP_OK_KEY)||'0');
+  return t>0&&(Date.now()-t)<24*60*60*1000;
 }
-async function saveNewPw(){
-  const master=document.getElementById('masterKey').value;
-  const p1=document.getElementById('newPw1').value;
-  const p2=document.getElementById('newPw2').value;
-  const err=document.getElementById('newPwErr');
-  if(master!==MASTER_KEY_REAL){err.textContent='❌ Неверный мастер-ключ';document.getElementById('masterKey').value='';return;}
-  if(p1.length<8){err.textContent='Минимум 8 символов';return;}
-  if(p1!==p2){err.textContent='Пароли не совпадают';return;}
-  const hash=await sha256(p1);
-  localStorage.setItem(AUTH.hashKey,hash);
-  toast('✅ Администратор создан','ok');
-  showSetupTotp();
-}
-function showSetupTotp(){
-  let secret=localStorage.getItem(AUTH.totpKey);
-  let recovery=localStorage.getItem(AUTH.recoveryKey);
-  if(!secret){secret=generateBase32Secret();localStorage.setItem(AUTH.totpKey,secret);}
-  if(!recovery){recovery=generateRecoveryCode();localStorage.setItem(AUTH.recoveryKey,recovery);}
-  const url='otpauth://totp/VsegdaPomnim:admin?secret='+secret+'&issuer=VsegdaPomnim&algorithm=SHA1&digits=6&period=30';
-  const qr='https://api.qrserver.com/v1/create-qr-code/?size=200x200&data='+encodeURIComponent(url);
-  document.getElementById('qrImg').innerHTML='<img src="'+qr+'" alt="QR" style="display:block;width:180px;height:180px" onerror="this.parentNode.innerHTML=\'<div style=color:#333;font-size:12px;padding:20px>QR не загрузился —<br>введи секрет вручную ниже</div>\'">';
-  document.getElementById('secretBig').textContent=secret;
-  document.getElementById('otpLink').textContent=url;
-  document.getElementById('recoveryCode').textContent=recovery;
-  showScreen('gate-setup-totp');
-}
-function finishTotpSetup(){
-  localStorage.setItem(AUTH.confirmedKey,'1');
-  toast('✅ 2FA настроена. Входи!','ok');
-  showScreen('gate-login');
-  setTimeout(()=>document.getElementById('pw').focus(),100);
-}
-async function tryLogin(){
-  const lock=checkLock();
-  if(lock.locked){document.getElementById('pwe').innerHTML='⛔ Лок. Через '+Math.ceil(lock.remain/60)+' мин';return;}
+function markLocalTotpOk(){localStorage.setItem(TOTP_OK_KEY,String(Date.now()));}
+
+/* UI-обработчики (вызывают Firebase из модуля ниже) */
+async function doLogin(){
   const btn=document.getElementById('loginBtn');
   btn.disabled=true;btn.textContent='Проверяю…';
-  const f=getFails();
-  await new Promise(r=>setTimeout(r,f.count*2000));
-  const pw=document.getElementById('pw').value;
-  const hash=await sha256(pw);
-  const saved=localStorage.getItem(AUTH.hashKey);
-  if(hash===saved){
-    document.getElementById('pwe').textContent='';
-    document.getElementById('pw').value='';
-    showScreen('gate-totp');
-    setTimeout(()=>document.getElementById('totpCode').focus(),100);
-  }else{
-    recordFail();
-    document.getElementById('pw').value='';
-  }
+  document.getElementById('pwe').textContent='';
+  const res=await window.fbLogin(document.getElementById('email').value.trim(),document.getElementById('pw').value);
   btn.disabled=false;btn.textContent='Войти';
-}
-function tryTotp(){
-  const lock=checkLock();
-  if(lock.locked){document.getElementById('totpErr').innerHTML='⛔ Лок. Через '+Math.ceil(lock.remain/60)+' мин';return;}
-  const code=document.getElementById('totpCode').value;
-  const secret=localStorage.getItem(AUTH.totpKey);
-  const recovery=localStorage.getItem(AUTH.recoveryKey);
-  if(code===recovery.replace(/-/g,'')){
-    const newRec=generateRecoveryCode();
-    localStorage.setItem(AUTH.recoveryKey,newRec);
-    alert('⚠️ Код восстановления использован!\n\nНовый код: '+newRec+'\n\nЗапиши и спрячь.');
-    recordSuccess();
-    enterApp();
-    return;
+  if(!res.ok){
+    const msg=(res.err||'').indexOf('too-many')>=0?'⛔ Слишком много попыток. Сервер заблокировал вход на время.':
+              ((res.err||'').indexOf('invalid')>=0||(res.err||'').indexOf('wrong')>=0?'❌ Неверный email или пароль':'❌ Ошибка: '+(res.err||'неизвестно'));
+    document.getElementById('pwe').textContent=msg;
   }
-  if(verifyTotp(secret,code)){
-    document.getElementById('totpErr').textContent='';
+}
+async function doTotp(){
+  const code=document.getElementById('totpCode').value;
+  if(verifyTotp(totpSecret,code)){
     document.getElementById('totpCode').value='';
-    recordSuccess();
+    document.getElementById('totpErr').textContent='';
+    markLocalTotpOk();
     enterApp();
   }else{
-    recordFail();
+    document.getElementById('totpErr').textContent='❌ Неверный код';
     document.getElementById('totpCode').value='';
+  }
+}
+async function doRecovery(){
+  const code=prompt('Введи код восстановления (без дефисов):');
+  if(!code)return;
+  if(code.replace(/\s/g,'').toUpperCase()===String(recoveryCode||'').replace(/-/g,'')){
+    pendingSecret=generateBase32Secret();
+    pendingRecovery=generateRecoveryCode();
+    await window.fbSaveAdmin(pendingSecret,pendingRecovery);
+    showSetupScreen();
+    toast('Код принят. Настрой новый аутентификатор','ok');
+  }else{
+    alert('❌ Неверный код восстановления');
+  }
+}
+function showSetupScreen(){
+  const url='otpauth://totp/VsegdaPomnim:admin?secret='+pendingSecret+'&issuer=VsegdaPomnim&algorithm=SHA1&digits=6&period=30';
+  const qr='https://api.qrserver.com/v1/create-qr-code/?size=200x200&data='+encodeURIComponent(url);
+  document.getElementById('qrImg').innerHTML='<img src="'+qr+'" alt="QR" style="display:block;width:180px;height:180px" onerror="this.parentNode.innerHTML=\'<div style=color:#333;font-size:12px;padding:20px>QR не загрузился —<br>введи секрет вручную</div>\'">';
+  document.getElementById('secretBig').textContent=pendingSecret;
+  document.getElementById('otpLink').textContent=url;
+  document.getElementById('recoveryCode').textContent=pendingRecovery;
+  showScreen('gate-setup-totp');
+}
+async function doSetupConfirm(){
+  const code=document.getElementById('setupCode').value;
+  if(verifyTotp(pendingSecret,code)){
+    totpSecret=pendingSecret;recoveryCode=pendingRecovery;
+    markLocalTotpOk();
+    document.getElementById('setupCode').value='';
+    document.getElementById('setupErr').textContent='';
+    enterApp();
+  }else{
+    document.getElementById('setupErr').textContent='❌ Код не совпадает. Возьми текущий код из приложения.';
   }
 }
 function enterApp(){
-  ['gate-login','gate-totp','gate-setup-pw','gate-setup-totp'].forEach(s=>{document.getElementById(s).style.display='none';});
+  ['gate-login','gate-totp','gate-setup-totp'].forEach(s=>{document.getElementById(s).style.display='none';});
   document.getElementById('app').style.display='block';
   initApp();
 }
-function logout(){
+function doLogout(){
   if(!confirm('Выйти из админки?'))return;
-  localStorage.removeItem(AUTH.sessionKey);
-  location.reload();
+  localStorage.removeItem(TOTP_OK_KEY);
+  window.fbLogout();
 }
 
 /* ============================================================ */
@@ -921,14 +826,15 @@ function mobTab(w){
   document.getElementById('mtab-pv').classList.toggle('on',w==='pv');
   document.getElementById('pvcol').classList.toggle('show',w==='pv');
 }
-window.onclick=e=>{const t=e.target;if(t.id==='visitMo')closeVisit();if(t.id==='hub')closeHub();if(t.id==='ordersMo')closeOrders();};
+window.onclick=e=>{const t=e.target;if(t.id==='hub')closeHub();if(t.id==='ordersMo')closeOrders();};
 (function(){const cv=document.getElementById('embers'),x=cv.getContext('2d');let W,H,ps=[];function rs(){W=cv.width=innerWidth;H=cv.innerHeight;}addEventListener('resize',rs);rs();for(let i=0;i<22;i++)ps.push({x:Math.random()*W,y:Math.random()*H,s:Math.random()*1.4+.3,v:Math.random()*.3+.08,o:Math.random()*.3+.05,d:Math.random()*2-1});(function loop(){x.clearRect(0,0,W,H);ps.forEach(p=>{p.y-=p.v;p.x+=p.d*.15;if(p.y<0){p.y=H;p.x=Math.random()*W;}x.fillStyle='rgba(212,175,55,'+p.o+')';x.beginPath();x.arc(p.x,p.y,p.s,0,7);x.fill();});requestAnimationFrame(loop);})();})();
-boot();
 </script>
 
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-import { getDatabase, ref, get, update } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
+import { getDatabase, ref, get, set, update } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+
 const firebaseConfig = {
   apiKey: "AIzaSyBM5VfYLGnlKUFhyrdFUcJKpHGZsMjCI_Q",
   authDomain: "serdce-pamyati.firebaseapp.com",
@@ -938,7 +844,41 @@ const firebaseConfig = {
   messagingSenderId: "118982633067",
   appId: "1:118982633067:web:b7c89c98e71fc71ead732e"
 };
-const db = getDatabase(initializeApp(firebaseConfig));
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+const auth = getAuth(app);
+
+/* ---- серверный вход ---- */
+window.fbLogin = async (email, pass) => {
+  try { await signInWithEmailAndPassword(auth, email, pass); return { ok: true }; }
+  catch (e) { return { ok: false, err: e.code }; }
+};
+window.fbLogout = () => signOut(auth);
+window.fbSaveAdmin = async (secret, recovery) => {
+  await set(ref(db, 'admin'), { totp: secret, recovery: recovery });
+};
+
+/* ---- главный сценарий загрузки ---- */
+onAuthStateChanged(auth, async user => {
+  if (!user) { showScreen('gate-login'); return; }
+  if (hasLocalTotpOk() && totpSecret) { enterApp(); return; }
+  try {
+    const snap = await get(ref(db, 'admin'));
+    if (snap.exists() && snap.val().totp) {
+      totpSecret = snap.val().totp;
+      recoveryCode = snap.val().recovery || null;
+      if (hasLocalTotpOk()) { enterApp(); } else { showScreen('gate-totp'); }
+    } else {
+      pendingSecret = generateBase32Secret();
+      pendingRecovery = generateRecoveryCode();
+      showSetupScreen();
+    }
+  } catch (e) {
+    showScreen('gate-totp');
+  }
+});
+
+/* ---- заявки (теперь только с серверным доступом) ---- */
 function esc2(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function updCnt(n){
   const b=document.getElementById('ordCnt');
@@ -981,21 +921,13 @@ window.loadOrders=async()=>{
     }).join('');
     updCnt(newCnt);
   }catch(e){
-    box.innerHTML='<p class="hub-empty">Не удалось загрузить: '+esc2(e.message)+'</p>';
+    box.innerHTML='<p class="hub-empty">Нет доступа к заявкам: '+esc2(e.message)+'<br>Войди как администратор.</p>';
   }
 };
 window.markDone=async(key)=>{
   await update(ref(db,'orders/'+key),{status:'done'});
   loadOrders();
 };
-(async()=>{
-  try{
-    const snap=await get(ref(db,'orders'));
-    let n=0;
-    if(snap.exists())snap.forEach(c=>{if((c.val()||{}).status!=='done')n++;});
-    updCnt(n);
-  }catch(e){}
-})();
 </script>
 </body>
 </html>
