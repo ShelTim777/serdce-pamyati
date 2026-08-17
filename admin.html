@@ -5,14 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Админка · Всегда помним</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/otpauth@9.3.1/dist/otpauth.min.js"></script>
 <style>
 :root{--bg:#0a0a0a;--bg2:#100e0b;--panel:#15120d;--panel2:#1c1813;--line:rgba(212,175,55,.2);--line2:rgba(212,175,55,.4);--accent:#d4af37;--accent2:#b8860b;--text:#ece8e1;--muted:#9a948a;--ok:#5fb878;--err:#e0795f;--soft:rgba(212,175,55,.1)}
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:radial-gradient(100% 60% at 80% -10%,rgba(212,175,55,.06),transparent 60%),var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh}
 #embers{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.5}
 .gate-screen{position:fixed;inset:0;z-index:5000;display:flex;align-items:center;justify-content:center;background:var(--bg);padding:20px;overflow-y:auto}
-.gate-box{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:40px;max-width:420px;width:100%;text-align:center;box-shadow:0 30px 80px rgba(0,0,0,.6)}
+.gate-box{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:40px;max-width:440px;width:100%;text-align:center;box-shadow:0 30px 80px rgba(0,0,0,.6)}
 .gate-box .h{font-size:46px;animation:beat 2.6s ease-in-out infinite}
 @keyframes beat{0%,100%{transform:scale(1)}14%{transform:scale(1.16)}28%{transform:scale(1)}42%{transform:scale(1.1)}}
 .gate-box h1{font-family:'Playfair Display',serif;color:var(--accent);font-size:22px;margin:14px 0 6px;letter-spacing:2px}
@@ -24,6 +23,7 @@ body{background:radial-gradient(100% 60% at 80% -10%,rgba(212,175,55,.06),transp
 .gate-box button:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 6px 20px rgba(212,175,55,.4)}
 .gate-box .e{color:var(--err);font-size:12px;min-height:18px;margin-top:8px;line-height:1.4}
 .gate-box .qr{background:#fff;border-radius:12px;padding:16px;display:inline-block;margin:14px 0}
+.gate-box .secret-big{font-family:monospace;font-size:16px;letter-spacing:2px;color:var(--accent);background:var(--bg2);border:1px dashed var(--line2);border-radius:10px;padding:12px;margin:10px 0;word-break:break-all;line-height:1.6}
 .gate-box .otp-link{font-size:11px;color:var(--muted);word-break:break-all;margin-top:10px;line-height:1.5;padding:10px;background:var(--bg2);border-radius:8px;border:1px solid var(--line)}
 .gate-box .recovery{background:rgba(212,175,55,.08);border:1px solid var(--line);border-radius:10px;padding:14px;margin-top:14px;font-size:12px;color:var(--text);line-height:1.5;text-align:left}
 .gate-box .recovery b{color:var(--accent);display:block;margin-bottom:6px}
@@ -209,7 +209,7 @@ body{background:radial-gradient(100% 60% at 80% -10%,rgba(212,175,55,.06),transp
 <div class="gate-box">
 <div class="h">🛡️</div>
 <h1>ДВУХФАКТОРКА</h1>
-<p class="sub">Открой Google Authenticator и введи 6 цифр</p>
+<p class="sub">Введи 6 цифр из приложения-аутентификатора</p>
 <input type="text" id="totpCode" placeholder="000 000" maxlength="7" inputmode="numeric" oninput="this.value=this.value.replace(/[^0-9]/g,'')" onkeydown="if(event.key==='Enter')tryTotp()">
 <button onclick="tryTotp()">Подтвердить</button>
 <div class="e" id="totpErr"></div>
@@ -234,15 +234,16 @@ body{background:radial-gradient(100% 60% at 80% -10%,rgba(212,175,55,.06),transp
 <div class="gate-box">
 <div class="h">📱</div>
 <h1>ДВУХФАКТОРКА</h1>
-<p class="sub">Отсканируй QR в Google Authenticator</p>
+<p class="sub">Отсканируй QR в Google Authenticator<br>ИЛИ введи секрет вручную</p>
 <div class="qr" id="qrImg"></div>
+<div class="secret-big" id="secretBig"></div>
 <div class="otp-link" id="otpLink"></div>
 <div class="recovery">
 <b>🔑 Код восстановления (сохрани!):</b>
 <span id="recoveryCode" style="font-family:monospace;letter-spacing:2px"></span>
 <div style="margin-top:8px;color:var(--muted);font-size:11px">Если потеряешь телефон — этот код даст доступ. Запиши на бумаге.</div>
 </div>
-<button onclick="finishTotpSetup()" style="margin-top:16px">Я отсканировал, продолжить</button>
+<button onclick="finishTotpSetup()" style="margin-top:16px">Я добавил в приложение, продолжить</button>
 </div>
 </div>
 
@@ -358,210 +359,254 @@ body{background:radial-gradient(100% 60% at 80% -10%,rgba(212,175,55,.06),transp
 
 <script>
 /* ============================================================ */
-/* 🔐 АУТЕНТИФИКАЦИЯ: мастер-ключ + хэш + 2FA + анти-брутфорс    */
+/* 🔐 СВОЙ TOTP (SHA1+HMAC) — БЕЗ внешних библиотек              */
 /* ============================================================ */
-const AUTH = {
-  hashKey: 'sp_admin_hash',
-  totpKey: 'sp_admin_totp',
-  recoveryKey: 'sp_admin_recovery',
-  sessionKey: 'sp_admin_session',
-  failsKey: 'sp_admin_fails',
-  sessionTTL: 24 * 60 * 60 * 1000,
-  lockTime: 30 * 60 * 1000,
-  maxFails: 5
-};
-const MASTER_KEY_REAL = 'VsegdaPomnim2026!MasterKey';
-
-async function sha256(text) {
-  try {
-    if (window.crypto && crypto.subtle) {
-      const enc = new TextEncoder().encode(text);
-      const buf = await crypto.subtle.digest('SHA-256', enc);
-      return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+function sha1Bytes(bytes){
+  const ml=bytes.length;
+  const total=Math.ceil((ml+9)/64)*64;
+  const buf=new Uint8Array(total);
+  buf.set(bytes); buf[ml]=0x80;
+  const dv=new DataView(buf.buffer);
+  const bitLen=ml*8;
+  dv.setUint32(total-4,bitLen>>>0);
+  dv.setUint32(total-8,Math.floor(bitLen/4294967296));
+  let h0=0x67452301,h1=0xEFCDAB89,h2=0x98BADCFE,h3=0x10325476,h4=0xC3D2E1F0;
+  const w=new Uint32Array(80);
+  for(let i=0;i<total;i+=64){
+    for(let j=0;j<16;j++)w[j]=dv.getUint32(i+j*4);
+    for(let j=16;j<80;j++){const n=w[j-3]^w[j-8]^w[j-14]^w[j-16];w[j]=(n<<1)|(n>>>31);}
+    let a=h0,b=h1,c=h2,d=h3,e=h4;
+    for(let j=0;j<80;j++){
+      let f,k;
+      if(j<20){f=(b&c)|((~b)&d);k=0x5A827999;}
+      else if(j<40){f=b^c^d;k=0x6ED9EBA1;}
+      else if(j<60){f=(b&c)|(b&d)|(c&d);k=0x8F1BBCDC;}
+      else{f=b^c^d;k=0xCA62C1D6;}
+      const t=(((a<<5)|(a>>>27))+f+e+k+w[j])>>>0;
+      e=d;d=c;c=(b<<30)|(b>>>2);b=a;a=t;
     }
-  } catch (e) {}
-  /* запасной вариант — работает даже на HTTP */
-  let h1 = 0xdeadbeef, h2 = 0x41c6ce57;
-  for (let i = 0; i < text.length; i++) {
-    const ch = text.charCodeAt(i);
-    h1 = Math.imul(h1 ^ ch, 2654435761);
-    h2 = Math.imul(h2 ^ ch, 1597334677);
+    h0=(h0+a)>>>0;h1=(h1+b)>>>0;h2=(h2+c)>>>0;h3=(h3+d)>>>0;h4=(h4+e)>>>0;
   }
-  h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);
-  h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
-  return (h2 >>> 0).toString(16).padStart(8, '0') + (h1 >>> 0).toString(16).padStart(8, '0');
+  const out=new Uint8Array(20);
+  const odv=new DataView(out.buffer);
+  odv.setUint32(0,h0);odv.setUint32(4,h1);odv.setUint32(8,h2);odv.setUint32(12,h3);odv.setUint32(16,h4);
+  return out;
+}
+function hmacSha1(key,msg){
+  let k=key; if(k.length>64)k=sha1Bytes(k);
+  const kb=new Uint8Array(64); kb.set(k);
+  const ipad=new Uint8Array(64+msg.length);
+  const opad=new Uint8Array(64+20);
+  for(let i=0;i<64;i++){ipad[i]=kb[i]^0x36;opad[i]=kb[i]^0x5C;}
+  ipad.set(msg,64);
+  opad.set(sha1Bytes(ipad),64);
+  return sha1Bytes(opad);
+}
+function base32Decode(s){
+  const chars='ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+  let bits=0,value=0;const out=[];
+  for(const c of s.replace(/=+$/,'').toUpperCase().replace(/\s/g,'')){
+    const idx=chars.indexOf(c); if(idx<0)continue;
+    value=(value<<5)|idx; bits+=5;
+    if(bits>=8){out.push((value>>>(bits-8))&255);bits-=8;}
+  }
+  return new Uint8Array(out);
+}
+function totpCode(secretBase32,counter){
+  const key=base32Decode(secretBase32);
+  const msg=new Uint8Array(8);
+  const dv=new DataView(msg.buffer);
+  dv.setUint32(0,Math.floor(counter/4294967296));
+  dv.setUint32(4,counter>>>0);
+  const h=hmacSha1(key,msg);
+  const off=h[19]&0x0f;
+  const code=(((h[off]&0x7f)<<24)|(h[off+1]<<16)|(h[off+2]<<8)|h[off+3])%1000000;
+  return String(code).padStart(6,'0');
+}
+function verifyTotp(secret,input){
+  const code=String(input||'').replace(/\s/g,'');
+  if(code.length!==6)return false;
+  const counter=Math.floor(Date.now()/1000/30);
+  for(let w=-1;w<=1;w++){
+    if(totpCode(secret,counter+w)===code)return true;
+  }
+  return false;
 }
 
-function generateBase32Secret() {
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
-  let out = '';
-  const arr = new Uint8Array(20);
-  crypto.getRandomValues(arr);
-  for (let i = 0; i < 20; i++) out += chars[arr[i] % 32];
-  return out;
-}
-function generateRecoveryCode() {
-  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-  let out = '';
-  const arr = new Uint8Array(12);
-  crypto.getRandomValues(arr);
-  for (let i = 0; i < 12; i++) {
-    out += chars[arr[i] % chars.length];
-    if (i === 3 || i === 7) out += '-';
+/* ============================================================ */
+/* 🔐 АУТЕНТИФИКАЦИЯ                                             */
+/* ============================================================ */
+const AUTH={
+  hashKey:'sp_admin_hash',
+  totpKey:'sp_admin_totp',
+  recoveryKey:'sp_admin_recovery',
+  confirmedKey:'sp_admin_totp_ok',
+  sessionKey:'sp_admin_session',
+  failsKey:'sp_admin_fails',
+  sessionTTL:24*60*60*1000,
+  lockTime:30*60*1000,
+  maxFails:5
+};
+const MASTER_KEY_REAL='VsegdaPomnim2026!MasterKey';
+
+async function sha256(text){
+  try{
+    if(window.crypto&&crypto.subtle){
+      const enc=new TextEncoder().encode(text);
+      const buf=await crypto.subtle.digest('SHA-256',enc);
+      return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+    }
+  }catch(e){}
+  let h1=0xdeadbeef,h2=0x41c6ce57;
+  for(let i=0;i<text.length;i++){
+    const ch=text.charCodeAt(i);
+    h1=Math.imul(h1^ch,2654435761);
+    h2=Math.imul(h2^ch,1597334677);
   }
+  h1=Math.imul(h1^(h1>>>16),2246822507)^Math.imul(h2^(h2>>>13),3266489909);
+  h2=Math.imul(h2^(h2>>>16),2246822507)^Math.imul(h1^(h1>>>13),3266489909);
+  return (h2>>>0).toString(16).padStart(8,'0')+(h1>>>0).toString(16).padStart(8,'0');
+}
+function generateBase32Secret(){
+  const chars='ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+  let out='';const arr=new Uint8Array(20);
+  crypto.getRandomValues(arr);
+  for(let i=0;i<20;i++)out+=chars[arr[i]%32];
   return out;
 }
-function verifyTotp(secret, code) {
-  try {
-    const totp = new OTPAuth.TOTP({
-      issuer: 'VsegdaPomnim', label: 'admin', algorithm: 'SHA1',
-      digits: 6, period: 30, secret: OTPAuth.Secret.fromBase32(secret)
-    });
-    return totp.validate({ token: code.replace(/\s/g, ''), window: 1 }) !== null;
-  } catch (e) { return false; }
+function generateRecoveryCode(){
+  const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let out='';const arr=new Uint8Array(12);
+  crypto.getRandomValues(arr);
+  for(let i=0;i<12;i++){out+=chars[arr[i]%chars.length];if(i===3||i===7)out+='-';}
+  return out;
 }
-function getFails() {
-  try { return JSON.parse(localStorage.getItem(AUTH.failsKey) || '{"count":0,"unlockAt":0}'); }
-  catch (e) { return { count: 0, unlockAt: 0 }; }
+function getFails(){
+  try{return JSON.parse(localStorage.getItem(AUTH.failsKey)||'{"count":0,"unlockAt":0}');}
+  catch(e){return{count:0,unlockAt:0};}
 }
-function setFails(d) { localStorage.setItem(AUTH.failsKey, JSON.stringify(d)); }
-function checkLock() {
-  const f = getFails();
-  if (f.unlockAt > Date.now()) return { locked: true, remain: Math.ceil((f.unlockAt - Date.now()) / 1000) };
-  if (f.unlockAt > 0) setFails({ count: 0, unlockAt: 0 });
-  return { locked: false };
+function setFails(d){localStorage.setItem(AUTH.failsKey,JSON.stringify(d));}
+function checkLock(){
+  const f=getFails();
+  if(f.unlockAt>Date.now())return{locked:true,remain:Math.ceil((f.unlockAt-Date.now())/1000)};
+  if(f.unlockAt>0)setFails({count:0,unlockAt:0});
+  return{locked:false};
 }
-function recordFail() {
-  const f = getFails();
+function recordFail(){
+  const f=getFails();
   f.count++;
-  if (f.count >= AUTH.maxFails) {
-    f.unlockAt = Date.now() + AUTH.lockTime;
-    toast('⛔ 5 ошибок. Лок на 30 минут', 'err');
-  } else {
-    toast('Неверно. Осталось попыток: ' + (AUTH.maxFails - f.count), 'err');
-  }
+  if(f.count>=AUTH.maxFails){f.unlockAt=Date.now()+AUTH.lockTime;toast('⛔ 5 ошибок. Лок на 30 минут','err');}
+  else{toast('Неверно. Осталось попыток: '+(AUTH.maxFails-f.count),'err');}
   setFails(f);
 }
-function recordSuccess() {
-  setFails({ count: 0, unlockAt: 0 });
-  localStorage.setItem(AUTH.sessionKey, String(Date.now()));
+function recordSuccess(){
+  setFails({count:0,unlockAt:0});
+  localStorage.setItem(AUTH.sessionKey,String(Date.now()));
 }
-function hasSession() {
-  const t = parseInt(localStorage.getItem(AUTH.sessionKey) || '0');
-  return t > 0 && (Date.now() - t) < AUTH.sessionTTL;
+function hasSession(){
+  const t=parseInt(localStorage.getItem(AUTH.sessionKey)||'0');
+  return t>0&&(Date.now()-t)<AUTH.sessionTTL;
 }
-function showScreen(id) {
-  ['gate-login', 'gate-totp', 'gate-setup-pw', 'gate-setup-totp'].forEach(s => {
-    document.getElementById(s).style.display = (s === id) ? 'flex' : 'none';
+function showScreen(id){
+  ['gate-login','gate-totp','gate-setup-pw','gate-setup-totp'].forEach(s=>{
+    document.getElementById(s).style.display=(s===id)?'flex':'none';
   });
 }
-async function boot() {
-  const hash = localStorage.getItem(AUTH.hashKey);
-  const totp = localStorage.getItem(AUTH.totpKey);
-  if (hash && totp && hasSession()) { enterApp(); return; }
-  if (!hash) { showScreen('gate-setup-pw'); return; }
-  if (!totp) { showSetupTotp(); return; }
+async function boot(){
+  const hash=localStorage.getItem(AUTH.hashKey);
+  const totp=localStorage.getItem(AUTH.totpKey);
+  const confirmed=localStorage.getItem(AUTH.confirmedKey);
+  if(hash&&totp&&confirmed&&hasSession()){enterApp();return;}
+  if(!hash){showScreen('gate-setup-pw');return;}
+  if(totp&&!confirmed){showSetupTotp();return;}
+  if(!totp){showSetupTotp();return;}
   showScreen('gate-login');
-  setTimeout(() => document.getElementById('pw').focus(), 100);
+  setTimeout(()=>document.getElementById('pw').focus(),100);
 }
-async function saveNewPw() {
-  const master = document.getElementById('masterKey').value;
-  const p1 = document.getElementById('newPw1').value;
-  const p2 = document.getElementById('newPw2').value;
-  const err = document.getElementById('newPwErr');
-  if (master !== MASTER_KEY_REAL) {
-    err.textContent = '❌ Неверный мастер-ключ';
-    document.getElementById('masterKey').value = '';
-    return;
-  }
-  if (p1.length < 8) { err.textContent = 'Минимум 8 символов'; return; }
-  if (p1 !== p2) { err.textContent = 'Пароли не совпадают'; return; }
-  const hash = await sha256(p1);
-  localStorage.setItem(AUTH.hashKey, hash);
-  toast('✅ Администратор создан', 'ok');
+async function saveNewPw(){
+  const master=document.getElementById('masterKey').value;
+  const p1=document.getElementById('newPw1').value;
+  const p2=document.getElementById('newPw2').value;
+  const err=document.getElementById('newPwErr');
+  if(master!==MASTER_KEY_REAL){err.textContent='❌ Неверный мастер-ключ';document.getElementById('masterKey').value='';return;}
+  if(p1.length<8){err.textContent='Минимум 8 символов';return;}
+  if(p1!==p2){err.textContent='Пароли не совпадают';return;}
+  const hash=await sha256(p1);
+  localStorage.setItem(AUTH.hashKey,hash);
+  toast('✅ Администратор создан','ok');
   showSetupTotp();
 }
-function showSetupTotp() {
-  const secret = generateBase32Secret();
-  const recovery = generateRecoveryCode();
-  localStorage.setItem(AUTH.totpKey, secret);
-  localStorage.setItem(AUTH.recoveryKey, recovery);
-  const totp = new OTPAuth.TOTP({
-    issuer: 'VsegdaPomnim', label: 'admin', algorithm: 'SHA1',
-    digits: 6, period: 30, secret: OTPAuth.Secret.fromBase32(secret)
-  });
-  const url = totp.toString();
-  const qr = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' + encodeURIComponent(url);
-  document.getElementById('qrImg').innerHTML = '<img src="' + qr + '" alt="QR" style="display:block;width:180px;height:180px">';
-  document.getElementById('otpLink').textContent = url;
-  document.getElementById('recoveryCode').textContent = recovery;
+function showSetupTotp(){
+  let secret=localStorage.getItem(AUTH.totpKey);
+  let recovery=localStorage.getItem(AUTH.recoveryKey);
+  if(!secret){secret=generateBase32Secret();localStorage.setItem(AUTH.totpKey,secret);}
+  if(!recovery){recovery=generateRecoveryCode();localStorage.setItem(AUTH.recoveryKey,recovery);}
+  const url='otpauth://totp/VsegdaPomnim:admin?secret='+secret+'&issuer=VsegdaPomnim&algorithm=SHA1&digits=6&period=30';
+  const qr='https://api.qrserver.com/v1/create-qr-code/?size=200x200&data='+encodeURIComponent(url);
+  document.getElementById('qrImg').innerHTML='<img src="'+qr+'" alt="QR" style="display:block;width:180px;height:180px" onerror="this.parentNode.innerHTML=\'<div style=color:#333;font-size:12px;padding:20px>QR не загрузился —<br>введи секрет вручную ниже</div>\'">';
+  document.getElementById('secretBig').textContent=secret;
+  document.getElementById('otpLink').textContent=url;
+  document.getElementById('recoveryCode').textContent=recovery;
   showScreen('gate-setup-totp');
 }
-function finishTotpSetup() {
-  toast('✅ 2FA настроена. Входи!', 'ok');
+function finishTotpSetup(){
+  localStorage.setItem(AUTH.confirmedKey,'1');
+  toast('✅ 2FA настроена. Входи!','ok');
   showScreen('gate-login');
-  setTimeout(() => document.getElementById('pw').focus(), 100);
+  setTimeout(()=>document.getElementById('pw').focus(),100);
 }
-async function tryLogin() {
-  const lock = checkLock();
-  if (lock.locked) {
-    document.getElementById('pwe').innerHTML = '⛔ Лок. Через ' + Math.ceil(lock.remain / 60) + ' мин';
-    return;
-  }
-  const btn = document.getElementById('loginBtn');
-  btn.disabled = true; btn.textContent = 'Проверяю…';
-  const f = getFails();
-  await new Promise(r => setTimeout(r, f.count * 2000));
-  const pw = document.getElementById('pw').value;
-  const hash = await sha256(pw);
-  const saved = localStorage.getItem(AUTH.hashKey);
-  if (hash === saved) {
-    document.getElementById('pwe').textContent = '';
-    document.getElementById('pw').value = '';
+async function tryLogin(){
+  const lock=checkLock();
+  if(lock.locked){document.getElementById('pwe').innerHTML='⛔ Лок. Через '+Math.ceil(lock.remain/60)+' мин';return;}
+  const btn=document.getElementById('loginBtn');
+  btn.disabled=true;btn.textContent='Проверяю…';
+  const f=getFails();
+  await new Promise(r=>setTimeout(r,f.count*2000));
+  const pw=document.getElementById('pw').value;
+  const hash=await sha256(pw);
+  const saved=localStorage.getItem(AUTH.hashKey);
+  if(hash===saved){
+    document.getElementById('pwe').textContent='';
+    document.getElementById('pw').value='';
     showScreen('gate-totp');
-    setTimeout(() => document.getElementById('totpCode').focus(), 100);
-  } else {
+    setTimeout(()=>document.getElementById('totpCode').focus(),100);
+  }else{
     recordFail();
-    document.getElementById('pw').value = '';
+    document.getElementById('pw').value='';
   }
-  btn.disabled = false; btn.textContent = 'Войти';
+  btn.disabled=false;btn.textContent='Войти';
 }
-function tryTotp() {
-  const lock = checkLock();
-  if (lock.locked) {
-    document.getElementById('totpErr').innerHTML = '⛔ Лок. Через ' + Math.ceil(lock.remain / 60) + ' мин';
-    return;
-  }
-  const code = document.getElementById('totpCode').value.replace(/\s/g, '');
-  const secret = localStorage.getItem(AUTH.totpKey);
-  const recovery = localStorage.getItem(AUTH.recoveryKey);
-  if (code === recovery.replace(/-/g, '')) {
-    const newRec = generateRecoveryCode();
-    localStorage.setItem(AUTH.recoveryKey, newRec);
-    alert('⚠️ Код восстановления использован!\n\nНовый код: ' + newRec + '\n\nЗапиши и спрячь.');
+function tryTotp(){
+  const lock=checkLock();
+  if(lock.locked){document.getElementById('totpErr').innerHTML='⛔ Лок. Через '+Math.ceil(lock.remain/60)+' мин';return;}
+  const code=document.getElementById('totpCode').value;
+  const secret=localStorage.getItem(AUTH.totpKey);
+  const recovery=localStorage.getItem(AUTH.recoveryKey);
+  if(code===recovery.replace(/-/g,'')){
+    const newRec=generateRecoveryCode();
+    localStorage.setItem(AUTH.recoveryKey,newRec);
+    alert('⚠️ Код восстановления использован!\n\nНовый код: '+newRec+'\n\nЗапиши и спрячь.');
     recordSuccess();
     enterApp();
     return;
   }
-  if (verifyTotp(secret, code)) {
-    document.getElementById('totpErr').textContent = '';
-    document.getElementById('totpCode').value = '';
+  if(verifyTotp(secret,code)){
+    document.getElementById('totpErr').textContent='';
+    document.getElementById('totpCode').value='';
     recordSuccess();
     enterApp();
-  } else {
+  }else{
     recordFail();
-    document.getElementById('totpCode').value = '';
+    document.getElementById('totpCode').value='';
   }
 }
-function enterApp() {
-  ['gate-login', 'gate-totp', 'gate-setup-pw', 'gate-setup-totp'].forEach(s => {
-    document.getElementById(s).style.display = 'none';
-  });
-  document.getElementById('app').style.display = 'block';
+function enterApp(){
+  ['gate-login','gate-totp','gate-setup-pw','gate-setup-totp'].forEach(s=>{document.getElementById(s).style.display='none';});
+  document.getElementById('app').style.display='block';
   initApp();
 }
-function logout() {
-  if (!confirm('Выйти из админки?')) return;
+function logout(){
+  if(!confirm('Выйти из админки?'))return;
   localStorage.removeItem(AUTH.sessionKey);
   location.reload();
 }
@@ -569,35 +614,33 @@ function logout() {
 /* ============================================================ */
 /* 🏗️ ЛОГИКА АДМИНКИ                                             */
 /* ============================================================ */
-const REPO='ShelTim777', RNAME='serdce-pamyati';
+const REPO='ShelTim777',RNAME='serdce-pamyati';
 const API='https://api.github.com/repos/'+REPO+'/'+RNAME+'/contents/';
 const TEMPLATE_PATH='memorial/_template.html';
 const SAVE_KEY='sp_person_v1';
 function emptyPerson(){
-  return {category:'svo',fullName:'',badge:'',birth:'',death:'',city:'',
-    lat:'',lng:'',id:'',mainPhoto:'',quote:'',music:'',
-    timeline:[],tracks:[],words:'',wordsSign:'',restPlace:'',restAddr:''};
+  return{category:'svo',fullName:'',badge:'',birth:'',death:'',city:'',lat:'',lng:'',id:'',mainPhoto:'',quote:'',music:'',timeline:[],tracks:[],words:'',wordsSign:'',restPlace:'',restAddr:''};
 }
 let person=emptyPerson();
-function savePerson(){ try{ localStorage.setItem(SAVE_KEY, JSON.stringify(person)); }catch(e){} }
-function loadSaved(){ try{ const s=localStorage.getItem(SAVE_KEY); if(!s)return null; const o=JSON.parse(s); return (o&&typeof o==='object')?o:null; }catch(e){ return null; } }
+function savePerson(){try{localStorage.setItem(SAVE_KEY,JSON.stringify(person));}catch(e){}}
+function loadSaved(){try{const s=localStorage.getItem(SAVE_KEY);if(!s)return null;const o=JSON.parse(s);return(o&&typeof o==='object')?o:null;}catch(e){return null;}}
 function initApp(){
   loadToken();
   document.querySelectorAll('#catseg button').forEach(b=>b.onclick=()=>{person.category=b.dataset.c;syncCat();onInput();});
   document.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{document.getElementById(c.dataset.go).scrollIntoView({behavior:'smooth'});});
   const saved=loadSaved();
-  if(saved){ person=Object.assign(emptyPerson(), saved); if(!Array.isArray(person.timeline))person.timeline=[]; if(!Array.isArray(person.tracks))person.tracks=[]; }
-  else { loadDemo(); }
-  syncAll(); renderEv(); renderTracks(); onInput(); scrollSpy();
-  if(tok()) setTimeout(openHub,300);
+  if(saved){person=Object.assign(emptyPerson(),saved);if(!Array.isArray(person.timeline))person.timeline=[];if(!Array.isArray(person.tracks))person.tracks=[];}
+  else{loadDemo();}
+  syncAll();renderEv();renderTracks();onInput();scrollSpy();
+  if(tok())setTimeout(openHub,300);
 }
 function loadDemo(){
   person=emptyPerson();
   person.category='svo';
   person.fullName='ГРИГОРЬЕВ ДМИТРИЙ НИКОЛАЕВИЧ';
   person.badge='Герой Российской Федерации';
-  person.birth='23.08.1993'; person.death=''; person.city='Москва';
-  person.lat='55.7558'; person.lng='37.6173'; person.id='grigorev_dmitriy';
+  person.birth='23.08.1993';person.death='';person.city='Москва';
+  person.lat='55.7558';person.lng='37.6173';person.id='grigorev_dmitriy';
   person.mainPhoto='portrait.jpg';
   person.quote='Мы не просто защищали землю. Мы защищали тех, кто стоит за нашей спиной.';
   person.music='golubye-berety-sineva.mp3';
@@ -611,16 +654,16 @@ function loadDemo(){
 function newPerson(){
   if(!confirm('Очистить форму под нового человека?'))return;
   person=emptyPerson();
-  savePerson(); syncAll(); renderEv(); renderTracks(); onInput();
+  savePerson();syncAll();renderEv();renderTracks();onInput();
   document.getElementById('s1').scrollIntoView({behavior:'smooth'});
   toast('Форма очищена','ok');
 }
 const F=['fullName','badge','birth','death','city','lat','lng','id','mainPhoto','quote','music','words','wordsSign','restPlace','restAddr'];
-function syncAll(){ F.forEach(k=>{const el=document.getElementById(k);if(el)el.value=person[k]||'';}); syncCat(); }
+function syncAll(){F.forEach(k=>{const el=document.getElementById(k);if(el)el.value=person[k]||'';});syncCat();}
 function syncCat(){document.querySelectorAll('#catseg button').forEach(b=>b.classList.toggle('on',b.dataset.c===person.category));}
 function onInput(){
   F.forEach(k=>{const el=document.getElementById(k);if(el)person[k]=el.value.trim();});
-  validate(); renderPreview(); savePerson();
+  validate();renderPreview();savePerson();
 }
 function validate(){
   const need=[['f-name',person.fullName],['f-lat',person.lat],['f-lng',person.lng]];
@@ -706,20 +749,20 @@ function renderPreview(){
   ${words}${tracks}${rest}`;
 }
 function buildPersonObj(){
-  return {
-    category:person.category, fullName:person.fullName, birth:person.birth, death:person.death,
-    city:person.city, badge:person.badge, mainPhoto:person.mainPhoto, quote:person.quote, music:person.music,
+  return{
+    category:person.category,fullName:person.fullName,birth:person.birth,death:person.death,
+    city:person.city,badge:person.badge,mainPhoto:person.mainPhoto,quote:person.quote,music:person.music,
     timeline:person.timeline.map(e=>{const x={year:e.year,title:e.title,text:e.text};if(e.photo)x.photo=e.photo;if(e.final)x.final=true;return x;}),
     tracks:(person.tracks||[]).map(t=>({title:(t.title||'').trim(),file:(t.file||'').trim()})).filter(t=>t.title||t.file),
-    words:person.words, wordsSign:person.wordsSign, restPlace:person.restPlace, restAddr:person.restAddr,
+    words:person.words,wordsSign:person.wordsSign,restPlace:person.restPlace,restAddr:person.restAddr,
     id:person.id||slug(person.fullName)
   };
 }
 function mapEntry(o){
-  return {id:o.id,name:cap(person.fullName),dates:person.birth||'',category:person.category,city:person.city,
+  return{id:o.id,name:cap(person.fullName),dates:person.birth||'',category:person.category,city:person.city,
     coords:[parseFloat(person.lat)||0,parseFloat(person.lng)||0],link:'memorial/'+o.id+'/',candles:0};
 }
-function slug(s){return (s||'person').toLowerCase().replace(/ё/g,'e').replace(/[а-я]/g,c=>{const m='абвгдежзийклмнопрстуфхцчшщъыьэюя';const l='abvgdezzijklmnoprstufhcsch_y_eua';const i=m.indexOf(c);return i>=0?l[i]:'_';}).replace(/[^a-z0-9]+/g,'_').replace(/^_|_$/g,'')||'person';}
+function slug(s){return(s||'person').toLowerCase().replace(/ё/g,'e').replace(/[а-я]/g,c=>{const m='абвгдежзийклмнопрстуфхцчшщъыьэюя';const l='abvgdezzijklmnoprstufhcsch_y_eua';const i=m.indexOf(c);return i>=0?l[i]:'_';}).replace(/[^a-z0-9]+/g,'_').replace(/^_|_$/g,'')||'person';}
 function cap(s){return s?s.charAt(0)+s.slice(1).toLowerCase():s;}
 function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 let templateCache=null;
@@ -730,38 +773,35 @@ async function getTemplate(){
     if(!r.ok)throw 0;
     templateCache=await r.text();
     return templateCache;
-  }catch(e){
-    toast('Не нашёл memorial/_template.html','err');
-    return null;
-  }
+  }catch(e){toast('Не нашёл memorial/_template.html','err');return null;}
 }
 async function buildIndexHtml(){
-  const tpl=await getTemplate(); if(!tpl)return null;
+  const tpl=await getTemplate();if(!tpl)return null;
   const o=buildPersonObj();
-  return tpl.replace('%%PERSON%%', JSON.stringify(o,null,2));
+  return tpl.replace('%%PERSON%%',JSON.stringify(o,null,2));
 }
 function copyPerson(){
   const o=buildPersonObj();
   navigator.clipboard.writeText(JSON.stringify(o,null,2)).then(()=>toast('Данные скопированы','ok')).catch(()=>toast('Ошибка','err'));
 }
 async function downloadHtml(){
-  const html=await buildIndexHtml(); if(!html)return;
+  const html=await buildIndexHtml();if(!html)return;
   const o=buildPersonObj();
   download('index.html',html);
-  setTimeout(()=>download('memorials-entry.json', JSON.stringify(mapEntry(o),null,2)),800);
+  setTimeout(()=>download('memorials-entry.json',JSON.stringify(mapEntry(o),null,2)),800);
   toast('Скачиваю index.html и memorials-entry.json','ok');
 }
 function download(name,content){
   const b=new Blob([content,{type:'text/plain;charset=utf-8'}]);
   const url=URL.createObjectURL(b);
   const a=document.createElement('a');
-  a.href=url; a.download=name; a.style.display='none';
+  a.href=url;a.download=name;a.style.display='none';
   document.body.appendChild(a);
   a.click();
-  setTimeout(()=>{ try{document.body.removeChild(a);}catch(e){} URL.revokeObjectURL(url); },1500);
+  setTimeout(()=>{try{document.body.removeChild(a);}catch(e){}URL.revokeObjectURL(url);},1500);
 }
-function tok(){return (document.getElementById('token')?document.getElementById('token').value:'').trim();}
-function authH(){return {'Authorization':'token '+tok(),'Accept':'application/vnd.github.v3+json'};}
+function tok(){return(document.getElementById('token')?document.getElementById('token').value:'').trim();}
+function authH(){return{'Authorization':'token '+tok(),'Accept':'application/vnd.github.v3+json'};}
 async function ghGet(path){const r=await fetch(API+path,{headers:authH()});if(!r.ok)return null;return r.json();}
 async function ghRead(path){const h=tok()?authH():{'Accept':'application/vnd.github.v3+json'};const r=await fetch(API+path,{headers:h});if(!r.ok)return null;return r.json();}
 function decodeContent(c){try{return decodeURIComponent(escape(atob(c)));}catch(e){return null;}}
@@ -777,18 +817,18 @@ function b64(s){return btoa(unescape(encodeURIComponent(s)));}
 async function publish(){
   if(!tok()){toast('Вставь токен GitHub (кнопка 🔑)','err');toggleTok(true);return;}
   if(!person.fullName||!person.lat||!person.lng){toast('Заполни ФИО и координаты','err');return;}
-  const html=await buildIndexHtml(); if(!html)return;
+  const html=await buildIndexHtml();if(!html)return;
   const o=buildPersonObj();
-  const btn=event&&event.target; if(btn){btn.disabled=true;btn.textContent='⏳ Публикую…';}
+  const btn=event&&event.target;if(btn){btn.disabled=true;btn.textContent='⏳ Публикую…';}
   try{
-    await ghPut('memorial/'+o.id+'/index.html', html, 'Всегда помним: страница '+o.id);
-    let list=[]; const cur=await ghGet('memorials.json');
+    await ghPut('memorial/'+o.id+'/index.html',html,'Всегда помним: страница '+o.id);
+    let list=[];const cur=await ghGet('memorials.json');
     if(cur&&cur.content){try{list=JSON.parse(decodeURIComponent(escape(atob(cur.content))));}catch(e){list=[];}}
     if(!Array.isArray(list))list=[];
     const entry=mapEntry(o);
     const idx=list.findIndex(x=>x.id===o.id);
-    if(idx>=0)list[idx]=entry; else list.push(entry);
-    await ghPut('memorials.json', JSON.stringify(list,null,2), 'Всегда помним: обновлена карта');
+    if(idx>=0)list[idx]=entry;else list.push(entry);
+    await ghPut('memorials.json',JSON.stringify(list,null,2),'Всегда помним: обновлена карта');
     savePerson();
     toast('✅ Опубликовано! Через 1-2 мин.','ok');
   }catch(e){toast('Ошибка: '+e.message,'err');}
@@ -797,8 +837,8 @@ async function publish(){
 let hubData=[];
 async function loadPeopleList(){
   const cur=await ghRead('memorials.json');
-  if(!cur||!cur.content)return [];
-  try{const list=JSON.parse(decodeContent(cur.content)||'[]');return Array.isArray(list)?list:[];}catch(e){return [];}}
+  if(!cur||!cur.content)return[];
+  try{const list=JSON.parse(decodeContent(cur.content)||'[]');return Array.isArray(list)?list:[];}catch(e){return[];}}
 function extractPerson(html){
   const m=html.indexOf('const PERSON =');
   if(m<0)return null;
