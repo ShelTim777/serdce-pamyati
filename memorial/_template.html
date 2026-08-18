@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Всегда помним</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#0a0a0a;--bg2:#0d0c0a;--text:#ece8e1;--muted:#9a948a;--accent:#d4af37;--accent-soft:rgba(212,175,55,.14);--line:rgba(212,175,55,.22);--card:rgba(20,18,15,.78)}
 *{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}
@@ -165,14 +165,14 @@ document.getElementById('m-birth').textContent=PERSON.birth||'—';
 if(PERSON.death){document.getElementById('m-death').textContent=PERSON.death;}else{document.getElementById('m-death-wrap').style.display='none';}
 document.getElementById('m-city').textContent=PERSON.city?('📍 '+PERSON.city):'';
 const q=document.getElementById('m-quote');if(PERSON.quote)q.textContent='«'+PERSON.quote+'»';else q.style.display='none';
-const a=document.getElementById('audio');if(PERSON.music){a.innerHTML='<source src="'+PERSON.music+'" type="audio/mpeg">';}else{document.querySelector('.music').style.display='none';}
+const a=document.getElementById('audio');if(PERSON.music){const ext=(PERSON.music.match(/\.([a-z0-9]+)$/i)||[])[1]||'mp3';const mime={'mp3':'audio/mpeg','mp4':'audio/mp4','m4a':'audio/mp4','ogg':'audio/ogg','wav':'audio/wav','webm':'audio/webm'}[ext.toLowerCase()]||'audio/mpeg';a.innerHTML='<source src="'+PERSON.music+'" type="'+mime+'">';}else{document.querySelector('.music').style.display='none';}
 if(PERSON.words){document.getElementById('words-sec').style.display='';document.getElementById('words-text').textContent='«'+PERSON.words+'»';document.getElementById('words-sign').textContent=PERSON.wordsSign||'';}
 if(PERSON.restPlace||PERSON.restAddr){document.getElementById('rest-sec').style.display='';document.getElementById('rest-place').textContent=PERSON.restPlace||'';document.getElementById('rest-addr').textContent=PERSON.restAddr||'';}
 renderTimeline();
 })();
 function renderTimeline(){const box=document.getElementById('timeline');let h='';(PERSON.timeline||[]).forEach(e=>{h+='<div class="ev reveal'+(e.final?' final':'')+'"><div class="yr">'+(e.year||'')+'</div><div class="dot"></div><div class="body"><h3>'+e.title+'</h3><p>'+e.text+'</p>'+(e.photo?'<div class="ph"><img src="img/'+e.photo+'" alt=""></div>':'')+'</div></div>';});box.innerHTML=h;}
 const REPO='ShelTim777',RNAME='serdce-pamyati',MPATH='memorial/'+(PERSON.id||'person');
-const PEXT=['.jpg','.jpeg','.png','.webp'],VEXT=['.mp4','.webm','.mov'],AEXT=['.mp3','.m4a','.ogg','.wav'];
+const PEXT=['.jpg','.jpeg','.png','.webp'],VEXT=['.mp4','.webm','.mov','.mkv'],AEXT=['.mp3','.m4a','.ogg','.wav','.webm'];
 let photos=[],videos=[],curP=-1,curV=-1;
 const numKey=n=>{const m=String(n).match(/\d+/);return m?+m[0]:99999;};
 function loadRepo(sub,exts,cb){fetch('https://api.github.com/repos/'+REPO+'/'+RNAME+'/contents/'+MPATH+'/'+sub,{headers:{Accept:'application/vnd.github.v3+json'}}).then(r=>r.ok?r.json():Promise.reject()).then(list=>{cb(list.filter(x=>x.type==='file'&&exts.some(e=>x.name.toLowerCase().endsWith(e))).sort((a,b)=>numKey(a.name)-numKey(b.name)).map(x=>sub+'/'+x.name));}).catch(()=>cb([]));}
