@@ -176,6 +176,21 @@ body{background:radial-gradient(100% 60% at 80% -10%,rgba(212,175,55,.06),transp
 #toast.err{border-color:var(--err)}
 #toast.ok{border-color:var(--ok)}
 .mobtabs{display:none}
+/* КНОПКИ ЗАГРУЗКИ РЯДОМ С ПОЛЯМИ */
+.up-row{display:flex;gap:6px;align-items:stretch}
+.up-row input{flex:1}
+.up-btn{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#000;border:none;border-radius:9px;padding:0 14px;cursor:pointer;font-weight:700;font-size:14px;transition:.2s;white-space:nowrap;font-family:'Inter';min-width:50px;position:relative;overflow:hidden}
+.up-btn:hover{box-shadow:0 4px 15px rgba(212,175,55,.4);transform:translateY(-1px)}
+.up-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.up-btn.loading{color:transparent}
+.up-btn.loading::after{content:'⏳';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#000;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.up-btn-sm{background:var(--panel2);border:1px solid var(--line2);color:var(--accent);border-radius:8px;padding:7px 10px;cursor:pointer;font-weight:600;font-size:12px;transition:.2s;white-space:nowrap;font-family:'Inter';position:relative;overflow:hidden}
+.up-btn-sm:hover{background:var(--soft);border-color:var(--accent)}
+.up-btn-sm:disabled{opacity:.5;cursor:not-allowed}
+.up-btn-sm.loading{color:transparent}
+.up-btn-sm.loading::after{content:'⏳';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--accent);animation:spin 1s linear infinite}
+.up-status{font-size:11px;color:var(--muted);margin-top:4px;min-height:14px}
 @media(max-width:980px){
 .wrap{grid-template-columns:1fr}
 .preview-col{position:fixed;inset:0;top:auto;height:auto;z-index:2000;background:var(--bg);padding:14px;display:none}
@@ -295,7 +310,14 @@ body{background:radial-gradient(100% 60% at 80% -10%,rgba(212,175,55,.06),transp
 </div>
 <div class="sec" id="s2">
 <div class="sec-h"><span class="n">2</span>Шапка страницы</div>
-<div class="field"><label>Главное фото</label><input id="mainPhoto" placeholder="portrait.jpg" oninput="onInput()"><div class="hint">Относительно папки мемориала.</div></div>
+<div class="field">
+<label>Главное фото</label>
+<div class="up-row">
+<input id="mainPhoto" placeholder="portrait.jpg" oninput="onInput()">
+<button class="up-btn" onclick="uploadForField('mainPhoto','img','image')" title="Загрузить фото">📷</button>
+</div>
+<div class="hint">Относительно папки мемориала. Жми 📷 — загрузится и путь вставится сам.</div>
+</div>
 <div class="field"><label>Цитата</label><textarea id="quote" placeholder="Мы не просто защищали землю…" oninput="onInput()"></textarea></div>
 <div class="field"><label>Мелодия памяти</label><input id="music" placeholder="golubye-berety-sineva.mp3" oninput="onInput()"></div>
 </div>
@@ -347,9 +369,6 @@ body{background:radial-gradient(100% 60% at 80% -10%,rgba(212,175,55,.06),transp
 <div id="toast"></div>
 
 <script>
-/* ============================================================ */
-/* 🔢 СВОЙ TOTP (SHA1+HMAC) — без внешних библиотек              */
-/* ============================================================ */
 function sha1Bytes(bytes){
   const ml=bytes.length;
   const total=Math.ceil((ml+9)/64)*64;
@@ -446,7 +465,6 @@ function hasLocalTotpOk(){
 }
 function markLocalTotpOk(){localStorage.setItem(TOTP_OK_KEY,String(Date.now()));}
 
-/* UI-обработчики (вызывают Firebase из модуля ниже) */
 async function doLogin(){
   const btn=document.getElementById('loginBtn');
   btn.disabled=true;btn.textContent='Проверяю…';
@@ -496,7 +514,6 @@ function showSetupScreen(){
 async function doSetupConfirm(){
   const code=document.getElementById('setupCode').value;
   if(verifyTotp(pendingSecret,code)){
-    /* === ИСПРАВЛЕНИЕ: сохраняем секрет в Firebase ДО локальных переменных === */
     await window.fbSaveAdmin(pendingSecret,pendingRecovery);
     totpSecret=pendingSecret;recoveryCode=pendingRecovery;
     markLocalTotpOk();
@@ -518,9 +535,6 @@ function doLogout(){
   window.fbLogout();
 }
 
-/* ============================================================ */
-/* 🏗️ ЛОГИКА АДМИНКИ                                             */
-/* ============================================================ */
 const REPO='ShelTim777',RNAME='serdce-pamyati';
 const API='https://api.github.com/repos/'+REPO+'/'+RNAME+'/contents/';
 const TEMPLATE_PATH='memorial/_template.html';
@@ -591,7 +605,10 @@ function renderEv(){
     </div>
     <input placeholder="Заголовок" value="${esc(e.title||'')}" oninput="setEv(${i},'title',this.value)">
     <textarea placeholder="Что произошло" oninput="setEv(${i},'text',this.value)">${esc(e.text||'')}</textarea>
-    <input placeholder="фото (необязательно, 01.jpg)" value="${esc(e.photo||'')}" oninput="setEv(${i},'photo',this.value)">
+    <div class="up-row">
+      <input placeholder="фото (необязательно, 01.jpg)" value="${esc(e.photo||'')}" oninput="setEv(${i},'photo',this.value)">
+      <button class="up-btn-sm" onclick="uploadForField(['timeline',${i},'photo'],'img','image',this)" title="Загрузить фото">📷</button>
+    </div>
   </div>`).join('');
 }
 function addEv(){person.timeline.push({year:'',title:'',text:'',photo:'',final:false});renderEv();onInput();}
@@ -612,7 +629,10 @@ function renderTracks(){
       <button class="del" onclick="delTrack(${i})">×</button>
     </div>
     <input placeholder="Название песни" value="${esc(t.title||'')}" oninput="setTrack(${i},'title',this.value)">
-    <input class="f-in" placeholder="файл (необязательно)" value="${esc(t.file||'')}" oninput="setTrack(${i},'file',this.value)">
+    <div class="up-row">
+      <input class="f-in" placeholder="файл (необязательно)" value="${esc(t.file||'')}" oninput="setTrack(${i},'file',this.value)">
+      <button class="up-btn-sm" onclick="uploadForField(['tracks',${i},'file'],'audio','audio',this)" title="Загрузить аудио">🎵</button>
+    </div>
   </div>`).join('');
 }
 function addTrack(){person.tracks.push({title:'',file:''});renderTracks();onInput();}
@@ -829,6 +849,267 @@ function mobTab(w){
   document.getElementById('pvcol').classList.toggle('show',w==='pv');
 }
 window.onclick=e=>{const t=e.target;if(t.id==='hub')closeHub();if(t.id==='ordersMo')closeOrders();};
+
+/* ============================================================ */
+/* 📁 УНИВЕРСАЛЬНАЯ ЗАГРУЗКА + СЖАТИЕ ФОТО / ВИДЕО / АУДИО       */
+/* ============================================================ */
+function autoSafeName(s){
+  return (s||'file')
+    .toLowerCase()
+    .replace(/\.[a-z0-9]+$/i,'')
+    .replace(/ё/g,'e')
+    .replace(/[а-я]/g,c=>{
+      const m='абвгдежзийклмнопрстуфхцчшщъыьэюя';
+      const l='abvgdezzijklmnoprstufhcsch_y_eua';
+      const i=m.indexOf(c);
+      return i>=0?l[i]:'_';
+    })
+    .replace(/[^a-z0-9]+/g,'_')
+    .replace(/^_+|_+$/g,'')
+    || 'file';
+}
+function autoGetExt(name,def){
+  const m=(name||'').match(/\.([a-z0-9]+)$/i);
+  return m?m[1].toLowerCase():def;
+}
+
+/* СЖАТИЕ ФОТО (до 1600px, JPEG 85%) */
+function compressImage(file){
+  return new Promise(function(resolve,reject){
+    const img=new Image();
+    const url=URL.createObjectURL(file);
+    img.onload=function(){
+      let w=img.width,h=img.height;
+      const max=1600;
+      if(Math.max(w,h)>max){
+        if(w>h){h=Math.round(h*max/w);w=max;}
+        else{w=Math.round(w*max/h);h=max;}
+      }
+      const c=document.createElement('canvas');
+      c.width=w;c.height=h;
+      c.getContext('2d').drawImage(img,0,0,w,h);
+      URL.revokeObjectURL(url);
+      const dataUrl=c.toDataURL('image/jpeg',0.85);
+      const b64=dataUrl.split(',')[1];
+      const sizeBefore=file.size;
+      const sizeAfter=Math.round(b64.length*0.75);
+      resolve({b64:b64,ext:'jpg',before:sizeBefore,after:sizeAfter});
+    };
+    img.onerror=reject;
+    img.src=url;
+  });
+}
+
+/* СЖАТИЕ ВИДЕО (через MediaRecorder, webm, 1.5 Mbps) */
+async function compressVideo(file){
+  const url=URL.createObjectURL(file);
+  const video=document.createElement('video');
+  video.muted=true;video.playsInline=true;video.preload='auto';
+  await new Promise((res,rej)=>{
+    video.onloadedmetadata=res;
+    video.onerror=()=>rej(new Error('Не читается видео'));
+    video.src=url;
+  });
+  await new Promise((res,rej)=>{
+    video.oncanplay=res;
+    video.onerror=()=>rej(new Error('Не читается видео'));
+    video.load();
+  });
+  const maxDim=1280;
+  let w=video.videoWidth,h=video.videoHeight;
+  if(Math.max(w,h)>maxDim){
+    if(w>h){h=Math.round(h*maxDim/w);w=maxDim;}
+    else{w=Math.round(w*maxDim/h);h=maxDim;}
+  }
+  if(w%2)w--;if(h%2)h--;
+  const c=document.createElement('canvas');
+  c.width=w;c.height=h;
+  const ctx=c.getContext('2d');
+  const stream=c.captureStream(30);
+  let mime='video/webm;codecs=vp9';
+  if(!MediaRecorder.isTypeSupported(mime))mime='video/webm;codecs=vp8';
+  if(!MediaRecorder.isTypeSupported(mime))mime='video/webm';
+  const rec=new MediaRecorder(stream,{mimeType:mime,videoBitsPerSecond:1500000});
+  const chunks=[];
+  rec.ondataavailable=e=>{if(e.data&&e.data.size)chunks.push(e.data);};
+  const done=new Promise(res=>{rec.onstop=()=>res();});
+  video.currentTime=0;
+  await new Promise(r=>setTimeout(r,100));
+  rec.start(250);
+  video.play();
+  function draw(){
+    if(video.ended||video.paused){rec.stop();return;}
+    ctx.drawImage(video,0,0,w,h);
+    requestAnimationFrame(draw);
+  }
+  draw();
+  await new Promise(res=>{
+    video.onended=res;
+    video.onpause=()=>{if(video.currentTime>=video.duration-0.1)res();};
+  });
+  await new Promise(r=>setTimeout(r,500));
+  if(rec.state!=='inactive'){try{rec.stop();}catch(e){}}
+  await done;
+  stream.getTracks().forEach(t=>t.stop());
+  URL.revokeObjectURL(url);
+  const blob=new Blob(chunks,{type:'video/webm'});
+  const b64=await blobToB64(blob);
+  return {b64:b64,ext:'webm',before:file.size,after:blob.size};
+}
+
+/* СЖАТИЕ АУДИО (через MediaRecorder, webm, 96 kbps) */
+async function compressAudio(file){
+  const url=URL.createObjectURL(file);
+  const audio=document.createElement('audio');
+  await new Promise((res,rej)=>{
+    audio.onloadedmetadata=res;
+    audio.onerror=()=>rej(new Error('Не читается аудио'));
+    audio.src=url;
+  });
+  const AudioCtx=window.AudioContext||window.webkitAudioContext;
+  const ctx=new AudioCtx();
+  const source=ctx.createMediaElementSource(audio);
+  const dest=ctx.createMediaStreamDestination();
+  source.connect(dest);
+  source.connect(ctx.destination);
+  const stream=dest.stream;
+  let mime='audio/webm;codecs=opus';
+  if(!MediaRecorder.isTypeSupported(mime))mime='audio/webm';
+  if(!MediaRecorder.isTypeSupported(mime))mime='audio/ogg';
+  const rec=new MediaRecorder(stream,{mimeType:mime,audioBitsPerSecond:96000});
+  const chunks=[];
+  rec.ondataavailable=e=>{if(e.data&&e.data.size)chunks.push(e.data);};
+  const done=new Promise(res=>{rec.onstop=()=>res();});
+  await ctx.resume();
+  rec.start(250);
+  audio.currentTime=0;
+  await audio.play();
+  await new Promise(res=>{
+    audio.onended=res;
+    audio.onpause=()=>{if(audio.currentTime>=audio.duration-0.1)res();};
+  });
+  await new Promise(r=>setTimeout(r,300));
+  if(rec.state!=='inactive'){try{rec.stop();}catch(e){}}
+  await done;
+  stream.getTracks().forEach(t=>t.stop());
+  try{await ctx.close();}catch(e){}
+  URL.revokeObjectURL(url);
+  const blob=new Blob(chunks,{type:'audio/webm'});
+  const b64=await blobToB64(blob);
+  return {b64:b64,ext:'webm',before:file.size,after:blob.size};
+}
+
+function blobToB64(blob){
+  return new Promise(function(resolve,reject){
+    const r=new FileReader();
+    r.onload=()=>resolve(r.result.split(',')[1]);
+    r.onerror=reject;
+    r.readAsDataURL(blob);
+  });
+}
+
+async function autoPutFile(path,b64,msg){
+  if(!tok())throw new Error('Нужен токен GitHub (кнопка 🔑)');
+  let sha=null;
+  const g=await fetch(API+encodeURIComponent(path),{headers:authH()});
+  if(g.ok){const j=await g.json();if(j&&j.sha)sha=j.sha;}
+  const body={message:msg,content:b64};
+  if(sha)body.sha=sha;
+  const r=await fetch(API+encodeURIComponent(path),{
+    method:'PUT',
+    headers:{...authH(),'Content-Type':'application/json'},
+    body:JSON.stringify(body)
+  });
+  if(!r.ok){
+    const txt=await r.text();
+    throw new Error(txt.slice(0,160)||('HTTP '+r.status));
+  }
+  return r.json();
+}
+
+async function autoGetNextAudioNum(id){
+  try{
+    const r=await fetch(API+'memorial/'+encodeURIComponent(id)+'/audio',{headers:authH()});
+    if(!r.ok)return 1;
+    const list=await r.json();
+    if(!Array.isArray(list))return 1;
+    let max=0;
+    list.forEach(f=>{
+      const m=(f.name||'').match(/^0?(\d+)\./);
+      if(m)max=Math.max(max,parseInt(m[1]));
+    });
+    return max+1;
+  }catch(e){return 1;}
+}
+
+/* ГЛАВНАЯ ФУНКЦИЯ: универсальная загрузка для любого поля */
+async function uploadForField(pathKey,folder,mediaType,btnEl){
+  const id=person.id||slug(person.fullName)||'';
+  if(!id){toast('Заполни ФИО или ID страницы сначала','err');return;}
+  if(!tok()){toast('Вставь токен GitHub (кнопка 🔑)','err');toggleTok(true);return;}
+  if(btnEl)btnEl.classList.add('loading');btnEl&&(btnEl.disabled=true);
+  try{
+    const accept=mediaType==='image'?'image/*':(mediaType==='video'?'video/*':'audio/*');
+    const file=await pickFile(accept);
+    if(!file)return;
+    toast('⏳ Сжимаю '+file.name+'…','');
+    let res;
+    if(mediaType==='image')res=await compressImage(file);
+    else if(mediaType==='video')res=await compressVideo(file);
+    else res=await compressAudio(file);
+    let fileName,path;
+    if(folder==='audio'){
+      const num=await autoGetNextAudioNum(id);
+      fileName=String(num).padStart(2,'0')+'.'+res.ext;
+      path='memorial/'+id+'/audio/'+fileName;
+    }else{
+      fileName=autoSafeName(file.name)+'.'+res.ext;
+      path='memorial/'+id+'/'+folder+'/'+fileName;
+    }
+    toast('⏳ Заливаю на GitHub…','');
+    await autoPutFile(path,res.b64,'Всегда помним: '+fileName+' (сжато)');
+    const displayPath=folder+'/'+fileName;
+    setFieldByPath(pathKey,displayPath);
+    const saved=((res.before/1024)|0)+'KB → '+((res.after/1024)|0)+'KB';
+    toast('✅ '+fileName+' ('+saved+')','ok');
+    renderEv();renderTracks();onInput();
+  }catch(e){
+    toast('❌ '+(e.message||'ошибка'),'err');
+  }finally{
+    if(btnEl){btnEl.classList.remove('loading');btnEl.disabled=false;}
+  }
+}
+
+function pickFile(accept){
+  return new Promise(function(resolve){
+    const inp=document.createElement('input');
+    inp.type='file';inp.accept=accept;
+    inp.onchange=()=>{const f=inp.files&&inp.files[0];resolve(f||null);};
+    inp.click();
+  });
+}
+
+function setFieldByPath(key,value){
+  if(typeof key==='string'){
+    person[key]=value;
+    const el=document.getElementById(key);
+    if(el)el.value=value;
+  }else if(Array.isArray(key)){
+    let obj=person;
+    for(let i=0;i<key.length-1;i++){
+      obj=obj[key[i]];
+    }
+    obj[key[key.length-1]]=value;
+    if(key[0]==='timeline'){
+      const inp=document.querySelector(`#evlist .evcard:nth-child(${key[1]+1}) .up-row input`);
+      if(inp)inp.value=value;
+    }else if(key[0]==='tracks'){
+      const inp=document.querySelector(`#trlist .trcard:nth-child(${key[1]+1}) .up-row input`);
+      if(inp)inp.value=value;
+    }
+  }
+}
+
 (function(){const cv=document.getElementById('embers'),x=cv.getContext('2d');let W,H,ps=[];function rs(){W=cv.width=innerWidth;H=cv.innerHeight;}addEventListener('resize',rs);rs();for(let i=0;i<22;i++)ps.push({x:Math.random()*W,y:Math.random()*H,s:Math.random()*1.4+.3,v:Math.random()*.3+.08,o:Math.random()*.3+.05,d:Math.random()*2-1});(function loop(){x.clearRect(0,0,W,H);ps.forEach(p=>{p.y-=p.v;p.x+=p.d*.15;if(p.y<0){p.y=H;p.x=Math.random()*W;}x.fillStyle='rgba(212,175,55,'+p.o+')';x.beginPath();x.arc(p.x,p.y,p.s,0,7);x.fill();});requestAnimationFrame(loop);})();})();
 </script>
 
@@ -850,7 +1131,6 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 const auth = getAuth(app);
 
-/* ---- серверный вход ---- */
 window.fbLogin = async (email, pass) => {
   try { await signInWithEmailAndPassword(auth, email, pass); return { ok: true }; }
   catch (e) { return { ok: false, err: e.code }; }
@@ -860,7 +1140,6 @@ window.fbSaveAdmin = async (secret, recovery) => {
   await set(ref(db, 'admin'), { totp: secret, recovery: recovery });
 };
 
-/* ---- главный сценарий загрузки ---- */
 onAuthStateChanged(auth, async user => {
   if (!user) { showScreen('gate-login'); return; }
   if (hasLocalTotpOk() && totpSecret) { enterApp(); return; }
@@ -880,7 +1159,6 @@ onAuthStateChanged(auth, async user => {
   }
 });
 
-/* ---- заявки (теперь только с серверным доступом) ---- */
 function esc2(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function updCnt(n){
   const b=document.getElementById('ordCnt');
