@@ -263,6 +263,7 @@ body{background:radial-gradient(100% 60% at 80% -10%,rgba(212,175,55,.06),transp
 <button class="tb" onclick="openOrders()">📥 Заявки<span class="ord-badge" id="ordCnt" style="display:none">0</span></button>
 <button class="tb ghost" onclick="toggleTok()">🔑 Токен</button>
 <button class="tb" onclick="copyPerson()">📋 Копировать</button>
+<button class="tb" onclick="printSheet()">🖨️ Лист</button>
 <button class="tb" onclick="downloadHtml()">⬇ Скачать</button>
 <button class="tb primary" onclick="publish()">🚀 Опубликовать</button>
 </div>
@@ -1231,7 +1232,43 @@ async function arcUpload(folder, type) {
   inp.value = '';
   toast('📁 Залито: ' + ok + (fail ? ', ошибок: ' + fail : ''), 'ok');
 }
-  
+  /* ===== 🖨️ ЛИСТ ПАМЯТИ (только из админки) ===== */
+function printSheet(){
+  const id=person.id||slug(person.fullName)||'';
+  if(!id){toast('Заполни ФИО или ID сначала','err');return;}
+  const p=function(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');};
+  const photoUrl=person.mainPhoto?('https://serdce-pamyati.ru/'+resolvePhoto(person.mainPhoto)):'';
+  const pageUrl='https://serdce-pamyati.ru/memorial/'+id+'/';
+  const tl=(person.timeline||[]).map(e=>'<div><b>'+p(e.year||'')+'</b> '+p((e.title||'')+(e.text?' — '+e.text:''))+'</div>').join('');
+  const rest=(person.restPlace||person.restAddr)?'<div class="ps-sec">Место покоя</div><div class="ps-tl"><div>'+p(person.restPlace||'')+(person.restAddr?' · '+p(person.restAddr):'')+'</div></div>':'';
+  const html='<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Лист памяти — '+p(person.fullName||'')+'</title><style>'
+  +'@page{size:A4;margin:12mm}body{font-family:Georgia,"Times New Roman",serif;color:#1a1a1a;margin:0;padding:10mm}'
+  +'.ps-head{text-align:center;border-bottom:2px solid #b8860b;padding-bottom:4mm;margin-bottom:6mm}.ps-brand{font-size:5mm;letter-spacing:1.2mm;color:#b8860b;font-weight:900}.ps-slogan{font-size:3.2mm;font-style:italic;color:#666;margin-top:1mm}'
+  +'.ps-top{display:flex;gap:6mm;margin-bottom:6mm}.ps-photo{flex:0 0 55mm}.ps-photo img{width:55mm;height:70mm;object-fit:cover;object-position:50% 20%;border:1px solid #b8860b;padding:1mm;background:#fff}.ps-id{flex:1}'
+  +'.ps-name{font-size:6.5mm;font-weight:900;color:#111;line-height:1.15}.ps-dates{font-size:4.2mm;color:#b8860b;font-weight:700;margin-top:2mm;letter-spacing:.5mm}.ps-badge{font-size:3.4mm;color:#333;margin-top:3mm;line-height:1.4}.ps-city{font-size:3.2mm;color:#666;margin-top:2mm}'
+  +'.ps-sec{font-size:4.2mm;color:#b8860b;font-weight:900;letter-spacing:1mm;margin:5mm 0 2mm;text-transform:uppercase}.ps-tl{font-size:3.4mm;line-height:1.5;color:#222}.ps-tl div{margin-bottom:1.6mm}.ps-tl b{color:#b8860b}'
+  +'.ps-words{font-size:3.6mm;font-style:italic;color:#333;line-height:1.5;border-left:1mm solid #b8860b;padding-left:4mm;margin-top:4mm}'
+  +'.ps-foot{display:flex;align-items:center;gap:5mm;margin-top:7mm;border-top:1px solid #ccc;padding-top:4mm}.ps-qr img{width:26mm;height:26mm;display:block}.ps-foot-t{font-size:3.2mm;color:#444;line-height:1.45}.ps-foot-t b{color:#b8860b}'
+  +'</style></head><body>'
+  +'<div class="ps-head"><div class="ps-brand">🕯️ ВСЕГДА ПОМНИМ</div><div class="ps-slogan">«Они живы. Всегда.»</div></div>'
+  +'<div class="ps-top"><div class="ps-photo">'+(photoUrl?'<img src="'+photoUrl+'" alt="">':'')+'</div>'
+  +'<div class="ps-id"><div class="ps-name">'+p(person.fullName||'')+'</div>'
+  +'<div class="ps-dates">'+p(person.birth||'')+' — '+p(person.death||'')+'</div>'
+  +(person.badge?'<div class="ps-badge">'+p(person.badge)+'</div>':'')
+  +(person.city?'<div class="ps-city">📍 '+p(person.city)+'</div>':'')
+  +'</div></div>'
+  +(tl?'<div class="ps-sec">Жизненный путь</div><div class="ps-tl">'+tl+'</div>':'')
+  +(person.words?'<div class="ps-words">«'+p(person.words)+'»</div>':'')
+  +rest
+  +'<div class="ps-foot"><div class="ps-qr"><img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=2&data='+encodeURIComponent(pageUrl)+'" alt="QR"></div>'
+  +'<div class="ps-foot-t"><b>Отсканируйте QR-код</b> — откроется живая страница памяти: фотоархив, видео, песни, свечи и слова благодарности.<br>serdce-pamyati.ru — общероссийская сеть сохранения памяти</div></div>'
+  +'<script>window.onload=function(){setTimeout(function(){window.print()},600)}<\/script>'
+  +'</body></html>';
+  const w=window.open('','_blank');
+  if(!w){alert('Браузер заблокировал окно — разреши всплывающие окна для админки.');return;}
+  w.document.write(html);
+  w.document.close();
+}
 (function(){const cv=document.getElementById('embers'),x=cv.getContext('2d');let W,H,ps=[];function rs(){W=cv.width=innerWidth;H=cv.innerHeight;}addEventListener('resize',rs);rs();for(let i=0;i<22;i++)ps.push({x:Math.random()*W,y:Math.random()*H,s:Math.random()*1.4+.3,v:Math.random()*.3+.08,o:Math.random()*.3+.05,d:Math.random()*2-1});(function loop(){x.clearRect(0,0,W,H);ps.forEach(p=>{p.y-=p.v;p.x+=p.d*.15;if(p.y<0){p.y=H;p.x=Math.random()*W;}x.fillStyle='rgba(212,175,55,'+p.o+')';x.beginPath();x.arc(p.x,p.y,p.s,0,7);x.fill();});requestAnimationFrame(loop);})();})();
 </script>
 
