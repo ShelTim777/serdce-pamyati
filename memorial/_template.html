@@ -335,12 +335,12 @@ let storySlides=[],storyIdx=0,storyTimer=null;
 function storySrc(p){if(!p)return '';if(/^https?:\/\//.test(p)||p.charAt(0)==='/'||p.indexOf('img/')===0||p.indexOf('memorial/')===0)return p;return 'img/'+p;}
 function buildStory(){
   const s=[];
-  s.push({img:storySrc(PERSON.mainPhoto),year:PERSON.fullName,text:(PERSON.birth||'')+' — '+(PERSON.death||'…')});
+  s.push({img:PERSON.mainPhoto||'',year:PERSON.fullName,text:(PERSON.birth||'')+' — '+(PERSON.death||'…')});
   let ai=0;
   (PERSON.timeline||[]).forEach(e=>{
     let img=e.photo?storySrc(e.photo):'';
     if(!img&&photos.length){img=photos[ai%photos.length];ai++;}
-    if(!img)img=storySrc(PERSON.mainPhoto);
+    if(!img)img=PERSON.mainPhoto||'';
     s.push({img:img,year:e.year||'',text:(e.title||'')+(e.text?' '+e.text:'')});
   });
   return s;
