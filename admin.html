@@ -1082,6 +1082,28 @@ async function autoGetNextAudioNum(id){
 }
 
 /* ГЛАВНАЯ ФУНКЦИЯ: универсальная загрузка для любого поля */
+  /* 📐 АВТО-КРОП ГЛАВНОГО ФОТО ПОД ПОРТРЕТ 3:4 (лицо сверху) */
+function compressImagePortrait(file){
+  return new Promise(function(resolve,reject){
+    const img=new Image();
+    const url=URL.createObjectURL(file);
+    img.onload=function(){
+      const targetRatio=3/4;
+      let sw=img.width,sh=img.height,sx=0,sy=0;
+      if(sw/sh>targetRatio){sw=Math.round(sh*targetRatio);sx=Math.round((img.width-sw)/2);}
+      else{sh=Math.round(sw/targetRatio);sy=Math.round(img.height*0.06);if(sy+sh>img.height)sy=img.height-sh;}
+      let w=sw,h=sh;const max=1600;
+      if(h>max){w=Math.round(w*max/h);h=max;}
+      const c=document.createElement('canvas');c.width=w;c.height=h;
+      c.getContext('2d').drawImage(img,sx,sy,sw,sh,0,0,w,h);
+      URL.revokeObjectURL(url);
+      const d=c.toDataURL('image/jpeg',0.85);
+      resolve({b64:d.split(',')[1],ext:'jpg',before:file.size,after:Math.round(d.length*0.75)});
+    };
+    img.onerror=reject;
+    img.src=url;
+  });
+}
 async function uploadForField(pathKey,folder,mediaType,btnEl){
   const id=person.id||slug(person.fullName)||'';
   if(!id){toast('Заполни ФИО или ID страницы сначала','err');return;}
@@ -1093,7 +1115,7 @@ async function uploadForField(pathKey,folder,mediaType,btnEl){
     if(!file)return;
     toast('⏳ Сжимаю '+file.name+'…','');
     let res;
-    if(mediaType==='image')res=await compressImage(file);
+    if(mediaType==='image')res=await (pathKey==='mainPhoto'?compressImagePortrait(file):compressImage(file));
     else if(mediaType==='video')res=await compressVideo(file);
     else res=await compressAudio(file);
     let fileName,path;
