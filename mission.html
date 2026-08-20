@@ -48,6 +48,19 @@ header{background:rgba(10,10,10,.8);padding:20px 40px;display:flex;justify-conte
 footer{background:#050505;padding:40px 20px;text-align:center;border-top:1px solid rgba(255,255,255,.05)}
 .footer-brand{font-family:'Playfair Display',serif;font-size:20px;letter-spacing:4px;color:var(--accent);margin-bottom:10px}
 .footer-copy{font-size:12px;color:#444}
+.founders{max-width:900px;margin:50px auto 0;padding:0 20px}
+.founders h2{font-family:'Playfair Display',serif;font-size:30px;color:var(--accent);text-align:center;margin-bottom:8px}
+.founders-sub{text-align:center;color:var(--gray);margin-bottom:30px;font-size:14px}
+.founders-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.founder-card{background:rgba(21,21,21,.8);border:1px solid rgba(212,175,55,.15);border-radius:14px;padding:24px;text-align:center}
+.founder-photo{width:140px;height:140px;margin:0 auto 14px;border-radius:50%;overflow:hidden;border:3px solid var(--accent)}
+.founder-photo img{width:100%;height:100%;object-fit:cover}
+.founder-name{font-family:'Playfair Display',serif;font-size:20px;color:var(--text);margin-bottom:4px}
+.founder-role{color:var(--accent);font-size:12px;letter-spacing:1px;text-transform:uppercase}
+.story-box{margin-top:26px;background:rgba(212,175,55,.06);border-left:4px solid var(--accent);border-radius:8px;padding:28px}
+.story-box h3{font-family:'Playfair Display',serif;color:var(--accent);font-size:20px;margin-bottom:12px}
+.story-box p{line-height:1.8;font-size:15px;color:var(--text)}
+@media(max-width:768px){.founders-grid{grid-template-columns:1fr}}
 @media(max-width:768px){.values{grid-template-columns:1fr}.doing-list{grid-template-columns:1fr}.hero h1{font-size:32px}header{padding:15px 20px}}
 </style>
 </head>
@@ -89,7 +102,26 @@ footer{background:#050505;padding:40px 20px;text-align:center;border-top:1px sol
 <div class="doing-item"><div class="ic">🎬</div><div><strong>Истории героев</strong><span>Снимаем и публикуем истории — в соцсетях и вместе с местными СМИ.</span></div></div>
 </div>
 </section>
-
+<section class="founders">
+<h2>Основатели проекта</h2>
+<p class="founders-sub">Два человека. Одно дело.</p>
+<div class="founders-grid">
+<div class="founder-card">
+<div class="founder-photo"><img src="founder1.jpg" alt="Тим — основатель"></div>
+<div class="founder-name">Тим</div>
+<div class="founder-role">Основатель · страницы, таблички, производство</div>
+</div>
+<div class="founder-card">
+<div class="founder-photo"><img src="founder2.jpg" alt="Михаил — сооснователь"></div>
+<div class="founder-name">Михаил</div>
+<div class="founder-role">Сооснователь · участник СВО, медаль «За отвагу»</div>
+</div>
+</div>
+<div class="story-box">
+<h3>Как это началось</h3>
+<p>Михаил прошёл СВО, награждён медалью «За отвагу». Вернувшись, увидел заброшенные могилы ветеранов. В 2026 году мы запустили «Всегда помним»: мемориальные таблички с QR и NFC и страницы памяти героев. Первая табличка установлена на могиле ефрейтора Логиновского, кавалера ордена Славы. Это только начало.</p>
+</div>
+</section>
 <section class="cta">
 <p>Присоединяйся — сохрани память о своём герое.</p>
 <a href="index.html#map" class="btn-cta">Карта памяти</a>
