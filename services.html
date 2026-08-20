@@ -152,22 +152,32 @@ header { padding:15px 20px; flex-direction:column; gap:15px; }
 <h2 class="section-title">Бесплатно в каждом заказе</h2>
 <p class="section-sub">Загружайте архив памяти — в пределах лимитов это уже включено в цену</p>
 <div class="free-grid">
-<div class="free-card"><div class="free-icon">💾</div><div class="free-num">10</div><div class="free-label">файлов</div><div class="free-sub">фото + видео + аудио</div></div>
-<div class="free-card"><div class="free-icon">🕯️</div><div class="free-num">∞</div><div class="free-label">свечей памяти</div><div class="free-sub">от всех посетителей</div></div>
-<div class="free-card"><div class="free-icon">♾️</div><div class="free-num">∞</div><div class="free-label">лет хранения</div><div class="free-sub">без абонентской платы</div></div>
+<div class="free-card"><div class="free-icon">📷</div><div class="free-num">10</div><div class="free-label">фото</div><div class="free-sub">включено в тариф</div></div>
+<div class="free-card"><div class="free-icon">🎬</div><div class="free-num">10</div><div class="free-label">видео</div><div class="free-sub">включено в тариф</div></div>
+<div class="free-card"><div class="free-icon">🎵</div><div class="free-num">10</div><div class="free-label">аудио / песен</div><div class="free-sub">включено в тариф</div></div>
 </div>
 </section>
 <section class="section reveal">
-<h2 class="section-title">Нужно больше 10 файлов?</h2>
-<p class="section-sub">В базе уже 10 файлов любого типа. Каждый файл сверх лимита — 50 ₽</p>
+<h2 class="section-title">Нужно больше?</h2>
+<p class="section-sub">В базе уже 10 фото + 10 видео + 10 аудио. Каждый файл сверх лимита — 50 ₽</p>
 <div class="calc-box">
 <div class="calc-row">
-<div class="calc-info"><strong>📷🎬🎵 Дополнительные файлы</strong><span>любые: фото, видео или аудио · +50 ₽ за штуку</span></div>
-<div class="calc-control"><button class="calc-btn" onclick="chg('extra',-1)">−</button><span class="calc-val" id="v-extra">0</span><button class="calc-btn" onclick="chg('extra',1)">+</button></div>
-<div class="calc-extra" id="e-extra"></div>
+<div class="calc-info"><strong>📷 Дополнительные фото</strong><span>сверх бесплатных 10 · +50 ₽ за штуку</span></div>
+<div class="calc-control"><button class="calc-btn" onclick="chg('photo',-1)">−</button><span class="calc-val" id="v-photo">0</span><button class="calc-btn" onclick="chg('photo',1)">+</button></div>
+<div class="calc-extra" id="e-photo"></div>
+</div>
+<div class="calc-row">
+<div class="calc-info"><strong>🎬 Дополнительные видео</strong><span>сверх бесплатных 10 · +50 ₽ за штуку</span></div>
+<div class="calc-control"><button class="calc-btn" onclick="chg('video',-1)">−</button><span class="calc-val" id="v-video">0</span><button class="calc-btn" onclick="chg('video',1)">+</button></div>
+<div class="calc-extra" id="e-video"></div>
+</div>
+<div class="calc-row">
+<div class="calc-info"><strong>🎵 Дополнительные аудио</strong><span>сверх бесплатных 10 · +50 ₽ за штуку</span></div>
+<div class="calc-control"><button class="calc-btn" onclick="chg('audio',-1)">−</button><span class="calc-val" id="v-audio">0</span><button class="calc-btn" onclick="chg('audio',1)">+</button></div>
+<div class="calc-extra" id="e-audio"></div>
 </div>
 <div class="calc-total">
-<div class="calc-line"><span>Базовый комплект «всё включено» (10 файлов)</span><span>2 500 ₽</span></div>
+<div class="calc-line"><span>Базовый комплект «всё включено» (10 фото + 10 видео + 10 аудио)</span><span>2 500 ₽</span></div>
 <div class="calc-line"><span>Доплата за файлы сверх лимита</span><span id="extra-sum">0 ₽</span></div>
 <div class="calc-line final"><span>Итого</span><span id="final-sum">2 500 ₽</span></div>
 </div>
@@ -214,17 +224,24 @@ header { padding:15px 20px; flex-direction:column; gap:15px; }
 <script>
 var PRICE_EXTRA = 50;
 var BASE = 2500;
-var counts = { extra:0 };
+var counts = { photo:0, video:0, audio:0 };
 function chg(type, delta) {
 counts[type] = Math.max(0, counts[type] + delta);
 document.getElementById('v-' + type).textContent = counts[type];
 calc();
 }
 function calc() {
-var sum = counts.extra * PRICE_EXTRA;
-document.getElementById('e-extra').textContent = counts.extra > 0 ? ('+' + sum + ' ₽') : '';
-document.getElementById('extra-sum').textContent = sum + ' ₽';
-document.getElementById('final-sum').textContent = (BASE + sum).toLocaleString('ru-RU') + ' ₽';
+var extra = 0;
+var types = ['photo','video','audio'];
+for (var i = 0; i < types.length; i++) {
+var t = types[i];
+var sum = counts[t] * PRICE_EXTRA;
+extra += sum;
+var el = document.getElementById('e-' + t);
+el.textContent = counts[t] > 0 ? ('+' + sum + ' ₽') : '';
+}
+document.getElementById('extra-sum').textContent = extra + ' ₽';
+document.getElementById('final-sum').textContent = (BASE + extra).toLocaleString('ru-RU') + ' ₽';
 }
 var observer = new IntersectionObserver(function(entries) {
 entries.forEach(function(entry) {
