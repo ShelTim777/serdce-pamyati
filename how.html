@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Как это работает — Всегда помним</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0a0a;--text:#e8e8e8;--accent:#d4af37;--gray:#888}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:#0a0a0a}
+body{background-color:#0a0a0a;color:var(--text);font-family:'Inter',sans-serif;min-height:100vh}
+header{background:rgba(10,10,10,.8);padding:20px 40px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(212,175,55,.2);position:sticky;top:0;z-index:1000;backdrop-filter:blur(15px)}
+.logo{display:flex;align-items:center;gap:15px}
+.logo-icon{font-size:32px}
+.logo-text{font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:var(--accent);letter-spacing:2px}
+.btn-header{background:transparent;border:1px solid rgba(212,175,55,.4);color:var(--accent);padding:12px 25px;border-radius:30px;font-size:14px;font-weight:700;text-decoration:none;transition:.3s}
+.btn-header:hover{background:var(--accent);color:#000}
+.hero{text-align:center;padding:90px 20px 40px}
+.hero h1{font-family:'Playfair Display',serif;font-size:44px;color:var(--accent);margin-bottom:12px;letter-spacing:2px}
+.hero p{color:var(--gray);font-size:17px;max-width:640px;margin:0 auto;line-height:1.7}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:30px;max-width:1100px;margin:40px auto;padding:0 20px}
+.step{background:rgba(21,21,21,.8);border:1px solid rgba(212,175,55,.15);border-radius:14px;padding:35px 22px;text-align:center;transition:.3s}
+.step:hover{border-color:var(--accent);transform:translateY(-6px)}
+.step-icon{font-size:64px;margin-bottom:18px}
+.step-title{font-size:20px;font-weight:600;margin-bottom:12px}
+.step-desc{color:var(--gray);font-size:14px;line-height:1.6}
+.extra{max-width:800px;margin:30px auto;padding:0 20px}
+.extra-box{background:rgba(212,175,55,.06);border-left:4px solid var(--accent);border-radius:8px;padding:28px;text-align:center}
+.extra-box p{line-height:1.7;font-size:15px}
+.cta{text-align:center;padding:60px 20px 80px}
+.btn-cta{background:linear-gradient(135deg,#d4af37,#b8860b);color:#000;padding:16px 45px;border-radius:30px;font-size:16px;font-weight:700;text-decoration:none;display:inline-block;transition:.3s}
+.btn-cta:hover{transform:translateY(-3px);box-shadow:0 10px 30px rgba(212,175,55,.5)}
+footer{background:#050505;padding:40px 20px;text-align:center;border-top:1px solid rgba(255,255,255,.05)}
+.footer-brand{font-family:'Playfair Display',serif;font-size:20px;letter-spacing:4px;color:var(--accent);margin-bottom:10px}
+.footer-copy{font-size:12px;color:#444}
+@media(max-width:768px){.steps{grid-template-columns:1fr}.hero h1{font-size:30px}header{padding:15px 20px}}
+</style>
+</head>
+<body>
+<header>
+<div class="logo"><span class="logo-icon">🕯️</span><span class="logo-text">ВСЕГДА ПОМНИМ</span></div>
+<a href="index.html" class="btn-header">На главную</a>
+</header>
+<section class="hero">
+<h1>КАК ЭТО РАБОТАЕТ</h1>
+<p>Мемориальная табличка с NFC-чипом и QR-кодом связывает физический мемориал с живой цифровой страницей памяти.</p>
+</section>
+<section class="steps">
+<div class="step"><div class="step-icon">📱</div><div class="step-title">Сканируете NFC/QR</div><div class="step-desc">Наведите телефон на мемориальную табличку — камера или NFC считают код за секунду.</div></div>
+<div class="step"><div class="step-icon">🗺️</div><div class="step-title">Открывается страница</div><div class="step-desc">История жизни, фотографии, видеоархив, песни и слова благодарности — навсегда в сети.</div></div>
+<div class="step"><div class="step-icon">🕯️</div><div class="step-title">Зажигаете свечу</div><div class="step-desc">Оставьте виртуальную свечу и слова памяти — они останутся на странице навсегда.</div></div>
+</section>
+<section class="extra">
+<div class="extra-box"><p>Табличка не требует батареек и обслуживания: NFC-чип и QR-код работают десятилетиями, а страница памяти живёт вечно — без абонентской платы.</p></div>
+</section>
+<section class="cta">
+<a href="services.html" class="btn-cta">Услуги и тариф</a>
+</section>
+<footer>
+<div class="footer-brand">ВСЕГДА ПОМНИМ</div>
+<div class="footer-copy">© 2026 Всегда помним · «Они живы. Всегда.» 🕯️</div>
+<div class="footer-copy" style="margin-top:6px;">ИНН 700203701314</div>
+</footer>
+</body>
+</html>
