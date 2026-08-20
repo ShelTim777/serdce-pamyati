@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Наша миссия — Всегда помним</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0a0a;--text:#e8e8e8;--accent:#d4af37;--gray:#888}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:#0a0a0a}
+body{background-color:#0a0a0a;color:var(--text);font-family:'Inter',sans-serif;min-height:100vh}
+header{background:rgba(10,10,10,.8);padding:20px 40px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(212,175,55,.2);position:sticky;top:0;z-index:1000;backdrop-filter:blur(15px)}
+.logo{display:flex;align-items:center;gap:15px}
+.logo-icon{font-size:32px}
+.logo-text{font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:var(--accent);letter-spacing:2px}
+.btn-header{background:transparent;border:1px solid rgba(212,175,55,.4);color:var(--accent);padding:12px 25px;border-radius:30px;font-size:14px;font-weight:700;text-decoration:none;transition:.3s}
+.btn-header:hover{background:var(--accent);color:#000}
+.hero{text-align:center;padding:90px 20px 40px}
+.hero h1{font-family:'Playfair Display',serif;font-size:46px;color:var(--accent);margin-bottom:12px;letter-spacing:3px}
+.hero .slogan{font-family:'Playfair Display',serif;font-style:italic;font-size:18px;color:var(--text);margin-bottom:25px}
+.hero p{color:var(--gray);font-size:17px;max-width:680px;margin:0 auto;line-height:1.7}
+.mission-big{max-width:860px;margin:30px auto;padding:0 20px}
+.mission-box{background:rgba(212,175,55,.06);border-left:4px solid var(--accent);border-radius:8px;padding:35px;font-size:17px;line-height:1.8}
+.mission-box b{color:var(--accent)}
+.values{display:grid;grid-template-columns:repeat(3,1fr);gap:25px;max-width:1100px;margin:50px auto;padding:0 20px}
+.value{background:rgba(21,21,21,.8);border:1px solid rgba(212,175,55,.15);border-radius:14px;padding:35px 22px;text-align:center;transition:.3s}
+.value:hover{border-color:var(--accent);transform:translateY(-6px)}
+.value-icon{font-size:56px;margin-bottom:16px}
+.value-title{font-family:'Playfair Display',serif;font-size:20px;color:var(--accent);margin-bottom:12px}
+.value-desc{color:var(--gray);font-size:14px;line-height:1.6}
+.quote{max-width:800px;margin:50px auto;padding:0 20px;text-align:center}
+.quote p{font-family:'Playfair Display',serif;font-style:italic;font-size:22px;line-height:1.6;color:var(--text)}
+.quote p b{color:var(--accent)}
+.quote .sign{margin-top:16px;color:var(--gray);font-size:13px;letter-spacing:1px}
+.doing{max-width:900px;margin:40px auto;padding:0 20px}
+.doing h2{font-family:'Playfair Display',serif;font-size:30px;color:var(--accent);text-align:center;margin-bottom:30px}
+.doing-list{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.doing-item{background:rgba(21,21,21,.8);border:1px solid rgba(212,175,55,.15);border-radius:12px;padding:20px;display:flex;gap:14px;align-items:flex-start}
+.doing-item .ic{font-size:26px;flex-shrink:0}
+.doing-item strong{display:block;margin-bottom:5px}
+.doing-item span{color:var(--gray);font-size:13px;line-height:1.5}
+.cta{text-align:center;padding:60px 20px 80px}
+.cta p{color:var(--gray);margin-bottom:25px}
+.btn-cta{background:linear-gradient(135deg,#d4af37,#b8860b);color:#000;padding:16px 45px;border-radius:30px;font-size:16px;font-weight:700;text-decoration:none;display:inline-block;margin:0 8px 12px;transition:.3s}
+.btn-cta:hover{transform:translateY(-3px);box-shadow:0 10px 30px rgba(212,175,55,.5)}
+.btn-cta.ghost{background:transparent;border:1px solid rgba(212,175,55,.4);color:var(--accent)}
+footer{background:#050505;padding:40px 20px;text-align:center;border-top:1px solid rgba(255,255,255,.05)}
+.footer-brand{font-family:'Playfair Display',serif;font-size:20px;letter-spacing:4px;color:var(--accent);margin-bottom:10px}
+.footer-copy{font-size:12px;color:#444}
+@media(max-width:768px){.values{grid-template-columns:1fr}.doing-list{grid-template-columns:1fr}.hero h1{font-size:32px}header{padding:15px 20px}}
+</style>
+</head>
+<body>
+<header>
+<div class="logo"><span class="logo-icon">🕯️</span><span class="logo-text">ВСЕГДА ПОМНИМ</span></div>
+<a href="index.html" class="btn-header">На главную</a>
+</header>
+
+<section class="hero">
+<h1>НАША МИССИЯ</h1>
+<div class="slogan">«Они живы. Всегда.»</div>
+<p>Мы делаем так, чтобы память жила дольше камня, дольше бумаги и дольше человеческой жизни.</p>
+</section>
+
+<section class="mission-big">
+<div class="mission-box">
+«Всегда помним» — это не просто таблички и страницы. Это <b>мост между поколениями</b>. Каждый герой, ветеран и близкий человек заслуживает того, чтобы его имя, лицо и подвиг не растворились во времени. Мы соединяем современные технологии с вечными ценностями — чтобы правнуки могли узнать прадеда, прикоснуться к его истории и сказать спасибо.
+</div>
+</section>
+
+<section class="values">
+<div class="value"><div class="value-icon">🕯️</div><div class="value-title">Сохраняем</div><div class="value-desc">Возвращаем имена и лица: реставрируем старые фото, собираем архивы, записываем истории — навсегда в сети.</div></div>
+<div class="value"><div class="value-icon">🇷🇺</div><div class="value-title">Воспитываем</div><div class="value-desc">Молодое поколение должно знать, кем были их деды и прадеды. Память — фундамент, на котором стоит страна.</div></div>
+<div class="value"><div class="value-icon">❤️</div><div class="value-title">Творим добро</div><div class="value-desc">Часть средств с каждого заказа направляем на помощь пожилым людям — память о близких превращается в добро для живых.</div></div>
+</section>
+
+<section class="quote">
+<p>«Патриотизм нужно поднимать. <b>Молодое поколение должно понимать</b>, какой ценой досталась Победа и кто защищал небо нашей Родины.»</p>
+<div class="sign">— ОСНОВАТЕЛЬ ПРОЕКТА «ВСЕГДА ПОМНИМ»</div>
+</section>
+
+<section class="doing">
+<h2>Что мы делаем</h2>
+<div class="doing-list">
+<div class="doing-item"><div class="ic">🗺️</div><div><strong>Страницы памяти</strong><span>История жизни, фото- и видеоархив, песни, свечи и слова благодарности — навсегда.</span></div></div>
+<div class="doing-item"><div class="ic">🪧</div><div><strong>Мемориальные таблички</strong><span>NFC + QR, срок службы 10+ лет, проверка морозом, жарой и дождём.</span></div></div>
+<div class="doing-item"><div class="ic">🖼️</div><div><strong>Реставрация фото</strong><div class="x"></div><span>Возвращаем жизнь старым снимкам: убираем трещины, восстанавливаем лица, возвращаем цвет.</span></div></div>
+<div class="doing-item"><div class="ic">🎬</div><div><strong>Истории героев</strong><span>Снимаем и публикуем истории — в соцсетях и вместе с местными СМИ.</span></div></div>
+</div>
+</section>
+
+<section class="cta">
+<p>Присоединяйся — сохрани память о своём герое.</p>
+<a href="index.html#map" class="btn-cta">Карта памяти</a>
+<a href="services.html" class="btn-cta ghost">Услуги и тариф</a>
+</section>
+
+<footer>
+<div class="footer-brand">ВСЕГДА ПОМНИМ</div>
+<div class="footer-copy">© 2026 Всегда помним · «Они живы. Всегда.» 🕯️</div>
+<div class="footer-copy" style="margin-top:6px;">ИНН 700203701314</div>
+</footer>
+</body>
+</html>
