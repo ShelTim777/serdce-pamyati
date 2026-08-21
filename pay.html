@@ -117,8 +117,7 @@ footer { background:#050505; padding:40px 20px; text-align:center; border-top:1p
 <div style="font-size:12px; color:#444; margin-top:6px;">Самозанятый · ИНН 700203701314</div>
 </footer>
 <script>
-// ⚠️ ВСТАВЬ СЮДА URL СВОЕГО WORKER'А (после шага 4.2)
-const WORKER_URL = 'https://yookassa-proxy.ТВОЙ-ЛОГИН.workers.dev';
+const WORKER_URL = 'https://yookassa-proxy.ura230160.workers.dev';
 
 const BASE = 2990;
 const ADDON = 50;
@@ -159,7 +158,6 @@ $('payBtn').onclick = async () => {
     const res = await fetch(WORKER_URL + '/pay?amount=' + total);
     const data = await res.json();
     if (data.payurl) {
-      // Сохраняем order в sessionStorage — пригодится при возврате
       sessionStorage.setItem('lastOrder', data.order);
       window.location.href = data.payurl;
     } else {
