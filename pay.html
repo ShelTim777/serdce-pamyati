@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Оплата · Всегда помним</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+:root { --bg:#0a0a0a; --text:#e8e8e8; --accent:#d4af37; --gray:#888; }
+* { box-sizing:border-box; margin:0; padding:0; }
+body { background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; }
+header { background:rgba(10,10,10,0.9); padding:20px 40px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(212,175,55,0.2); position:sticky; top:0; z-index:100; backdrop-filter:blur(15px); }
+.logo { display:flex; align-items:center; gap:15px; }
+.logo-icon { font-size:32px; filter:drop-shadow(0 0 10px rgba(212,175,55,0.5)); }
+.logo-text { font-family:'Playfair Display',serif; font-size:24px; font-weight:700; color:var(--accent); letter-spacing:2px; }
+.btn-header { background:transparent; border:1px solid rgba(212,175,55,0.4); color:var(--accent); padding:12px 25px; border-radius:30px; font-size:14px; font-weight:700; text-decoration:none; }
+.container { max-width:620px; margin:0 auto; padding:50px 20px; }
+.brand-hero { text-align:center; margin-bottom:40px; }
+.brand-name { font-family:'Playfair Display',serif; font-size:36px; font-weight:700; letter-spacing:5px; color:var(--accent); margin-bottom:6px; }
+.brand-slogan { font-family:'Playfair Display',serif; font-style:italic; font-size:16px; color:var(--text); letter-spacing:1px; }
+h1 { font-family:'Playfair Display',serif; font-size:32px; text-align:center; margin-bottom:12px; }
+h1 span { color:var(--accent); }
+.subtitle { text-align:center; color:var(--gray); margin-bottom:30px; line-height:1.6; font-size:14px; }
+.calc-card { background:rgba(21,21,21,0.8); border:1px solid rgba(212,175,55,0.15); border-radius:12px; padding:30px 25px; margin-bottom:20px; }
+.calc-row { display:flex; justify-content:space-between; align-items:center; padding:14px 0; border-bottom:1px dashed rgba(212,175,55,0.15); }
+.calc-row:last-of-type { border-bottom:none; }
+.calc-row .label { font-size:14px; }
+.calc-row .price { color:var(--accent); font-weight:700; font-family:'Playfair Display',serif; font-size:16px; }
+.counter { display:flex; align-items:center; gap:12px; }
+.counter button { width:34px; height:34px; border-radius:50%; background:rgba(212,175,55,0.15); border:1px solid rgba(212,175,55,0.3); color:var(--accent); font-size:18px; font-weight:700; cursor:pointer; }
+.counter button:hover { background:var(--accent); color:#000; }
+.counter .val { min-width:24px; text-align:center; font-weight:700; color:var(--text); }
+.total-row { display:flex; justify-content:space-between; align-items:baseline; padding:20px 0 0; margin-top:10px; border-top:2px solid rgba(212,175,55,0.4); }
+.total-row .label { font-family:'Playfair Display',serif; font-size:20px; }
+.total-row .sum { font-family:'Playfair Display',serif; font-size:32px; font-weight:700; color:var(--accent); }
+.pay-card { background:rgba(21,21,21,0.8); border:1px solid rgba(212,175,55,0.15); border-radius:12px; padding:25px; text-align:center; }
+.btn-pay { display:block; width:100%; background:linear-gradient(135deg,#d4af37,#b8860b); color:#000; padding:18px; border:none; border-radius:30px; font-size:18px; font-weight:700; cursor:pointer; letter-spacing:1px; text-decoration:none; transition:.3s; }
+.btn-pay:hover { transform:translateY(-2px); box-shadow:0 10px 30px rgba(212,175,55,0.4); }
+.btn-pay:disabled { opacity:0.6; cursor:wait; }
+.offer { font-size:12px; color:var(--gray); margin-top:15px; line-height:1.6; }
+.offer a { color:var(--accent); text-decoration:underline; }
+.alt { text-align:center; margin-top:20px; padding-top:20px; border-top:1px dashed rgba(212,175,55,0.15); }
+.alt a { color:var(--accent); font-size:14px; text-decoration:none; }
+.guarantees { margin-top:25px; display:flex; justify-content:space-around; flex-wrap:wrap; gap:15px; }
+.g-item { text-align:center; font-size:12px; color:var(--gray); flex:1; min-width:120px; }
+.g-item .ico { font-size:22px; display:block; margin-bottom:4px; }
+footer { background:#050505; padding:40px 20px; text-align:center; border-top:1px solid rgba(255,255,255,0.05); margin-top:50px; }
+@media (max-width:768px) { header { padding:15px 20px; } h1 { font-size:26px; } .brand-name { font-size:28px; } .total-row .sum { font-size:26px; } }
+</style>
+</head>
+<body>
+<header>
+<div class="logo"><span class="logo-icon">🕯️</span><span class="logo-text">ВСЕГДА ПОМНИМ</span></div>
+<a href="services.html" class="btn-header">← К услугам</a>
+</header>
+<div class="container">
+<div class="brand-hero">
+<div class="brand-name">ВСЕГДА ПОМНИМ</div>
+<div class="brand-slogan">«Они живы. Всегда.»</div>
+</div>
+<h1>Оплата <span>заказа</span></h1>
+<p class="subtitle">Безопасная оплата через ЮKassa. Сразу после оплаты откроется форма для загрузки фотографий и истории.</p>
+
+<div class="calc-card">
+<div class="calc-row">
+<span class="label">Базовый комплект (страница + табличка + доставка)</span>
+<span class="price">2 990 ₽</span>
+</div>
+<div class="calc-row">
+<span class="label">Доп. фото (+50 ₽/шт)</span>
+<div class="counter">
+<button id="plusPhoto">+</button>
+<span class="val" id="photoCount">0</span>
+<button id="minusPhoto">−</button>
+</div>
+</div>
+<div class="calc-row">
+<span class="label">Доп. видео (+50 ₽/шт)</span>
+<div class="counter">
+<button id="plusVideo">+</button>
+<span class="val" id="videoCount">0</span>
+<button id="minusVideo">−</button>
+</div>
+</div>
+<div class="calc-row">
+<span class="label">Доп. аудио (+50 ₽/шт)</span>
+<div class="counter">
+<button id="plusAudio">+</button>
+<span class="val" id="audioCount">0</span>
+<button id="minusAudio">−</button>
+</div>
+</div>
+<div class="total-row">
+<span class="label">Итого:</span>
+<span class="sum" id="total">2 990 ₽</span>
+</div>
+</div>
+
+<div class="pay-card">
+<button class="btn-pay" id="payBtn">Оплатить 🕯️</button>
+<div class="offer">
+Нажимая «Оплатить», вы соглашаетесь с <a href="offer.html" target="_blank">публичной офертой</a> и <a href="privacy.html" target="_blank">обработкой персональных данных</a>. Чеки формируются автоматически (самозанятый, ИНН 700203701314).
+</div>
+<div class="guarantees">
+<div class="g-item"><span class="ico">🔒</span>ЮKassa</div>
+<div class="g-item"><span class="ico">📄</span>Чек 54-ФЗ</div>
+<div class="g-item"><span class="ico">↩️</span>Возврат</div>
+</div>
+<div class="alt">
+<a href="https://vk.ru/serdce_pamyati" target="_blank">Не хотите платить онлайн? Напишите в ВК →</a>
+</div>
+</div>
+</div>
+<footer>
+<div style="font-family:'Playfair Display',serif; font-size:18px; letter-spacing:4px; color:var(--accent); margin-bottom:8px;">ВСЕГДА ПОМНИМ</div>
+<div style="font-size:12px; color:#444;">© 2026 Всегда помним · «Они живы. Всегда.» 🕯️</div>
+<div style="font-size:12px; color:#444; margin-top:6px;">Самозанятый · ИНН 700203701314</div>
+</footer>
+<script>
+// ⚠️ ВСТАВЬ СЮДА URL СВОЕГО WORKER'А (после шага 4.2)
+const WORKER_URL = 'https://yookassa-proxy.ТВОЙ-ЛОГИН.workers.dev';
+
+const BASE = 2990;
+const ADDON = 50;
+let photo = 0, video = 0, audio = 0;
+
+const $ = id => document.getElementById(id);
+const recalc = () => {
+  const total = BASE + (photo + video + audio) * ADDON;
+  $('total').textContent = total.toLocaleString('ru-RU') + ' ₽';
+  $('photoCount').textContent = photo;
+  $('videoCount').textContent = video;
+  $('audioCount').textContent = audio;
+};
+const step = (key, delta) => {
+  if (key === 'photo') photo = Math.max(0, photo + delta);
+  if (key === 'video') video = Math.max(0, video + delta);
+  if (key === 'audio') audio = Math.max(0, audio + delta);
+  recalc();
+};
+
+$('plusPhoto').onclick = () => step('photo', +1);
+$('minusPhoto').onclick = () => step('photo', -1);
+$('plusVideo').onclick = () => step('video', +1);
+$('minusVideo').onclick = () => step('video', -1);
+$('plusAudio').onclick = () => step('audio', +1);
+$('minusAudio').onclick = () => step('audio', -1);
+
+$('payBtn').onclick = async () => {
+  const btn = $('payBtn');
+  if (WORKER_URL.includes('ТВОЙ-ЛОГИН')) {
+    alert('Укажите URL вашего Cloudflare Worker в коде страницы (переменная WORKER_URL)');
+    return;
+  }
+  btn.disabled = true;
+  btn.textContent = 'Создаём платёж...';
+  const total = BASE + (photo + video + audio) * ADDON;
+  try {
+    const res = await fetch(WORKER_URL + '/pay?amount=' + total);
+    const data = await res.json();
+    if (data.payurl) {
+      // Сохраняем order в sessionStorage — пригодится при возврате
+      sessionStorage.setItem('lastOrder', data.order);
+      window.location.href = data.payurl;
+    } else {
+      alert('Не удалось создать платёж. Попробуйте позже или напишите в ВК.');
+      btn.disabled = false;
+      btn.textContent = 'Оплатить 🕯️';
+    }
+  } catch (err) {
+    alert('Ошибка соединения. Попробуйте позже или напишите в ВК.');
+    btn.disabled = false;
+    btn.textContent = 'Оплатить 🕯️';
+  }
+};
+
+recalc();
+</script>
+</body>
+</html>
