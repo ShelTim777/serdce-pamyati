@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Дни памяти — Всегда помним</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0a0a;--text:#e8e8e8;--accent:#d4af37;--gray:#888}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh}
+header{background:rgba(10,10,10,.8);padding:20px 40px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(212,175,55,.2);position:sticky;top:0;z-index:1000;backdrop-filter:blur(15px)}
+.logo{display:flex;align-items:center;gap:15px}
+.logo-icon{font-size:32px}
+.logo-text{font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:var(--accent);letter-spacing:2px}
+.btn-header{background:transparent;border:1px solid rgba(212,175,55,.4);color:var(--accent);padding:12px 25px;border-radius:30px;font-size:14px;font-weight:700;text-decoration:none;transition:.3s}
+.btn-header:hover{background:var(--accent);color:#000}
+.hero{text-align:center;padding:80px 20px 30px}
+.hero h1{font-family:'Playfair Display',serif;font-size:44px;color:var(--accent);letter-spacing:3px;margin-bottom:12px}
+.hero p{color:var(--gray);font-size:16px;max-width:640px;margin:0 auto;line-height:1.7}
+.section{max-width:900px;margin:40px auto;padding:0 20px}
+.section h2{font-family:'Playfair Display',serif;font-size:26px;color:var(--accent);margin-bottom:20px;text-align:center}
+.date-card{background:rgba(21,21,21,.8);border:1px solid rgba(212,175,55,.15);border-left:4px solid var(--accent);border-radius:10px;padding:22px 26px;margin-bottom:14px}
+.date-card .d{font-family:'Playfair Display',serif;color:var(--accent);font-size:18px;margin-bottom:6px}
+.date-card .t{color:var(--text);font-size:14px;line-height:1.7}
+.cta{text-align:center;padding:50px 20px 70px}
+.cta h2{font-family:'Playfair Display',serif;font-size:28px;color:var(--text);margin-bottom:10px}
+.cta p{color:var(--gray);margin-bottom:25px}
+.btn-cta{background:linear-gradient(135deg,#d4af37,#b8860b);color:#000;padding:16px 45px;border-radius:30px;font-size:16px;font-weight:700;text-decoration:none;display:inline-block;margin:0 8px 12px;transition:.3s}
+.btn-cta:hover{transform:translateY(-3px);box-shadow:0 10px 30px rgba(212,175,55,.5)}
+.btn-cta.ghost{background:transparent;border:1px solid rgba(212,175,55,.4);color:var(--accent)}
+footer{background:#050505;padding:40px 20px;text-align:center;border-top:1px solid rgba(255,255,255,.05)}
+.footer-brand{font-family:'Playfair Display',serif;font-size:20px;letter-spacing:4px;color:var(--accent);margin-bottom:10px}
+.footer-copy{font-size:12px;color:#444}
+@media(max-width:768px){.hero h1{font-size:30px}header{padding:15px 20px}}
+</style>
+</head>
+<body>
+<header>
+<div class="logo"><span class="logo-icon">🕯️</span><span class="logo-text">ВСЕГДА ПОМНИМ</span></div>
+<a href="index.html" class="btn-header">На главную</a>
+</header>
+
+<section class="hero">
+<h1>ДНИ ПАМЯТИ</h1>
+<p>Даты, которые мы не имеем права забыть. Сегодня в истории — и ближайшие дни воинской славы.</p>
+</section>
+
+<section class="section">
+<h2>🕯️ Сегодня в истории</h2>
+<div id="todayBox"></div>
+</section>
+
+<section class="section">
+<h2>📅 Ближайшие дни памяти</h2>
+<div id="upcomingBox"></div>
+</section>
+
+<section class="cta">
+<h2>Твой герой тоже достоин вечной памяти</h2>
+<p>Страница памяти + мемориальная табличка с QR и NFC — навсегда.</p>
+<a href="order.html" class="btn-cta">Заказать табличку</a>
+<a href="services.html" class="btn-cta ghost">Услуги и тариф</a>
+</section>
+
+<footer>
+<div class="footer-brand">ВСЕГДА ПОМНИМ</div>
+<div class="footer-copy">© 2026 Всегда помним · «Они живы. Всегда.» 🕯️</div>
+<div class="footer-copy" style="margin-top:6px;">ИНН 700203701314</div>
+</footer>
+
+<script>
+var DATES = [
+{d:'01-27',y:1944,t:'Полное снятие блокады Ленинграда.'},
+{d:'02-02',y:1943,t:'Капитуляция немецких войск под Сталинградом. Начало перелома войны.'},
+{d:'02-23',y:1946,t:'День защитника Отечества.'},
+{d:'04-12',y:1961,t:'Полёт Гагарина. Первый человек в космосе — советский.'},
+{d:'05-09',y:1945,t:'Победа над фашистской Германией.'},
+{d:'06-22',y:1941,t:'Начало Великой Отечественной. День памяти и скорби.'},
+{d:'06-24',y:1945,t:'Парад Победы на Красной площади.'},
+{d:'08-05',y:1943,t:'Освобождение Орла и Белгорода. Первый артиллерийский салют в Москве.'},
+{d:'08-20',y:1939,t:'Начало наступления советских войск на Халхин-Голе. Операция Жукова завершилась разгромом японской армии.'},
+{d:'08-23',y:1943,t:'Освобождение Харькова. Завершение Курской битвы — коренного перелома войны.'},
+{d:'08-24',y:1944,t:'Освобождение Кишинёва. Ясско-Кишинёвская операция открыла путь на Балканы.'},
+{d:'09-02',y:1945,t:'Подписан акт о капитуляции Японии. Окончание Второй мировой войны.'},
+{d:'09-03',y:1945,t:'День окончания Второй мировой войны.'},
+{d:'09-08',y:1941,t:'Начало блокады Ленинграда. 872 дня несломленного духа.'},
+{d:'11-07',y:1941,t:'Парад на Красной площади. Войска уходили с него прямо на фронт.'},
+{d:'12-05',y:1941,t:'Контрнаступление под Москвой. Первый крупный разгром вермахта.'}
+];
+function card(x){var p=x.d.split('-');return '<div class="date-card"><div class="d">'+p[1]+'.'+p[0]+'.'+x.y+'</div><div class="t">'+x.t+'</div></div>';}
+var now=new Date();
+var key=('0'+(now.getMonth()+1)).slice(-2)+'-'+('0'+now.getDate()).slice(-2);
+var today=DATES.filter(function(x){return x.d===key;});
+document.getElementById('todayBox').innerHTML=today.length?today.map(card).join(''):'<div class="date-card"><div class="t">Сегодня тихий день. Но каждая дата возвращается — смотри ближайшие ниже.</div></div>';
+var sorted=DATES.slice().sort(function(a,b){return a.d<b.d?-1:1;});
+var up=sorted.filter(function(x){return x.d>=key;}).concat(sorted.filter(function(x){return x.d<key;}));
+document.getElementById('upcomingBox').innerHTML=up.slice(0,4).map(card).join('');
+</script>
+</body>
+</html>
