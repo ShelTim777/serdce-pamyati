@@ -25,6 +25,7 @@ h1 span { color:var(--accent); }
 label { display:block; color:var(--accent); font-size:13px; letter-spacing:1px; text-transform:uppercase; margin:20px 0 8px; }
 input, textarea { width:100%; background:#0a0a0a; border:1px solid rgba(212,175,55,0.3); border-radius:8px; padding:14px; color:var(--text); font-size:15px; font-family:'Inter',sans-serif; }
 input:focus, textarea:focus { outline:none; border-color:var(--accent); }
+input[type=file] { padding:10px; }
 textarea { min-height:80px; resize:vertical; }
 .hint { color:var(--gray); font-size:12px; margin-top:5px; }
 .btn-submit { width:100%; margin-top:30px; background:linear-gradient(135deg,#d4af37 0%,#b8860b 100%); color:#000; padding:16px; border:none; border-radius:30px; font-size:16px; font-weight:700; cursor:pointer; }
@@ -58,7 +59,7 @@ footer { background:#050505; padding:40px 20px; text-align:center; border-top:1p
 
 <div class="gate" id="gateBox" style="display:none">
 <h2>🕯️ Сначала — оплата</h2>
-<p>Форма открытия материалов доступна после оплаты заказа.<br>Если вы уже оплатили — дождитесь возврата с ЮKassa или проверьте почту.<br>Если не оплачивали — перейдите к оплате:</p>
+<p>Форма открытия материалов доступна после оплаты заказа.<br>Если вы уже оплатили — дождитесь возврата с ЮKassa.<br>Если не оплачивали — перейдите к оплате:</p>
 <a href="pay.html">Перейти к оплате</a>
 <a href="https://vk.ru/serdce_pamyati" target="_blank" style="background:transparent; border:1px solid rgba(212,175,55,0.4); color:var(--accent);">Написать в ВК</a>
 </div>
@@ -76,11 +77,21 @@ footer { background:#050505; padding:40px 20px; text-align:center; border-top:1p
 <input type="text" id="epitaph" placeholder="Помним. Любим. Скорбим.">
 <label>История жизни</label>
 <textarea id="bio" placeholder="Кем был, что любил, какие моменты семья помнит..."></textarea>
-<label>Песни / аудио (названия или ссылки, до 10)</label>
-<textarea id="songs" placeholder="«День Победы», «Синий платочек» или ссылка на запись"></textarea>
-<label>Фотографии (до 20)</label>
+
+<label>📷 Фотографии (до 10 файлов)</label>
 <input type="file" id="photos" accept="image/*" multiple>
-<div class="hint">Сожмутся автоматически и сохранятся в заказе</div>
+<div class="hint" id="photosHint">Выбрано: 0/10 · до 10 МБ каждый · файлы автоматически сжимаются</div>
+
+<label>🎬 Видео (до 10 файлов)</label>
+<input type="file" id="videos" accept="video/*" multiple>
+<div class="hint" id="videosHint">Выбрано: 0/10 · до 100 МБ каждый · большие — лучше ссылками</div>
+
+<label>🎵 Аудио (до 10 файлов)</label>
+<input type="file" id="audio" accept="audio/*" multiple>
+<div class="hint" id="audioHint">Выбрано: 0/10 · до 30 МБ каждый · или названия песен</div>
+
+<label>Песни / аудио (названия или ссылки)</label>
+<textarea id="songs" placeholder="«День Победы», «Синий платочек» или ссылка на запись"></textarea>
 <label>Видео (ссылки: YouTube / Rutube / ВК / облако)</label>
 <textarea id="videoLinks" placeholder="По одной ссылке в строке"></textarea>
 <label>Ссылка на папку с материалами (если есть)</label>
@@ -119,11 +130,22 @@ const firebaseConfig = {
   messagingSenderId: "118982633067",
   appId: "1:118982633067:web:b7c89c98e71fc71ead732e"
 };
-const db = getDatabase(initializeApp(firebaseConfig));
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
 
 const status = t => document.getElementById('submitBtn').textContent = t;
+const MAX = 10;
 
-function compressToDataUrl(file) {
+// Счётчики выбранных файлов
+['photos','videos','audio'].forEach(id => {
+  document.getElementById(id).addEventListener('change', e => {
+    const n = Math.min(e.target.files.length, MAX);
+    document.getElementById(id + 'Hint').textContent = 'Выбрано: ' + n + '/10' + (e.target.files.length > MAX ? ' (лишние будут пропущены)' : '');
+  });
+});
+
+// Сжатие фото → Blob
+function compressToBlob(file) {
   return new Promise(resolve => {
     const url = URL.createObjectURL(file);
     const img = new Image();
@@ -134,25 +156,31 @@ function compressToDataUrl(file) {
       canvas.height = Math.round(img.height * scale);
       canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
       URL.revokeObjectURL(url);
-      resolve(canvas.toDataURL('image/jpeg', 0.7));
+      canvas.toBlob(b => resolve(b), 'image/jpeg', 0.7);
     };
     img.onerror = () => resolve(null);
     img.src = url;
   });
 }
 
-// === ГЕЙТ: проверяем номер заказа и оплату ===
+// Загрузка файла в Selectel
+async function uploadFile(blob, path, contentType) {
+  const res = await fetch('https://upload-proxy.ura230160.workers.dev/upload?key=' + path, {
+    method: 'POST',
+    headers: { 'Content-Type': contentType || 'application/octet-stream' },
+    body: blob
+  });
+  if (!res.ok) throw new Error('Upload failed: ' + (await res.text()).slice(0, 100));
+  return (await res.json()).url;
+}
+
+// === ГЕЙТ ===
 const params = new URLSearchParams(window.location.search);
 const ORDER = params.get('order');
 
 async function checkGate() {
   document.getElementById('loadingBox').style.display = 'none';
-  
-  if (!ORDER) {
-    document.getElementById('gateBox').style.display = 'block';
-    return;
-  }
-  
+  if (!ORDER) { document.getElementById('gateBox').style.display = 'block'; return; }
   try {
     const snap = await get(ref(db, 'orders/' + ORDER));
     const data = snap.val();
@@ -164,7 +192,6 @@ async function checkGate() {
       document.getElementById('gateBox').style.display = 'block';
     }
   } catch (err) {
-    // Firebase недоступен — всё равно откроем форму (чтоб клиент не ждал)
     document.getElementById('formWrap').style.display = 'block';
     document.getElementById('orderBadge').textContent = 'Заказ: ' + ORDER;
     document.getElementById('finalOrder').textContent = ORDER;
@@ -172,39 +199,53 @@ async function checkGate() {
 }
 checkGate();
 
-// === ОТПРАВКА МАТЕРИАЛОВ ===
+// === ОТПРАВКА ===
 document.getElementById('orderForm').addEventListener('submit', async e => {
   e.preventDefault();
   if (document.getElementById('honeypot').value) return;
   const btn = document.getElementById('submitBtn');
   btn.disabled = true;
+  const base = ORDER || ('fallback-' + Date.now());
   try {
-    const files = Array.from(document.getElementById('photos').files).slice(0, 20);
-    const photos = [];
-    for (const f of files) {
-      status(`📷 Сжимаем ${photos.length + 1}/${files.length}...`);
-      const d = await compressToDataUrl(f);
-      if (d) photos.push(d);
+    const photoLinks = [], videoLinks = [], audioLinks = [];
+
+    // ФОТО (сжатие → Selectel)
+    const photos = Array.from(document.getElementById('photos').files).slice(0, MAX);
+    for (let i = 0; i < photos.length; i++) {
+      status('📷 Фото ' + (i + 1) + '/' + photos.length + '...');
+      const blob = await compressToBlob(photos[i]);
+      if (blob) photoLinks.push(await uploadFile(blob, 'orders/' + base + '/photos/' + (i + 1) + '.jpg', 'image/jpeg'));
     }
-    status('Сохраняем материалы...');
-    
-    const payload = {
+
+    // ВИДЕО (прямая загрузка в Selectel)
+    const videos = Array.from(document.getElementById('videos').files).slice(0, MAX);
+    for (let i = 0; i < videos.length; i++) {
+      if (videos[i].size > 100 * 1024 * 1024) { alert('Видео «' + videos[i].name + '» больше 100 МБ — приложите ссылку на YouTube/Rutube в поле ниже.'); continue; }
+      status('🎬 Видео ' + (i + 1) + '/' + videos.length + '...');
+      videoLinks.push(await uploadFile(videos[i], 'orders/' + base + '/videos/' + (i + 1) + '-' + videos[i].name.replace(/[^\w.\-а-яА-Я]/g, '_'), videos[i].type || 'video/mp4'));
+    }
+
+    // АУДИО (прямая загрузка в Selectel)
+    const audios = Array.from(document.getElementById('audio').files).slice(0, MAX);
+    for (let i = 0; i < audios.length; i++) {
+      if (audios[i].size > 30 * 1024 * 1024) { alert('Аудио «' + audios[i].name + '» больше 30 МБ — напишите название песни в поле ниже.'); continue; }
+      status('🎵 Аудио ' + (i + 1) + '/' + audios.length + '...');
+      audioLinks.push(await uploadFile(audios[i], 'orders/' + base + '/audio/' + (i + 1) + '-' + audios[i].name.replace(/[^\w.\-а-яА-Я]/g, '_'), audios[i].type || 'audio/mpeg'));
+    }
+
+    status('Сохраняем заказ...');
+    await update(ref(db, 'orders/' + base), {
       submittedAt: Date.now(),
       status: 'received',
       fio: fio.value, dates: dates.value, epitaph: epitaph.value,
       bio: bio.value, songs: songs.value, folder: folder.value,
       videoLinks: videoLinks.value, contact: contact.value,
-      city: city.value, comment: comment.value, photos
-    };
-    
-    if (ORDER) {
-      // пишется в тот же заказ orders/ORD-xxx
-      await update(ref(db, 'orders/' + ORDER), payload);
-    } else {
-      // резерв: на всякий случай
-      await update(ref(db, 'orders/' + 'fallback-' + Date.now()), payload);
-    }
-    
+      city: city.value, comment: comment.value,
+      photoFiles: photoLinks,
+      videoFiles: videoLinks,
+      audioFiles: audioLinks
+    });
+
     document.getElementById('orderForm').style.display = 'none';
     document.getElementById('successBox').style.display = 'block';
   } catch (err) {
