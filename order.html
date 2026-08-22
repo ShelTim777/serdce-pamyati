@@ -264,7 +264,31 @@ $('orderForm').addEventListener('submit', async e => {
       status('🎵 Аудио ' + (i + 1) + '/' + audios.length + '...');
       audioLinks.push(await s3Upload(audios[i], 'orders/' + base + '/audio/' + (i + 1) + '-' + audios[i].name.replace(/[^\w.\-а-яА-Я]/g, '_'), audios[i].type || 'audio/mpeg'));
     }
-
+    // === ПОЛНАЯ ЗАЯВКА ФАЙЛОМ В SELECTEL ===
+    const infoText = [
+      '=== ЗАЯВКА ' + base + ' ===',
+      'ФИО ушедшего: ' + $('fio').value,
+      'Даты жизни: ' + $('dates').value,
+      'Эпитафия: ' + $('epitaph').value,
+      'История жизни: ' + $('bio').value,
+      'Песни/аудио: ' + $('songs').value,
+      'Видео-ссылки: ' + $('videoLinks').value,
+      'Папка с материалами: ' + $('folder').value,
+      'Контакт: ' + $('contact').value,
+      'Город: ' + $('city').value,
+      'Комментарий: ' + $('comment').value,
+      '',
+      'ФОТО (' + photoLinks.length + '):',
+      ...photoLinks,
+      '',
+      'ВИДЕО (' + videoLinks.length + '):',
+      ...videoLinks,
+      '',
+      'АУДИО (' + audioLinks.length + '):',
+      ...audioLinks
+    ].join('\n');
+    await s3Upload(new Blob([infoText], { type: 'text/plain;charset=utf-8' }), 'orders/' + base + '/zayavka.txt', 'text/plain');
+    
     status('Сохраняем заказ...');
     await update(ref(db, 'orders/' + base), {
       submittedAt: Date.now(),
