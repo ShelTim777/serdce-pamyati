@@ -117,8 +117,6 @@ footer { background:#050505; padding:40px 20px; text-align:center; border-top:1p
 <div style="font-size:12px; color:#444; margin-top:6px;">Самозанятый · ИНН 700203701314</div>
 </footer>
 <script>
-const WORKER_URL = 'https://yookassa-proxy.ura230160.workers.dev';
-
 const BASE = 2990;
 const ADDON = 50;
 let photo = 0, video = 0, audio = 0;
@@ -149,7 +147,7 @@ $('payBtn').onclick = () => {
   const total = BASE + (photo + video + audio) * ADDON;
   $('payBtn').disabled = true;
   $('payBtn').textContent = 'Перенаправляем в ЮKassa...';
-  window.location.href = WORKER_URL + '/pay?amount=' + total;
+  window.location.href = '/pay.php?amount=' + total;
 };
 
 recalc();
