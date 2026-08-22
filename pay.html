@@ -145,11 +145,12 @@ $('minusVideo').onclick = () => step('video', -1);
 $('plusAudio').onclick = () => step('audio', +1);
 $('minusAudio').onclick = () => step('audio', -1);
 
-$('payBtn').onclick = async () => {
-  const btn = $('payBtn');
-  btn.disabled = true;
-  btn.textContent = 'Создаём платёж...';
+$('payBtn').onclick = () => {
   const total = BASE + (photo + video + audio) * ADDON;
+  $('payBtn').disabled = true;
+  $('payBtn').textContent = 'Перенаправляем в ЮKassa...';
+  window.location.href = WORKER_URL + '/pay?amount=' + total;
+};
   
   try {
     // Таймаут 15 секунд
