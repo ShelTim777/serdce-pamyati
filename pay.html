@@ -151,50 +151,6 @@ $('payBtn').onclick = () => {
   $('payBtn').textContent = 'Перенаправляем в ЮKassa...';
   window.location.href = WORKER_URL + '/pay?amount=' + total;
 };
-  
-  try {
-    // Таймаут 15 секунд
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 15000);
-    
-    const res = await fetch(WORKER_URL + '/pay?amount=' + total, {
-      signal: controller.signal
-    });
-    clearTimeout(timeout);
-    
-    if (!res.ok) {
-      const text = await res.text();
-      alert('Ошибка HTTP ' + res.status + ': ' + text.slice(0, 200) + '\n\nНапишите нам в ВК.');
-      btn.disabled = false;
-      btn.textContent = 'Оплатить 🕯️';
-      return;
-    }
-    
-    const data = await res.json();
-    if (data.payurl) {
-      sessionStorage.setItem('lastOrder', data.order);
-      window.location.href = data.payurl;
-    } else if (data.error) {
-      alert('Ошибка: ' + (data.error.message || data.error.description || JSON.stringify(data.error)).slice(0, 300) + '\n\nНапишите нам в ВК.');
-      btn.disabled = false;
-      btn.textContent = 'Оплатить 🕯️';
-    } else {
-      alert('Не удалось создать платёж. Попробуйте позже или напишите в ВК.');
-      btn.disabled = false;
-      btn.textContent = 'Оплатить 🕯️';
-    }
-  } catch (err) {
-    let msg = 'Ошибка соединения';
-    if (err.name === 'AbortError') {
-      msg = 'Таймаут: сервер не ответил за 15 секунд';
-    } else if (err.message) {
-      msg = err.message;
-    }
-    alert(msg + '\n\nПопробуйте позже или напишите в ВК.');
-    btn.disabled = false;
-    btn.textContent = 'Оплатить 🕯️';
-  }
-};
 
 recalc();
 </script>
