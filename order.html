@@ -133,18 +133,17 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-const status = t => document.getElementById('submitBtn').textContent = t;
+const $ = id => document.getElementById(id);
+const status = t => $('submitBtn').textContent = t;
 const MAX = 10;
 
-// Счётчики выбранных файлов
 ['photos','videos','audio'].forEach(id => {
-  document.getElementById(id).addEventListener('change', e => {
+  $(id).addEventListener('change', e => {
     const n = Math.min(e.target.files.length, MAX);
-    document.getElementById(id + 'Hint').textContent = 'Выбрано: ' + n + '/10' + (e.target.files.length > MAX ? ' (лишние будут пропущены)' : '');
+    $(id + 'Hint').textContent = 'Выбрано: ' + n + '/10' + (e.target.files.length > MAX ? ' (лишние будут пропущены)' : '');
   });
 });
 
-// Сжатие фото → Blob
 function compressToBlob(file) {
   return new Promise(resolve => {
     const url = URL.createObjectURL(file);
@@ -163,9 +162,8 @@ function compressToBlob(file) {
   });
 }
 
-// Загрузка файла в Selectel
 async function uploadFile(blob, path, contentType) {
-  const res = await fetch('https://upload-proxy.ura230160.workers.dev/upload?key=' + path, {
+  const res = await fetch('https://upload-proxy.ura230160.workers.dev/upload?key=' + encodeURIComponent(path), {
     method: 'POST',
     headers: { 'Content-Type': contentType || 'application/octet-stream' },
     body: blob
@@ -174,59 +172,54 @@ async function uploadFile(blob, path, contentType) {
   return (await res.json()).url;
 }
 
-// === ГЕЙТ ===
 const params = new URLSearchParams(window.location.search);
 const ORDER = params.get('order');
 
 async function checkGate() {
-  document.getElementById('loadingBox').style.display = 'none';
-  if (!ORDER) { document.getElementById('gateBox').style.display = 'block'; return; }
+  $('loadingBox').style.display = 'none';
+  if (!ORDER) { $('gateBox').style.display = 'block'; return; }
   try {
     const snap = await get(ref(db, 'orders/' + ORDER));
     const data = snap.val();
     if (data && data.paid === true) {
-      document.getElementById('formWrap').style.display = 'block';
-      document.getElementById('orderBadge').textContent = '🕯️ Заказ оплачен: ' + ORDER;
-      document.getElementById('finalOrder').textContent = ORDER;
+      $('formWrap').style.display = 'block';
+      $('orderBadge').textContent = '🕯️ Заказ оплачен: ' + ORDER;
+      $('finalOrder').textContent = ORDER;
     } else {
-      document.getElementById('gateBox').style.display = 'block';
+      $('gateBox').style.display = 'block';
     }
   } catch (err) {
-    document.getElementById('formWrap').style.display = 'block';
-    document.getElementById('orderBadge').textContent = 'Заказ: ' + ORDER;
-    document.getElementById('finalOrder').textContent = ORDER;
+    $('formWrap').style.display = 'block';
+    $('orderBadge').textContent = 'Заказ: ' + ORDER;
+    $('finalOrder').textContent = ORDER;
   }
 }
 checkGate();
 
-// === ОТПРАВКА ===
-document.getElementById('orderForm').addEventListener('submit', async e => {
+$('orderForm').addEventListener('submit', async e => {
   e.preventDefault();
-  if (document.getElementById('honeypot').value) return;
-  const btn = document.getElementById('submitBtn');
+  if ($('honeypot').value) return;
+  const btn = $('submitBtn');
   btn.disabled = true;
   const base = ORDER || ('fallback-' + Date.now());
   try {
     const photoLinks = [], videoLinks = [], audioLinks = [];
 
-    // ФОТО (сжатие → Selectel)
-    const photos = Array.from(document.getElementById('photos').files).slice(0, MAX);
+    const photos = Array.from($('photos').files).slice(0, MAX);
     for (let i = 0; i < photos.length; i++) {
       status('📷 Фото ' + (i + 1) + '/' + photos.length + '...');
       const blob = await compressToBlob(photos[i]);
       if (blob) photoLinks.push(await uploadFile(blob, 'orders/' + base + '/photos/' + (i + 1) + '.jpg', 'image/jpeg'));
     }
 
-    // ВИДЕО (прямая загрузка в Selectel)
-    const videos = Array.from(document.getElementById('videos').files).slice(0, MAX);
+    const videos = Array.from($('videos').files).slice(0, MAX);
     for (let i = 0; i < videos.length; i++) {
       if (videos[i].size > 100 * 1024 * 1024) { alert('Видео «' + videos[i].name + '» больше 100 МБ — приложите ссылку на YouTube/Rutube в поле ниже.'); continue; }
       status('🎬 Видео ' + (i + 1) + '/' + videos.length + '...');
       videoLinks.push(await uploadFile(videos[i], 'orders/' + base + '/videos/' + (i + 1) + '-' + videos[i].name.replace(/[^\w.\-а-яА-Я]/g, '_'), videos[i].type || 'video/mp4'));
     }
 
-    // АУДИО (прямая загрузка в Selectel)
-    const audios = Array.from(document.getElementById('audio').files).slice(0, MAX);
+    const audios = Array.from($('audio').files).slice(0, MAX);
     for (let i = 0; i < audios.length; i++) {
       if (audios[i].size > 30 * 1024 * 1024) { alert('Аудио «' + audios[i].name + '» больше 30 МБ — напишите название песни в поле ниже.'); continue; }
       status('🎵 Аудио ' + (i + 1) + '/' + audios.length + '...');
@@ -237,19 +230,25 @@ document.getElementById('orderForm').addEventListener('submit', async e => {
     await update(ref(db, 'orders/' + base), {
       submittedAt: Date.now(),
       status: 'received',
-      fio: fio.value, dates: dates.value, epitaph: epitaph.value,
-      bio: bio.value, songs: songs.value, folder: folder.value,
-      videoLinks: videoLinks.value, contact: contact.value,
-      city: city.value, comment: comment.value,
+      fio: $('fio').value,
+      dates: $('dates').value,
+      epitaph: $('epitaph').value,
+      bio: $('bio').value,
+      songs: $('songs').value,
+      folder: $('folder').value,
+      videoLinks: $('videoLinks').value,
+      contact: $('contact').value,
+      city: $('city').value,
+      comment: $('comment').value,
       photoFiles: photoLinks,
       videoFiles: videoLinks,
       audioFiles: audioLinks
     });
 
-    document.getElementById('orderForm').style.display = 'none';
-    document.getElementById('successBox').style.display = 'block';
+    $('orderForm').style.display = 'none';
+    $('successBox').style.display = 'block';
   } catch (err) {
-    alert('Не удалось отправить. Напишите нам в ВК: vk.ru/serdce_pamyati');
+    alert('Не удалось отправить: ' + err.message + '\nНапишите нам в ВК: vk.ru/serdce_pamyati');
     btn.disabled = false;
     btn.textContent = 'Отправить материалы 🕯️';
   }
