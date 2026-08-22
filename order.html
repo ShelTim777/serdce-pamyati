@@ -163,7 +163,7 @@ function compressToBlob(file) {
 }
 
 async function uploadFile(blob, path, contentType) {
-  const res = await fetch('https://upload-proxy.ura230160.workers.dev/upload?key=' + encodeURIComponent(path), {
+const res = await fetch('/upload.php?key=' + encodeURIComponent(path), {
     method: 'POST',
     headers: { 'Content-Type': contentType || 'application/octet-stream' },
     body: blob
