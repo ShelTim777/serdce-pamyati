@@ -80,15 +80,15 @@ footer { background:#050505; padding:40px 20px; text-align:center; border-top:1p
 
 <label>📷 Фотографии (до 10 файлов)</label>
 <input type="file" id="photos" accept="image/*" multiple>
-<div class="hint" id="photosHint">Выбрано: 0/10 · до 10 МБ каждый · файлы автоматически сжимаются</div>
+<div class="hint" id="photosHint">Выбрано: 0/10 · сожмутся автоматически</div>
 
 <label>🎬 Видео (до 10 файлов)</label>
 <input type="file" id="videos" accept="video/*" multiple>
-<div class="hint" id="videosHint">Выбрано: 0/10 · до 100 МБ каждый · большие — лучше ссылками</div>
+<div class="hint" id="videosHint">Выбрано: 0/10 · до 200 МБ каждый · большие — ссылками</div>
 
 <label>🎵 Аудио (до 10 файлов)</label>
 <input type="file" id="audio" accept="audio/*" multiple>
-<div class="hint" id="audioHint">Выбрано: 0/10 · до 30 МБ каждый · или названия песен</div>
+<div class="hint" id="audioHint">Выбрано: 0/10 · до 50 МБ каждый · или названия песен</div>
 
 <label>Песни / аудио (названия или ссылки)</label>
 <textarea id="songs" placeholder="«День Победы», «Синий платочек» или ссылка на запись"></textarea>
@@ -133,16 +133,58 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
+// === SELECTEL S3 (прямая загрузка) ===
+const S3 = {
+  endpoint: 'https://serdce-pamyati.s3.ru-6.storage.selcloud.ru',
+  host: 'serdce-pamyati.s3.ru-6.storage.selcloud.ru',
+  region: 'ru-6',
+  accessKey: 'fbed2eabe8d94f0f8be38c775a681740',
+  secretKey: 'da3635559af540a6828bf58c58dbdc42'
+};
+
 const $ = id => document.getElementById(id);
 const status = t => $('submitBtn').textContent = t;
 const MAX = 10;
 
-['photos','videos','audio'].forEach(id => {
-  $(id).addEventListener('change', e => {
-    const n = Math.min(e.target.files.length, MAX);
-    $(id + 'Hint').textContent = 'Выбрано: ' + n + '/10' + (e.target.files.length > MAX ? ' (лишние будут пропущены)' : '');
+function hex(buf) { return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join(''); }
+async function hmac(key, str) {
+  const k = await crypto.subtle.importKey('raw', key, { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
+  return crypto.subtle.sign('HMAC', k, new TextEncoder().encode(str));
+}
+
+async function s3Upload(blob, key, ct) {
+  const now = new Date();
+  const amzDate = now.toISOString().replace(/[:-]|\.\d{3}/g, '');
+  const dateStamp = amzDate.slice(0, 8);
+  const uri = '/' + key.split('/').map(encodeURIComponent).join('/');
+
+  const canonicalHeaders = 'content-type:' + ct + '\nhost:' + S3.host + '\nx-amz-content-sha256:UNSIGNED-PAYLOAD\nx-amz-date:' + amzDate + '\n';
+  const signedHeaders = 'content-type;host;x-amz-content-sha256;x-amz-date';
+  const canonicalRequest = 'PUT\n' + uri + '\n\n' + canonicalHeaders + '\n' + signedHeaders + '\nUNSIGNED-PAYLOAD';
+  const scope = dateStamp + '/' + S3.region + '/s3/aws4_request';
+  const crHash = hex(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(canonicalRequest)));
+  const sts = 'AWS4-HMAC-SHA256\n' + amzDate + '\n' + scope + '\n' + crHash;
+
+  let k = new TextEncoder().encode('AWS4' + S3.secretKey);
+  k = await hmac(k, dateStamp);
+  k = await hmac(k, S3.region);
+  k = await hmac(k, 's3');
+  k = await hmac(k, 'aws4_request');
+  const sig = hex(await hmac(k, sts));
+
+  const res = await fetch(S3.endpoint + uri, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': ct,
+      'x-amz-content-sha256': 'UNSIGNED-PAYLOAD',
+      'x-amz-date': amzDate,
+      'Authorization': 'AWS4-HMAC-SHA256 Credential=' + S3.accessKey + '/' + scope + ', SignedHeaders=' + signedHeaders + ', Signature=' + sig
+    },
+    body: blob
   });
-});
+  if (!res.ok) throw new Error('S3 ' + res.status + ': ' + (await res.text()).slice(0, 150));
+  return S3.endpoint + uri;
+}
 
 function compressToBlob(file) {
   return new Promise(resolve => {
@@ -162,15 +204,12 @@ function compressToBlob(file) {
   });
 }
 
-async function uploadFile(blob, path, contentType) {
-const res = await fetch('/upload.php?key=' + encodeURIComponent(path), {
-    method: 'POST',
-    headers: { 'Content-Type': contentType || 'application/octet-stream' },
-    body: blob
+['photos','videos','audio'].forEach(id => {
+  $(id).addEventListener('change', e => {
+    const n = Math.min(e.target.files.length, MAX);
+    $(id + 'Hint').textContent = 'Выбрано: ' + n + '/10' + (e.target.files.length > MAX ? ' (лишние пропустим)' : '');
   });
-  if (!res.ok) throw new Error('Upload failed: ' + (await res.text()).slice(0, 100));
-  return (await res.json()).url;
-}
+});
 
 const params = new URLSearchParams(window.location.search);
 const ORDER = params.get('order');
@@ -209,21 +248,21 @@ $('orderForm').addEventListener('submit', async e => {
     for (let i = 0; i < photos.length; i++) {
       status('📷 Фото ' + (i + 1) + '/' + photos.length + '...');
       const blob = await compressToBlob(photos[i]);
-      if (blob) photoLinks.push(await uploadFile(blob, 'orders/' + base + '/photos/' + (i + 1) + '.jpg', 'image/jpeg'));
+      if (blob) photoLinks.push(await s3Upload(blob, 'orders/' + base + '/photos/' + (i + 1) + '.jpg', 'image/jpeg'));
     }
 
     const videos = Array.from($('videos').files).slice(0, MAX);
     for (let i = 0; i < videos.length; i++) {
-      if (videos[i].size > 100 * 1024 * 1024) { alert('Видео «' + videos[i].name + '» больше 100 МБ — приложите ссылку на YouTube/Rutube в поле ниже.'); continue; }
+      if (videos[i].size > 200 * 1024 * 1024) { alert('Видео «' + videos[i].name + '» больше 200 МБ — приложите ссылку.'); continue; }
       status('🎬 Видео ' + (i + 1) + '/' + videos.length + '...');
-      videoLinks.push(await uploadFile(videos[i], 'orders/' + base + '/videos/' + (i + 1) + '-' + videos[i].name.replace(/[^\w.\-а-яА-Я]/g, '_'), videos[i].type || 'video/mp4'));
+      videoLinks.push(await s3Upload(videos[i], 'orders/' + base + '/videos/' + (i + 1) + '-' + videos[i].name.replace(/[^\w.\-а-яА-Я]/g, '_'), videos[i].type || 'video/mp4'));
     }
 
     const audios = Array.from($('audio').files).slice(0, MAX);
     for (let i = 0; i < audios.length; i++) {
-      if (audios[i].size > 30 * 1024 * 1024) { alert('Аудио «' + audios[i].name + '» больше 30 МБ — напишите название песни в поле ниже.'); continue; }
+      if (audios[i].size > 50 * 1024 * 1024) { alert('Аудио «' + audios[i].name + '» больше 50 МБ — напишите название.'); continue; }
       status('🎵 Аудио ' + (i + 1) + '/' + audios.length + '...');
-      audioLinks.push(await uploadFile(audios[i], 'orders/' + base + '/audio/' + (i + 1) + '-' + audios[i].name.replace(/[^\w.\-а-яА-Я]/g, '_'), audios[i].type || 'audio/mpeg'));
+      audioLinks.push(await s3Upload(audios[i], 'orders/' + base + '/audio/' + (i + 1) + '-' + audios[i].name.replace(/[^\w.\-а-яА-Я]/g, '_'), audios[i].type || 'audio/mpeg'));
     }
 
     status('Сохраняем заказ...');
