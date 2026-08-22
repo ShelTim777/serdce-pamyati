@@ -228,9 +228,7 @@ async function checkGate() {
       $('gateBox').style.display = 'block';
     }
   } catch (err) {
-    $('formWrap').style.display = 'block';
-    $('orderBadge').textContent = 'Заказ: ' + ORDER;
-    $('finalOrder').textContent = ORDER;
+    $('gateBox').style.display = 'block';
   }
 }
 checkGate();
